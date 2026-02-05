@@ -17,7 +17,6 @@ export class ScheduleService {
   }
 
   async createShift(payload: ShiftDTO): Promise<ShiftResponse> {
-    // Validate payload against Zod schema
     const validationResult = ShiftSchema.safeParse(payload);
     if (!validationResult.success) {
       const errors = validationResult.error.issues.map(e => `${e.path.join('.')}: ${e.message}`).join('; ');
