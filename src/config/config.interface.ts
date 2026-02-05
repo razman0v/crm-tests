@@ -1,5 +1,6 @@
 export interface TestConfig {
   baseUrl: string;
+  companyUid: string;
   credentials: {
     admin: {
       username: string;

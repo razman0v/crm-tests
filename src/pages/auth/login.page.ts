@@ -8,11 +8,11 @@ export class LoginPage {
   readonly usernameInput: Locator;
   readonly passwordInput: Locator;
   readonly loginButton: Locator;
-  
+
   readonly smsInput: Locator;
-  
+
   readonly roleEmployeeRadio: Locator;
-  
+
   readonly companySelect: Locator;
   readonly companySearchInput: Locator;
   readonly companyOption: Locator;
@@ -21,7 +21,7 @@ export class LoginPage {
     this.page = page;
     this.config = config;
 
-    this.usernameInput = page.getByLabel(/login|email|phone/i); 
+    this.usernameInput = page.getByLabel(/login|email|phone/i);
     this.passwordInput = page.getByLabel(/Пароль|password/i);
     this.loginButton = page.getByText('Войти', { exact: true });
 
@@ -29,7 +29,9 @@ export class LoginPage {
 
     this.roleEmployeeRadio = page.getByText(/Я сотрудник/i);
 
-    this.companySelect = page.locator('.FieldLayoutView').filter({ hasText: 'Выберите компанию:' }).locator('.DropDownFieldView');
+    this.companySelect = page.locator('.FieldLayoutView')
+      .filter({ hasText: 'Выберите компанию:' })
+      .locator('.DropDownFieldView');
     this.companySearchInput = page.getByPlaceholder(/Начните вводить символы для поиска.../i);
     this.companyOption = page.getByText(this.config.features.secondCompanyName);
     this.loginButton = page.getByText('Войти', { exact: true });
@@ -40,7 +42,7 @@ export class LoginPage {
   }
 
   async performLogin() {
-   
+
     console.log('Filling credentials...');
     await this.usernameInput.fill(this.config.credentials.admin.username);
     await this.passwordInput.fill(this.config.credentials.admin.password);
@@ -49,10 +51,10 @@ export class LoginPage {
     console.log('Waiting for SMS input...');
     await this.smsInput.waitFor();
     await this.smsInput.fill(this.config.features.smsCode);
-    
+
 
     console.log('Selecting Role...');
-    await this.roleEmployeeRadio.waitFor(); 
+    await this.roleEmployeeRadio.waitFor();
     await this.roleEmployeeRadio.click();
 
     console.log('Selecting Company...');

@@ -1,9 +1,8 @@
 import { TestConfig } from './config.interface';
-// dotenv уже подключен в playwright.config.ts, поэтому process.env доступен
 
 export const devConfig: TestConfig = {
-  // Если переменной нет в .env, упадем с ошибкой или возьмем дефолт
   baseUrl: process.env.BASE_URL || 'http://localhost/3000',
+  companyUid: process.env.COMPANY_UID || '',
   
   credentials: {
     admin: {
