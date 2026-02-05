@@ -23,16 +23,16 @@ export class LoginPage {
 
     this.usernameInput = page.getByLabel(/login|email|phone/i); 
     this.passwordInput = page.getByLabel(/Пароль|password/i);
-    this.loginButton = page.locator('button[type="submit"]');
+    this.loginButton = page.getByText('Войти', { exact: true });
 
-    this.smsInput = page.locator('input[type="number"]').first();
+    this.smsInput = page.getByLabel(/Please enter OTP character 1/i);
 
-    this.roleEmployeeRadio = page.getByText(/сотрудник/i);
+    this.roleEmployeeRadio = page.getByText(/Я сотрудник/i);
 
-    this.companySelect = page.locator('.DropDownFieldView__selected-items').first();
-    this.companySearchInput = page.locator('input[type="search"]');
+    this.companySelect = page.locator('.FieldLayoutView').filter({ hasText: 'Выберите компанию:' }).locator('.DropDownFieldView');
+    this.companySearchInput = page.getByPlaceholder(/Начните вводить символы для поиска.../i);
     this.companyOption = page.getByText(this.config.features.secondCompanyName);
-    this.loginButton = page.locator('button[type="submit"]');
+    this.loginButton = page.getByText('Войти', { exact: true });
   }
 
   async goto() {
@@ -47,7 +47,7 @@ export class LoginPage {
     await this.loginButton.click();
 
     console.log('Waiting for SMS input...');
-    await this.smsInput.waitFor({ state: 'visible', timeout: 10000 });
+    await this.smsInput.waitFor();
     await this.smsInput.fill(this.config.features.smsCode);
     
 
