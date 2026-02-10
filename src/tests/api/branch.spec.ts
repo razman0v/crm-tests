@@ -1,16 +1,19 @@
 import { test, expect } from '@playwright/test';
 import { BranchService } from '../../lib/api/services/branch.service';
+import { faker } from '@faker-js/faker';
 
 test.describe('Branch Service', () => {
   test('should create a new branch and retrieve its cabinet', async ({ request }) => {
     const branchService = new BranchService(request);
 
     // Create branch (automatically fetches full details including cabinets)
-    const newBranch = await branchService.create('Playwright Test Branch');
+    const branchName = `${faker.location.city()} Branch`;
+    console.log(`Creating branch: "${branchName}"`);
+    const newBranch = await branchService.create(branchName);
 
     // Verify branch was created
     expect(newBranch.id).toBeDefined();
-    expect(newBranch.title).toBe('Playwright Test Branch');
+    expect(newBranch.title).toBe(branchName);
     console.log('✅ Branch ID:', newBranch.id);
 
     // Verify cabinets exist

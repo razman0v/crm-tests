@@ -10,7 +10,7 @@ export class ScheduleService extends BaseService {
     }
 
     const token = await this.getAccessToken();
-    const headers = this.getHeaders(token);
+    const headers = await this.getHeaders(token);
 
     const response = await this.request.post('/api/v1/schedule/shift', {
       data: payload,
@@ -21,8 +21,8 @@ export class ScheduleService extends BaseService {
       await this.handleResponseError(response, 'Shift creation');
     }
 
-    const responseText = await response.text();
-    const parsedResponse = this.safeParseJsonResponse<ShiftResponse>(responseText);
+    const responseText = await response.text(); // Already awaited
+    const parsedResponse = this.safeParseJsonResponse<ShiftResponse>(responseText); // Now correctly typed
 
     if (!parsedResponse) {
       console.log('API: ✅ Request successful (200/204), but response body is empty.');

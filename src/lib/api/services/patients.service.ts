@@ -5,7 +5,7 @@ import { BaseService } from './base.service';
 export class PatientsService extends BaseService {
   async create(payload: PatientPayload): Promise<PatientResponse> {
     const token = await this.getAccessToken();
-    const headers = this.getHeaders(token);
+    const headers = await this.getHeaders(token);
 
     await this.request.post('/api/v1/init', { headers });
 
