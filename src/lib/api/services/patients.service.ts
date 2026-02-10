@@ -1,34 +1,11 @@
-import { APIRequestContext, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 import { PatientPayload, PatientResponse } from '../../entities/patient.types';
-import { getConfig } from '@/config/env-loader';
+import { BaseService } from './base.service';
 
-export class PatientsService {
-  private request: APIRequestContext;
-  private config = getConfig();
-
-  constructor(request: APIRequestContext) {
-    this.request = request;
-  }
-
-  private async getAccessToken(): Promise<string | undefined> {
-    const state = await this.request.storageState();
-    const tokenCookie = state.cookies.find(c => c.name === 'accessToken');
-    return tokenCookie?.value;
-  }
-
+export class PatientsService extends BaseService {
   async create(payload: PatientPayload): Promise<PatientResponse> {
     const token = await this.getAccessToken();
-
-    if (!token) {
-        throw new Error('AccessToken cookie not found. Please check auth setup.');
-    }
-
-    const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-        'X-Requested-With': 'XMLHttpRequest',
-        'company-uid': this.config.companyUid,
-        'Authorization': `Bearer ${token}`
-    };
+    const headers = this.getHeaders(token);
 
     await this.request.post('/api/v1/init', { headers });
 
@@ -38,9 +15,7 @@ export class PatientsService {
     });
 
     if (!response.ok()) {
-        const errorText = await response.text();
-        console.error(`API Error: ${errorText}`);
-        throw new Error(`Patient creation failed: ${response.status()} ${response.statusText()}`);
+      await this.handleResponseError(response, 'Patient creation');
     }
 
     expect(response.ok()).toBeTruthy();

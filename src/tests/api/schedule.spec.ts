@@ -1,60 +1,69 @@
 import { test, expect } from '@playwright/test';
 import { ScheduleService } from '../../lib/api/services/schedule.service';
 import { ShiftDTO } from '../../lib/entities/schedule.types';
-import { getConfig } from '@/config/env-loader';
 
 test.describe('Schedule Service', () => {
   test('should create a shift like the browser', async ({ request }) => {
     const scheduleService = new ScheduleService(request);
-    const config = getConfig();
 
-    // 1. Даты: Берем следующую неделю целиком
+    // --- 1. CONFIGURATION (Matches your Payload exactly) ---
+    const employeeBranchId = 231;        // The Doctor
+    const companyBranchCabinetId = 251;  // The Room
+    const startTime = "10:01";
+    const endTime = "18:15";
+
+    // --- 2. DYNAMIC DATES (So test works every week) ---
+    // Calculate next Monday and next Sunday dynamically
     const nextMonday = new Date();
-    nextMonday.setDate(nextMonday.getDate() + ((1 + 7 - nextMonday.getDay()) % 7)); // Ближайший понедельник
+    nextMonday.setDate(nextMonday.getDate() + ((1 + 7 - nextMonday.getDay()) % 7)); 
     
     const nextSunday = new Date(nextMonday);
-    nextSunday.setDate(nextMonday.getDate() + 6); // +6 дней = Воскресенье
+    nextSunday.setDate(nextMonday.getDate() + 6); 
 
-    // Функция форматирования в YYYY-MM-DD
     const formatDate = (date: Date) => date.toISOString().split('T')[0];
 
-    const cabinetId = 225; // ID кабинета
-    
-    // Шаблон рабочего дня
-    const workDayTemplate = {
-      startTime: "11:05",
-      endTime: "12:07",
-      companyBranchCabinetId: cabinetId,
-      role: "doctor"
-    };
+    // --- 3. BUILD INNER JSON (dataJson) ---
+    // This matches the structure inside your "dataJson" string
+    const workTimes = [
+      {
+        startTime: startTime,
+        endTime: endTime,
+        companyBranchCabinetId: companyBranchCabinetId,
+        role: "doctor"
+      }
+    ];
 
-    // Генерируем структуру на всю неделю
     const weekSchedule = {
       days: [
-        { title: "monday", workTimes: [workDayTemplate] },
-        { title: "tuesday", workTimes: [workDayTemplate] },
-        { title: "wednesday", workTimes: [workDayTemplate] },
-        { title: "thursday", workTimes: [workDayTemplate] },
-        { title: "friday", workTimes: [workDayTemplate] },
-        { title: "saturday", workTimes: [] }, // Выходной
-        { title: "sunday", workTimes: [] }    // Выходной
+        { title: "monday", workTimes: workTimes },
+        { title: "tuesday", workTimes: workTimes },
+        { title: "wednesday", workTimes: workTimes },
+        { title: "thursday", workTimes: workTimes },
+        { title: "friday", workTimes: workTimes },
+        { title: "saturday", workTimes: [] },
+        { title: "sunday", workTimes: [] }
       ]
     };
 
-    // 3. Собираем Payload
+    // --- 4. BUILD FINAL PAYLOAD ---
     const payload: ShiftDTO = {
-      employeeBranchId: 218, // Твой ID из лога
-      companyBranchId: null, // Как в логе
+      employeeBranchId: employeeBranchId,
+      companyBranchId: null,
       dateFrom: formatDate(nextMonday),
       dateTo: formatDate(nextSunday),
       dataJson: JSON.stringify(weekSchedule),
     };
 
-    console.log('Sending Payload:', JSON.stringify(payload, null, 2));
+    console.log(`🚀 Sending Payload for employeeBranchId: ${employeeBranchId}`);
 
-    // 4. Отправка
+    // --- 5. EXECUTE & VERIFY ---
     const createdShift = await scheduleService.createShift(payload);
+    
     expect(createdShift).toBeDefined();
-    console.log(`✅ Расписание успешно отправлено на сервер!`);
+    
+    console.log(`✅ Shift successfully created!`);
+    console.log(`   Dates: ${payload.dateFrom} to ${payload.dateTo}`);
+    console.log(`   Doctor: ${payload.employeeBranchId}`);
+    console.log(`   Cabinet: ${companyBranchCabinetId}`);
   });
 });
