@@ -9,11 +9,6 @@ export class BaseService {
     this.request = request;
   }
 
-  /**
-   * Extracts the access token from storage state (cookies).
-   * @returns The access token value or undefined if not found.
-   * @throws Error if token is not found.
-   */
   protected async getAccessToken(): Promise<string> {
     const state = await this.request.storageState();
     const tokenCookie = state.cookies.find(c => c.name === 'accessToken');
@@ -27,11 +22,12 @@ export class BaseService {
 
   /**
    * Builds standard HTTP headers for API requests.
-   * Includes authentication, content-type, and company-uid headers.
-   * @param token The access token for Authorization header.
+   * Automatically extracts and injects the access token.
+   * @param tokenOverride Optional token override (for testing or special cases).
    * @returns Standard headers object.
    */
-  protected getHeaders(token: string): Record<string, string> {
+  protected async getHeaders(tokenOverride?: string): Promise<Record<string, string>> {
+    const token = tokenOverride || await this.getAccessToken();
     return {
       'Content-Type': 'application/json',
       'X-Requested-With': 'XMLHttpRequest',
@@ -40,12 +36,6 @@ export class BaseService {
     };
   }
 
-  /**
-   * Handles API response errors with clear messaging.
-   * @param response The API response from Playwright.
-   * @param errorContext Additional context for the error message.
-   * @throws Error with formatted error message including status and response text.
-   */
   protected async handleResponseError(
     response: Awaited<ReturnType<APIRequestContext['post']>>,
     errorContext: string
@@ -57,11 +47,6 @@ export class BaseService {
     );
   }
 
-  /**
-   * Safely parses JSON response, handling empty responses.
-   * @param responseText The raw response text.
-   * @returns Parsed JSON object or null if response is empty.
-   */
   protected safeParseJsonResponse<T>(responseText: string): T | null {
     if (!responseText) {
       return null;
