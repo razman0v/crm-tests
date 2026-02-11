@@ -2019,9 +2019,14 @@
 │   ├── lib
 │   │   ├── api
 │   │   │   └── services
+│   │   │       ├── base.service.ts
+│   │   │       ├── branch.service.ts
+│   │   │       ├── employee.service.ts
 │   │   │       ├── patients.service.ts
 │   │   │       └── schedule.service.ts
 │   │   ├── entities
+│   │   │   ├── branch.types.ts
+│   │   │   ├── employee.types.ts
 │   │   │   ├── patient.types.ts
 │   │   │   └── schedule.types.ts
 │   │   └── fixtures
@@ -2031,7 +2036,8 @@
 │   │       └── login.page.ts
 │   └── tests
 │       ├── api
-│       │   └── schedule.spec.ts
+│       │   ├── branch.spec.ts
+│       │   └── employee.spec.ts
 │       ├── auth.setup.ts
 │       └── e2e
 │           └── smoke
@@ -2040,4 +2046,4 @@
 ├── tree.txt
 └── tsconfig.json
 
-170 directories, 1871 files
+170 directories, 1877 files
