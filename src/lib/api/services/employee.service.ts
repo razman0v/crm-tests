@@ -79,10 +79,13 @@ export class EmployeeService extends BaseService {
       );
     }
 
-    return {
+    // Construct result with proper type safety
+    const result: EmployeeWithBranchId = {
       ...fullEmployee,
       employeeBranchId: linkedBranch.id
     };
+
+    return result;
   }
 
   async getById(id: number): Promise<EmployeeResponse> {

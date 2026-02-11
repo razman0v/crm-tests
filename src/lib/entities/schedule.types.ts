@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const ShiftSchema = z.object({
-  employeeBranchId: z.number().optional(),
+  employeeBranchId: z.number(), // Required - shifts must have an employee
   companyBranchId: z.number().nullable().optional(), 
   dateFrom: z.string(), 
   dateTo: z.string(),

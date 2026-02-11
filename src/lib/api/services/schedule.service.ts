@@ -9,8 +9,8 @@ export class ScheduleService extends BaseService {
       throw new Error(`Invalid shift payload: ${errors}`);
     }
 
-    const token = await this.getAccessToken();
-    const headers = await this.getHeaders(token);
+    // getHeaders() handles token extraction internally
+    const headers = await this.getHeaders();
 
     const response = await this.request.post('/api/v1/schedule/shift', {
       data: payload,
@@ -21,12 +21,12 @@ export class ScheduleService extends BaseService {
       await this.handleResponseError(response, 'Shift creation');
     }
 
-    const responseText = await response.text(); // Already awaited
-    const parsedResponse = this.safeParseJsonResponse<ShiftResponse>(responseText); // Now correctly typed
+    const responseText = await response.text();
+    const parsedResponse = this.safeParseJsonResponse<ShiftResponse>(responseText);
 
     if (!parsedResponse) {
       console.log('API: ✅ Request successful (200/204), but response body is empty.');
-      // Возвращаем заглушку, чтобы тест не падал
+      // Return stub to prevent test failure on empty response
       return { id: 0, dateFrom: payload.dateFrom, dateTo: payload.dateTo } as ShiftResponse;
     }
 
