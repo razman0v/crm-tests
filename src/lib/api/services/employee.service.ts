@@ -1,6 +1,6 @@
 import { BaseService } from './base.service';
 import { EmployeePayload, EmployeeResponse, EmployeeWithBranchId, CompanyEmployeeBranch } from '../../entities/employee.types';
-import { faker } from '@faker-js/faker';
+import { fakerRU as faker } from '@faker-js/faker';
 
 export class EmployeeService extends BaseService {
   

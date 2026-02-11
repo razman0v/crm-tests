@@ -5,7 +5,10 @@ export class BranchService extends BaseService {
   
   async create(name: string = `Auto Branch ${Date.now()}`): Promise<BranchResponse> {
     const headers = await this.getHeaders();
-    
+
+    const roomNumber = Math.floor(Math.random() * 900) + 100;
+    const cabinetName = `Auto Cabinet - ${roomNumber}`;
+
     const payload: BranchPayload = {
       companyId: null,
       title: name,
@@ -14,7 +17,7 @@ export class BranchService extends BaseService {
       contacts: [],
       companyBranchCabinets: [
         {
-          title: "Auto Cabinet",
+          title: cabinetName,
           isActive: true,
           isStock: true
         }
