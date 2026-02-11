@@ -2,77 +2,105 @@ import { test, expect } from '@playwright/test';
 import { BranchService } from '../../lib/api/services/branch.service';
 import { EmployeeService } from '../../lib/api/services/employee.service';
 import { ScheduleService } from '../../lib/api/services/schedule.service';
-import { ShiftDTO } from '../../lib/entities/schedule.types';
+import { ShiftFactory } from '../../lib/fixtures/shift.factory';
 import { faker } from '@faker-js/faker';
 
 test.describe('Schedule Service - Create Shift', () => {
   
-  test('should create a shift for an employee', async ({ request }) => {
-    // 1. Setup Branch
+  test('should create a simple single-day shift with default work hours', async ({ request }) => {
+    // Setup: Create Branch with Cabinet
     const branchService = new BranchService(request);
     const branchName = `${faker.location.city()} Clinic`;
     const newBranch = await branchService.create(branchName);
     
-    // We need a valid Cabinet ID for the schedule
     const cabinetId = newBranch.companyBranchCabinets?.[0]?.id;
     if (!cabinetId) throw new Error("Created branch has no cabinets, cannot schedule shift");
     console.log(`✅ Branch ${newBranch.id} created with Cabinet ID: ${cabinetId}`);
 
-    // 2. Setup Doctor
+    // Setup: Create Doctor
     const employeeService = new EmployeeService(request);
     const newEmployee = await employeeService.create(newBranch.id);
     const employeeBranchId = newEmployee.employeeBranchId;
     console.log(`✅ Doctor created with employeeBranchId: ${employeeBranchId}`);
 
-    // 3. Prepare Dates (YYYY-MM-DD)
-    const today = new Date();
-    const tomorrow = new Date(today);
+    // Calculate tomorrow's date for the shift
+    const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
-    const dateStr = tomorrow.toISOString().split('T')[0]; // "2026-02-12"
+    const dateStr = tomorrow.toISOString().split('T')[0]; // "YYYY-MM-DD"
 
-    // 4. Construct complex dataJson
-    // The API expects a full week structure. We populate only the target day.
-    const weekDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-    const targetDayName = tomorrow.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+    // Create shift using convenience method (abstracts payload construction)
+    const scheduleService = new ScheduleService(request);
+    const response = await scheduleService.createSimpleShift(
+      employeeBranchId,
+      cabinetId,
+      dateStr
+    );
+
+    // Verify response
+    expect(response).toBeDefined();
+    expect(response.dateFrom).toContain(dateStr);
+    expect(typeof response.id).toBe('number');
     
-    const daysArray = weekDays.map(day => {
-      const isTargetDay = day === targetDayName;
-      return {
-        title: day,
-        workTimes: isTargetDay ? [
-          {
-            startTime: "09:00",
-            endTime: "17:00",
-            companyBranchCabinetId: cabinetId,
-            role: "doctor"
-          }
-        ] : [] // Empty for other days
-      };
-    });
+    console.log(`✅ Shift successfully created! (ID: ${response.id})`);
+  });
 
-    const dataJsonObj = { days: daysArray };
+  test('should create a multi-day shift', async ({ request }) => {
+    // Setup: Branch and Cabinet
+    const branchService = new BranchService(request);
+    const newBranch = await branchService.create(`${faker.location.city()} Clinic`);
+    const cabinetId = newBranch.companyBranchCabinets?.[0]?.id;
+    if (!cabinetId) throw new Error("No cabinet available");
 
-    // 5. Assemble Payload (Matching "Ground Truth")
-    const payload: ShiftDTO = {
-      dateFrom: dateStr,
-      dateTo: dateStr, // Single day shift
-      employeeBranchId: employeeBranchId,
-      companyBranchId: null, // Explicitly null
-      dataJson: JSON.stringify(dataJsonObj),
-      // workDaysCount removed (not present in valid manual payload)
-    };
+    // Setup: Employee
+    const employeeService = new EmployeeService(request);
+    const newEmployee = await employeeService.create(newBranch.id);
+    const employeeBranchId = newEmployee.employeeBranchId;
 
-    console.log(`Test: Sending Payload for ${dateStr}...`);
+    // Create 3-day shift (Monday-Wednesday)
+    const today = new Date();
+    const monday = new Date(today);
+    monday.setDate(today.getDate() + (1 - today.getDay() + 7) % 7); // Next Monday
+    
+    const wednesday = new Date(monday);
+    wednesday.setDate(wednesday.getDate() + 2); // Wednesday
+    
+    const dateFrom = monday.toISOString().split('T')[0];
+    const dateTo = wednesday.toISOString().split('T')[0];
 
-    // 6. Execute
+    // Use factory for custom multi-day configuration
+    const payload = ShiftFactory.createCustomShift(
+      employeeBranchId,
+      cabinetId,
+      dateFrom,
+      dateTo,
+      [
+        { day: 'monday', workTimes: [{ startTime: '09:00', endTime: '17:00', role: 'doctor' }] },
+        { day: 'tuesday', workTimes: [{ startTime: '10:00', endTime: '18:00', role: 'doctor' }] },
+        { day: 'wednesday', workTimes: [{ startTime: '09:00', endTime: '17:00', role: 'doctor' }] },
+      ]
+    );
+
     const scheduleService = new ScheduleService(request);
     const response = await scheduleService.createShift(payload);
 
-    // 7. Verify
     expect(response).toBeDefined();
-    // API response often returns date with time 00:00:00, so we check inclusion
-    expect(response.dateFrom).toContain(dateStr);
+    expect(response.dateFrom).toContain(dateFrom);
+    expect(response.dateTo).toContain(dateTo);
+    console.log(`✅ Multi-day shift created! (${dateFrom} to ${dateTo})`);
+  });
+
+  test('should handle shift validation errors gracefully', async ({ request }) => {
+    const scheduleService = new ScheduleService(request);
     
-    console.log(`✅ Shift successfully created! (ID: ${response.id || 'N/A'})`);
+    // Invalid payload: missing employeeBranchId (required field)
+    const invalidPayload = {
+      companyBranchId: null,
+      dateFrom: '2026-02-12',
+      dateTo: '2026-02-12',
+      dataJson: '{"days": []}',
+    } as any;
+
+    // Should throw validation error
+    await expect(scheduleService.createShift(invalidPayload)).rejects.toThrow(/Invalid shift payload/);
   });
 });
