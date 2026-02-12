@@ -29,8 +29,15 @@ export class GlossaryService extends BaseService {
     } else if (data.data && Array.isArray(data.data)) {
       items = data.data;
     } else {
-      console.warn(`[Glossary] Warning: Unexpected format for ${endpoint}`, data);
-      items = [];
+      // Throw instead of silently returning empty array
+      throw new Error(
+        `[Glossary] Unexpected API response format for ${endpoint}. ` +
+        `Expected array or {items: []} or {data: []}. Got: ${JSON.stringify(data).slice(0, 200)}`
+      );
+    }
+
+    if (items.length === 0) {
+      console.warn(`[Glossary] Warning: Empty result from ${endpoint}`);
     }
 
     this.cache[cacheKey] = items;

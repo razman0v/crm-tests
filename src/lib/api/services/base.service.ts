@@ -67,7 +67,7 @@ export class BaseService {
   /**
    * Generic POST request with Retry logic and Auto-Auth
    */
-  protected async post<T>(endpoint: string, data: any): Promise<T> {
+  protected async post<T, D = any>(endpoint: string, data: D): Promise<T> {
     return withRetry(
       async () => {
         const headers = await this.getHeaders();
