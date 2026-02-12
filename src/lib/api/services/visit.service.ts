@@ -3,7 +3,7 @@ import { VisitDTO, VisitSchema, VisitResponse } from '../../entities/visit.types
 import { BaseService } from './base.service';
 
 export class VisitService extends BaseService {
-  async create(payload: VisitDTO): Promise<{ id: number; url: string }> {
+  async create(payload: VisitDTO): Promise<VisitResponse> {
     // Validate payload against schema
     const validatedPayload = VisitSchema.parse(payload);
 
@@ -19,11 +19,6 @@ export class VisitService extends BaseService {
     }
 
     const responseData: VisitResponse = await response.json();
-    const id = responseData.id;
-
-    return {
-      id,
-      url: `${this.config.baseUrl}/visits/${id}`,
-    };
+    return responseData;
   }
 }

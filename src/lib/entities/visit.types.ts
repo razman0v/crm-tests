@@ -17,6 +17,8 @@ export interface VisitResponse {
   doctorId: number;
   shiftTime: string;
   notes?: string;
+  duration: number;
+  status: string;
   createdAt?: string;
   updatedAt?: string;
 }

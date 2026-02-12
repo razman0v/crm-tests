@@ -8,16 +8,17 @@ interface GlossaryItem {
 }
 
 export class GlossaryService extends BaseService {
-  private static cache: Record<string, GlossaryItem[]> = {};
+  // Instance-level cache instead of static to avoid test pollution
+  private cache: Record<string, GlossaryItem[]> = {};
 
   /**
    * Универсальный метод получения данных
    * Автоматически определяет, пришел массив или объект-обертка
    */
   private async getOrFetch(endpoint: string, cacheKey: string): Promise<GlossaryItem[]> {
-    if (GlossaryService.cache[cacheKey]) {
-      return GlossaryService.cache[cacheKey];
-}
+    if (this.cache[cacheKey]) {
+      return this.cache[cacheKey];
+    }
 
     const headers = await this.getHeaders();
     const response = await this.request.get(endpoint, { headers });
@@ -41,7 +42,7 @@ export class GlossaryService extends BaseService {
       items = [];
     }
 
-    GlossaryService.cache[cacheKey] = items;
+    this.cache[cacheKey] = items;
     return items;
   }
 
@@ -109,5 +110,12 @@ export class GlossaryService extends BaseService {
       return list[0].id;
     }
     return this.findIdByLabel(list, label, 'Branches');
+  }
+
+  /**
+   * Clear instance cache (useful for tests)
+   */
+  clearCache(): void {
+    this.cache = {};
   }
 }
