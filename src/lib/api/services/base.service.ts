@@ -1,5 +1,6 @@
 import { APIRequestContext } from '@playwright/test';
 import { getConfig } from '@/config/env-loader';
+import { withRetry } from '../../../utils/retry.utils';
 
 export class BaseService {
   protected request: APIRequestContext;
@@ -9,54 +10,79 @@ export class BaseService {
     this.request = request;
   }
 
+  // Helper to get token
   protected async getAccessToken(): Promise<string> {
     const state = await this.request.storageState();
-    const tokenCookie = state.cookies.find(c => c.name === 'accessToken');
-    
+    const tokenCookie = state.cookies.find((c) => c.name === 'accessToken');
+
     if (!tokenCookie?.value) {
       throw new Error('AccessToken cookie not found. Please check auth setup.');
     }
-    
+
     return tokenCookie.value;
   }
 
-  /**
-   * Builds standard HTTP headers for API requests.
-   * Automatically extracts and injects the access token.
-   * @param tokenOverride Optional token override (for testing or special cases).
-   * @returns Standard headers object.
-   */
+  // Helper to build headers
   protected async getHeaders(tokenOverride?: string): Promise<Record<string, string>> {
-    const token = tokenOverride || await this.getAccessToken();
+    const token = tokenOverride || (await this.getAccessToken());
     return {
       'Content-Type': 'application/json',
       'X-Requested-With': 'XMLHttpRequest',
       'company-uid': this.config.companyUid,
-      'Authorization': `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     };
   }
 
+  // Error Handler
   protected async handleResponseError(
     response: Awaited<ReturnType<APIRequestContext['post']>>,
     errorContext: string
   ): Promise<never> {
     const errorText = await response.text();
-    console.error(`API Error (${errorContext}): ${errorText}`);
+    console.error(`❌ API Error (${errorContext}): ${errorText}`);
     throw new Error(
       `${errorContext} failed: ${response.status()} ${response.statusText()}\n${errorText}`
     );
   }
 
-  protected safeParseJsonResponse<T>(responseText: string): T | null {
-    if (!responseText) {
-      return null;
-    }
+  /**
+   * Generic GET request with Retry logic and Auto-Auth
+   */
+  protected async get<T>(endpoint: string): Promise<T> {
+    return withRetry(
+      async () => {
+        const headers = await this.getHeaders();
+        const response = await this.request.get(endpoint, { headers });
 
-    try {
-      return JSON.parse(responseText) as T;
-    } catch (e) {
-      console.warn('API: Response is not valid JSON:', responseText);
-      throw new Error(`Failed to parse API response as JSON: ${responseText}`);
-    }
+        if (!response.ok()) {
+          await this.handleResponseError(response, `GET ${endpoint}`);
+        }
+
+        return response.json();
+      },
+      { description: `GET ${endpoint}` }
+    );
+  }
+
+  /**
+   * Generic POST request with Retry logic and Auto-Auth
+   */
+  protected async post<T>(endpoint: string, data: any): Promise<T> {
+    return withRetry(
+      async () => {
+        const headers = await this.getHeaders();
+        const response = await this.request.post(endpoint, {
+          headers,
+          data,
+        });
+
+        if (!response.ok()) {
+          await this.handleResponseError(response, `POST ${endpoint}`);
+        }
+
+        return response.json();
+      },
+      { description: `POST ${endpoint}` }
+    );
   }
 }

@@ -8,7 +8,6 @@ interface GlossaryItem {
 }
 
 export class GlossaryService extends BaseService {
-  // Instance-level cache instead of static to avoid test pollution
   private cache: Record<string, GlossaryItem[]> = {};
 
   /**
@@ -20,17 +19,9 @@ export class GlossaryService extends BaseService {
       return this.cache[cacheKey];
     }
 
-    const headers = await this.getHeaders();
-    const response = await this.request.get(endpoint, { headers });
+    const data = await this.get<any>(endpoint);
 
-    if (!response.ok()) {
-      await this.handleResponseError(response, `Fetching glossary: ${cacheKey}`);
-    }
-
-    const data = await response.json();
     let items: GlossaryItem[] = [];
-
-    // Логика обработки разных форматов ответа
     if (Array.isArray(data)) {
       items = data;
     } else if (data.items && Array.isArray(data.items)) {
@@ -51,7 +42,6 @@ export class GlossaryService extends BaseService {
    */
   private findIdByLabel(list: GlossaryItem[], label: string, context: string): number {
     const search = label.trim().toLowerCase();
-    
     const item = list.find((i) => {
       const matchLabel = i.label?.trim().toLowerCase() === search;
       const matchName = i.name?.trim().toLowerCase() === search;
@@ -59,7 +49,6 @@ export class GlossaryService extends BaseService {
     });
 
     if (!item) {
-      // Если не нашли, выводим список доступных опций (первые 10), чтобы было проще искать ошибку
       const available = list.slice(0, 10).map((i) => i.label).join(', ');
       throw new Error(
         `Glossary Error: Could not find '${label}' in ${context}. First 10 options: [${available}...]`
@@ -68,7 +57,6 @@ export class GlossaryService extends BaseService {
     return item.id;
   }
 
-  
   // PUBLIC METHODS (API Methods)
   
   // 1. Специализация (Specialization)
