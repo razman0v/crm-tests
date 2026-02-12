@@ -8,16 +8,16 @@ interface GlossaryItem {
 }
 
 export class GlossaryService extends BaseService {
-  private cache: Record<string, GlossaryItem[]> = {};
+  private static cache: Record<string, GlossaryItem[]> = {};
 
   /**
    * Универсальный метод получения данных
    * Автоматически определяет, пришел массив или объект-обертка
    */
   private async getOrFetch(endpoint: string, cacheKey: string): Promise<GlossaryItem[]> {
-    if (this.cache[cacheKey]) {
-      return this.cache[cacheKey];
-    }
+    if (GlossaryService.cache[cacheKey]) {
+      return GlossaryService.cache[cacheKey];
+}
 
     const headers = await this.getHeaders();
     const response = await this.request.get(endpoint, { headers });
@@ -41,7 +41,7 @@ export class GlossaryService extends BaseService {
       items = [];
     }
 
-    this.cache[cacheKey] = items;
+    GlossaryService.cache[cacheKey] = items;
     return items;
   }
 

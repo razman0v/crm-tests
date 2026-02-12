@@ -1,55 +1,37 @@
 import { test, expect } from '@playwright/test';
 import { GlossaryService } from '../../lib/api/services/glossary.service';
 
-test('Integration: Glossary Service', async ({ request }) => {
-  console.log('\n--- TESTING GLOSSARY SERVICE ---');
+test.describe('API Contract: Glossary Service', () => {
+  let glossary: GlossaryService;
 
-  const glossary = new GlossaryService(request);
+  test.beforeEach(async ({ request }) => {
+    glossary = new GlossaryService(request);
+  });
 
-  // 1. Специализация
-  const specName = 'Анестезиология и реаниматология';
-  console.log(`1. Specialization: "${specName}"`);
-  try {
-    const id = await glossary.getSpecializationId(specName);
-    console.log(`   ✅ Success! ID: ${id}`);
-    expect(id).toBe(148); // Проверяем конкретный ID из вашего лога
-  } catch (e) { 
-    console.log(`   ❌ Failed: ${(e as Error).message}`); 
-  }
+  test('should resolve Specialization ID (e.g. Анестезиология)', async () => {
+    const id = await glossary.getSpecializationId('Анестезиология и реаниматология');
+    expect(id).toBe(148); // ID который мы подтвердили
+  });
 
-  // 2. Мед. должность
-  const medPosName = 'Директор образовательной организации'; // Или любая другая из списка
-  console.log(`2. Medical Position: "${medPosName}"`);
-  try {
-    // Внимание: если 'Директор...' нет в дефолтном списке autocomplete, тест может упасть.
-    // Если упадет, попробуем найти другую позицию, которая точно есть.
-    const id = await glossary.getMedicalJobPositionId(medPosName);
-    console.log(`   ✅ Success! ID: ${id}`);
+  test('should resolve Job Position ID (e.g. Диктатор)', async () => {
+    const id = await glossary.getJobPositionId('Диктатор');
+    expect(id).toBe(1);
+  });
+
+  test('should resolve Medical Job Position ID (e.g. Директор)', async () => {
+    const id = await glossary.getMedicalJobPositionId('Директор образовательной организации');
+    expect(id).toBe(562);
+  });
+
+  test('should return default branch if no name provided', async () => {
+    const id = await glossary.getBranchId();
     expect(id).toBeGreaterThan(0);
-  } catch (e) { 
-    console.log(`   ❌ Failed: ${(e as Error).message}`); 
-  }
+  });
 
-  // 3. Должность
-  const jobPosName = 'Диктатор';
-  console.log(`3. Job Position: "${jobPosName}"`); 
-  try {
-    const id = await glossary.getJobPositionId(jobPosName);
-    console.log(`   ✅ Success! ID: ${id}`);
-    expect(id).toBe(1); // Из вашего лога
-  } catch (e) { 
-    console.log(`   ❌ Failed: ${(e as Error).message}`); 
-  }
-
-  // 4. Филиал
-  console.log('4. Fetching Default Branch ID...');
-  try {
-    const branchId = await glossary.getBranchId();
-    console.log(`   ✅ Success! ID: ${branchId}`);
-    expect(branchId).toBeGreaterThan(0);
-  } catch (e) {
-    console.log(`   ❌ Failed: ${(e as Error).message}`);
-  }
-
-  console.log('--- END ---\n');
+  test('should throw meaningful error for non-existent entry', async () => {
+    // Проверяем, что сервис реально ругается на несуществующие данные
+    await expect(async () => {
+      await glossary.getJobPositionId('Несуществующая должность 123');
+    }).rejects.toThrow(/Glossary Error: Could not find/);
+  });
 });
