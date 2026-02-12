@@ -1,446 +1,394 @@
-# Next Steps - Actionable Implementation Roadmap
+# Dental CRM Test Suite - Next Steps
 
-**Last Updated**: February 11, 2026  
-**Overall Progress**: 19% (24/131 features complete)
+**Last Updated:** February 12, 2026  
+**Current Completion:** 45% (25/57 features)
 
 ---
 
 ## 🚀 Immediate Priorities (Next Sprint)
 
-### 1. Visit Service & Visit Data Types
-**Status**: ❌ Missing  
-**Description**: Complete the "data creation trio" (Patient ✅, Schedule ✅, Visit ❌) to unblock E2E test setup phase.
+### 1. Visit Service (API Layer)
+**Description:** Implement the Visit Service to enable API-driven creation of dental visits (patients linked to doctor appointments). This unblocks the hybrid E2E testing strategy.
 
-**Files to Create**:
-- `src/lib/entities/visit.types.ts` - VisitDTO, VisitResponse, VisitSchema (Zod)
-- `src/lib/api/services/visit.service.ts` - VisitService class with create() method
+**Dependencies:** Needs Patient Service + Schedule Service (already implemented)
 
-**Technical Notes**:
-- VisitDTO should accept: `patientId`, `doctorId`, `shiftId` (or visit time)
-- POST endpoint: `/api/v1/health/visits`
-- Return: VisitResponse with `id` + construct URL: `${baseUrl}/visits/${visitId}`
-- Match pattern from PatientsService: extract token from storage, set headers, validate payload with Zod
-- Contract test: `src/tests/api/visit.spec.ts` - create visit and assert 201 response
+**Technical Note:**  
+- Create `src/lib/entities/visit.types.ts` with VisitDTO, VisitResponse, and Zod schema  
+- Create `src/lib/api/services/visit.service.ts`  
+- Method signature: `createVisit(patientId: number, doctorId: number, shiftTime: string): Promise<{id: number, url: string}>`  
+- POST endpoint: `/api/v1/health/visits`  
+- Return both visit ID and the constructed visit page URL  
+- Follow pattern from PatientsService: extract token from storage, set headers, validate payload with Zod  
 
-**Dependencies**: 
-- Patient Service (✅ exists)
-- Schedule Service (✅ exists)
-
-**Acceptance Criteria**:
-- [ ] VisitSchema validates visit payload
-- [ ] Service throws clear error on 4xx/5xx responses
-- [ ] Contract test passes
+**Estimated Effort:** 2-3 hours
 
 ---
 
-### 2. Staging Environment Config
-**Status**: ❌ Missing  
-**Description**: Unblock staging environment testing by implementing the staging configuration loader.
+### 2. Glossary Service (API Layer)
+**Description:** Implement Glossary Service for FK resolution (specializations, branches, job positions). Many create operations fail due to invalid reference IDs.
 
-**File to Create**:
-- `src/config/staging.config.ts` - Mirror of dev.config.ts for staging environment
+**Dependencies:** None (uses authenticated API context)
 
-**Technical Notes**:
-- Follow pattern from `src/config/dev.config.ts`
-- Read from `.env` with variables: `STAGING_BASE_URL`, `STAGING_ADMIN_USERNAME`, `STAGING_ADMIN_PASSWORD`, etc.
-- Update `src/config/env-loader.ts` line 12: replace error with actual staging config import
-- Environment selection via `process.env.TEST_ENV='staging'`
+**Technical Note:**  
+- Create `src/lib/api/services/glossary.service.ts`  
+- Methods: `getSpecializationId(name: string)`, `getBranchId()`, `getJobPositionId(name: string)`  
+- GET endpoints: `/api/v1/glossary/specializations`, `/api/v1/glossary/branches`, `/api/v1/glossary/positions`  
+- Cache results to avoid repeated API calls  
+- Throw descriptive error if ID not found  
 
-**Dependencies**: None
-
-**Acceptance Criteria**:
-- [ ] `TEST_ENV=staging npm test` works without throwing error
-- [ ] Config loader correctly routes to staging config
+**Estimated Effort:** 2-3 hours
 
 ---
 
-### 3. API Request Manager with Retry Logic
-**Status**: ❌ Missing  
-**Description**: Centralize API request handling with exponential backoff retry logic. Reduce code duplication across services.
+### 3. Retry Logic with Exponential Backoff
+**Description:** Add resilience to the API layer by implementing automatic retries for transient 502/503/504 errors. This is a critical reliability requirement.
 
-**File to Create**:
-- `src/lib/api/request-manager.ts` - ApiRequestManager class
+**Dependencies:** Needs BaseService refactoring
 
-**Technical Notes**:
-- Wraps Playwright's `APIRequestContext`
-- Implements retry logic:
-  - Only retry on 502, 503, 504
-  - Backoff formula: `wait = 100ms × 2^k` (k=0,1,2)
-  - Max retries: 2
-- Error handling:
-  - 4xx: throw `ClientError` with URL + request/response body
-  - 5xx: throw `ServerError` with details
-- Auto-inject headers: `Content-Type: application/json`, `X-Requested-With: XMLHttpRequest`
-- Methods: `post()`, `get()`, `patch()`, `delete()` with consistent signature
+**Technical Note:**  
+- Extend `src/lib/api/services/base.service.ts`  
+- Add protected method `retryWithBackoff(fn, maxRetries=3)`  
+- Backoff formula: `WaitTime_k = 100ms × 2^k` (k = 0, 1, 2)  
+- Retry only on 502, 503, 504; throw immediately on 4xx/5xx  
+- Add logging: "Retry attempt K/3 for [endpoint]"  
 
-**Dependencies**: None
-
-**Acceptance Criteria**:
-- [ ] Existing services (PatientsService, ScheduleService, VisitService) refactored to use ApiRequestManager
-- [ ] Unit test verifies 502 retry with correct backoff timing
-- [ ] Error messages include request URL and response body
-- [ ] No changes to test specs due to service refactor
+**Estimated Effort:** 2-3 hours
 
 ---
 
-### 4. Base Page Object Class
-**Status**: ❌ Missing  
-**Description**: Create foundation for all Page Objects. Standardize locator patterns, wait strategies, and common actions.
+### 4. Logger Utility Component
+**Description:** Implement observability layer that outputs JSON Lines in CI and colorized text locally. Essential for debugging and CI artifact analysis.
 
-**File to Create**:
-- `src/pages/base.page.ts` - BasePage class (all POM classes inherit from this)
+**Dependencies:** None
 
-**Technical Notes**:
-```typescript
-export class BasePage {
-  constructor(protected page: Page, protected config: TestConfig) {}
-  
-  protected async goto(path: string): Promise<void> { }
-  protected async waitForElement(locator: Locator, timeout?: number): Promise<void> { }
-  protected async fillInput(locator: Locator, value: string): Promise<void> { 
-    // wait actionable → clear → fill
-  }
-  protected async selectByText(locator: Locator, text: string): Promise<void> { 
-    // click dropdown → find option by text → click
-  }
-  protected async clickAndWait(locator: Locator, waitFor: Locator): Promise<void> { }
-  protected getCurrentUrl(): string { }
-}
-```
+**Technical Note:**  
+- Create `src/utils/logger.ts`  
+- Class `Logger` with methods: `info()`, `warn()`, `error()`, `debug()`  
+- Detect `CI` env variable to switch format  
+- Auto-append Test Name + Step Name to each entry  
+- Redact secrets (keys containing 'pass', 'token', 'secret')  
+- Later: integrate with Allure reporting  
 
-**Dependencies**: None
-
-**Acceptance Criteria**:
-- [ ] LoginPage refactored to extend BasePage (removes duplicate logic)
-- [ ] Helper methods tested with async patterns
-- [ ] No flakiness in element waits (use proper timeouts)
+**Estimated Effort:** 3-4 hours
 
 ---
 
-### 5. Utility Functions: SNILS & OMS Generation
-**Status**: 🚧 In Progress (PatientFactory incomplete)  
-**Description**: Add Russian identifier generation to PatientFactory. SNILS requires checksum calculation.
+### 5. Config Runtime Validation (Zod)
+**Description:** Add Zod schema validation to TestConfig. Currently only TypeScript interfaces exist, leaving room for runtime errors.
 
-**File to Update**:
-- `src/lib/fixtures/patient.factory.ts` - Add SNILS checksum + OMS generation
+**Dependencies:** Zod already installed
 
-**Technical Notes**:
-- SNILS checksum algorithm (Project.md):
-  ```
-  S = Σ(d_i × (10 - i)) for i=1..9
-  C = S if S < 100
-      else 0 if S == 100
-      else S mod 101
-  Result: 9 random digits + 2-digit checksum
-  ```
-- OMS Policy: 16-digit numeric string
-- Implement helper function: `calculateSnilsChecksum(base9Digits: string): string`
-- Generate passport with proper structure
+**Technical Note:**  
+- Create `src/config/config.schema.ts` with `ConfigSchema` Zod definition  
+- Update `src/config/env-loader.ts` to parse and validate config on load  
+- Throw `ZodError` with clear field names if validation fails  
+- Test: `npm run debug:config` should pass validation  
 
-**Dependencies**: None
-
-**Acceptance Criteria**:
-- [ ] 100 generated SNILSs pass modulo 101 checksum validation
-- [ ] OMS policy is exactly 16 digits
-- [ ] PatientFactory.createRandom() returns truly valid payloads every time
-- [ ] Unit test: verify SNILS pass validation
+**Estimated Effort:** 1-2 hours
 
 ---
 
-### 6. Patient Zod Schema Validation
-**Status**: ❌ Missing  
-**Description**: Add runtime contract validation for Patient payloads. Catch data mismatches before API calls.
+### 6. Complete PatientFactory (SNILS & OMS)
+**Description:** Extend PatientFactory to generate valid SNILS (with correct checksum) and 16-digit OMS policy numbers. Current implementation is incomplete.
 
-**File to Update**:
-- `src/lib/entities/patient.types.ts` - Add PatientSchema (Zod)
+**Dependencies:** None
 
-**Technical Notes**:
-- Add schema per Project.md specification:
-  ```typescript
-  export const PatientSchema = z.object({
-    id: z.number().optional(),
-    user: z.object({
-      surname: z.string().min(1),
-      name: z.string().min(1),
-      patronymic: z.string().nullable().optional(),
-      birthday: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-      snils: z.string().regex(/^\d{11}$/), // 11 digits
-      phone: z.string().regex(/^7\d{10}$/) // Russian format
-    }),
-    policyOmsNumber: z.string().length(16),
-    passport: z.object({
-      number: z.string(),
-      series: z.string()
-    })
-  })
-  ```
-- Integrate into PatientsService: `PatientSchema.parse(payload)` before POST
-- Use `.safeParse()` if you want error object instead of throwing
+**Technical Note:**  
+- Update `src/lib/fixtures/patient.factory.ts`  
+- Add method `generateValidSnils(): string` (Modulo 101 checksum per Project.md spec)  
+- Add method `generateOmsPolicy(): string` (16 digits, following field rules)  
+- Update `createRandom()` to use these generators  
+- Add unit test validating SNILS checksum  
 
-**Dependencies**: 
-- SNILS/OMS generation (#5)
-
-**Acceptance Criteria**:
-- [ ] Invalid SNILS rejected with clear error
-- [ ] Truncated phone rejected
-- [ ] Valid payload created in contract test passes validation
-- [ ] Unit test: verify schema validation logic
+**Estimated Effort:** 2-3 hours
 
 ---
 
-### 7. Custom Test Fixtures (Dependency Injection)
-**Status**: ❌ Missing  
-**Description**: Wire services and page objects into test functions via Playwright fixtures. Bridge test specs to framework.
+### 7. Allure Reporter Configuration
+**Description:** Wire up Allure reporting in Playwright config. Already in package.json; needs `playwright.config.ts` integration.
 
-**File to Create**:
-- `src/lib/fixtures/custom-fixtures.ts` - Custom fixtures for services + pages
+**Dependencies:** allure-playwright already installed
 
-**Technical Notes**:
-```typescript
-export const test = base.extend({
-  patientService: async ({ request }, use) => {
-    const service = new PatientsService(request);
-    await use(service);
-  },
-  scheduleService: async ({ request }, use) => {
-    // ...
-  },
-  visitService: async ({ request }, use) => {
-    // ...
-  },
-  // Page fixtures
-  loginPage: async ({ page }, use) => {
-    const page = new LoginPage(page, getConfig());
-    await use(page);
-  },
-});
+**Technical Note:**  
+- Update `reporter` in `playwright.config.ts`  
+- Add `allure-playwright` reporter config  
+- Set output folder to `allure-results`  
+- Later integrations: WARN/ERROR logs attach to Allure; traces attach on failure  
 
-export { expect } from '@playwright/test';
-```
-
-**Advanced Fixture**: `dentalVisitFlow`
-- Creates Shift → Patient → Visit in setup phase
-- Returns: `{ patientId, visitId, visitUrl, doctor, shiftTime }`
-- Used by tests to prepare data without manual API calls
-
-**Dependencies**: 
-- Visit Service (#1)
-- Base Page Object (#4)
-
-**Acceptance Criteria**:
-- [ ] Services auto-initialized with auth context
-- [ ] Page objects auto-initialized with page + config
-- [ ] dentalVisitFlow fixture orchestrates full setup
-- [ ] Test can use: `test('...', async ({ patientService, loginPage, dentalVisitFlow }) => { })`
+**Estimated Effort:** 1 hour
 
 ---
 
-### 8. Full Dental Visit E2E Test (Smoke)
-**Status**: 🚧 In Progress (partial implementation)  
-**Description**: Validate the complete hybrid strategy: API setup → UI business logic. Will expand as UI components built.
+### 8. Visit & Glossary Contract Tests
+**Description:** Implement contract tests for Visit and Glossary APIs to match existing Patient/Schedule/Branch/Employee tests.
 
-**File to Update**:
-- `src/tests/e2e/smoke/api-check.spec.ts` - Rename or create `full-visit-cycle.spec.ts`
+**Dependencies:** Needs Visit Service + Glossary Service
 
-**Technical Notes**:
-- Current test only creates patient, no visit setup
-- **Step 1 (API)**: Use custom fixtures to create Shift, Patient, Visit
-- **Step 2 (UI)**: Navigate to visit URL, instantiate VisitDetailsPage
-- **Step 3 (UI)**: Change status to 'Arrived' (no Dental Chart yet—mock with page.route)
-- **Step 4 (Assertion)**: Verify status badge shows 'Arrived'
-- For Dental Chart/Treatment Plan: use `page.route()` to mock API responses until components built
+**Technical Note:**  
+- Create `src/tests/api/visit.spec.ts`  
+- Create `src/tests/api/glossary.spec.ts`  
+- Each test: setup minimum viable payload → POST → assert 201 + response shape  
+- Use custom fixtures to auto-initialize services  
 
-```typescript
-test('Full Dental Visit Cycle', async ({ dentalVisitFlow, visitDetailsPage }) => {
-  // dentalVisitFlow handles: shift → patient → visit creation
-  const { visitUrl, patientId, visitId } = await dentalVisitFlow;
-  
-  // UI: Navigate to created visit
-  await visitDetailsPage.goto(visitUrl);
-  
-  // UI: Change status (minimal, no chart yet)
-  await visitDetailsPage.changeStatus('Arrived');
-  
-  // Assertion
-  expect(await visitDetailsPage.getStatusText()).toContain('Arrived');
-});
-```
-
-**Dependencies**: 
-- Visit Service (#1)
-- Custom Fixtures (#7)
-- Visit Details Page (backlog, but can mock for now)
-
-**Acceptance Criteria**:
-- [ ] Test passes 3 consecutive runs (no flakies)
-- [ ] Covers critical path: create → navigate → change status
-- [ ] Graceful API error handling
-- [ ] Ready for UI component integration
+**Estimated Effort:** 2-3 hours
 
 ---
 
-### Visit Details Page Object
-**Status**: ❌ Missing  
-**File**: `src/pages/crm/visit-details.page.ts`
+---
 
-**Methods to Implement**:
-- `goto(visitUrl: string)`
-- `changeStatus(newStatus: string)` - click status dropdown, select option, wait for badge update
-- `fillQuestionnaire(data: object)` - populate patient intake form
-- `fillDiary(notes: string)` - record doctor observations
-- `completeVisit()` - final submit action
+## 📋 Backlog (Future)
 
-**Dependent Components** (mark for Phase 3):
-- Dental Chart Component (complex, SVG/Canvas interactions)
-- Treatment Plan Component (dynamic grid with service additions)
-- Medical Diary Component (rich text editor)
-- Questionnaire Component (form with validations)
+### UI Layer (Atoms & Components)
+
+#### 9. Base Page Object Class
+Create abstract base class for all Page Objects, providing common locators and helper methods.  
+**File:** `src/pages/base.page.ts`  
+**Details:** Properties for navigation, waits, assertions; methods for common patterns
+
+#### 10. InputField & SelectDropdown Atoms
+Low-level UI components for form inputs. InputField with fill/type utilities, SelectDropdown supporting both `<select>` and custom divs.  
+**Files:** `src/pages/components/atoms/input-field.atom.ts`, `src/pages/components/atoms/select-dropdown.atom.ts`
+
+#### 11. Dental Chart Widget (Complex Organism)
+SVG/Canvas-based tooth status visualization. Critical complexity: must use `page.route` to mock responses for stable testing.  
+**File:** `src/pages/components/organisms/dental-chart/dental-chart.widget.ts`  
+**TODO from Project.md:** Map all 32 teeth IDs to SVG path selectors
+
+#### 12. Tooth & Diagnosis Menu Components
+Sub-components of Dental Chart. Tooth: clickable, status-aware. Diagnosis Menu: context menu for condition selection.  
+**Files:** `src/pages/components/organisms/dental-chart/tooth.component.ts`, `src/pages/components/organisms/dental-chart/diagnosis-menu.component.ts`
+
+#### 13. Treatment Plan Organism
+Dynamic grid for medical services. Methods: `searchService()`, `addService()`, `transferToVisit()`.  
+**File:** `src/pages/components/organisms/treatment-plan.component.ts`
+
+#### 14. Additional UI Components
+Medical Diary, Questionnaire, DatePicker, Modal, Sidebar components needed for full visit workflow.  
+**Files:** Multiple files under `src/pages/components/organisms/` and `src/pages/components/atoms/`
+
+#### 15. Auth Supplement Pages
+Extend login flow with missing pages: SMS entry, Role selection, Branch selection, Auth Wizard.  
+**Files:** `src/pages/auth/sms.page.ts`, `src/pages/auth/role.page.ts`, `src/pages/auth/branch.page.ts`, `src/pages/auth/auth-wizard.page.ts`
+
+#### 16. CRM Feature Pages
+Main workflow pages: Visit Details, Dashboard, Patient Card.  
+**Files:** `src/pages/crm/visit-details.page.ts`, `src/pages/crm/dashboard.page.ts`, `src/pages/crm/patient-card.page.ts`
 
 ---
 
-### Glossary Service (FK Resolution)
-**Status**: ❌ Missing  
-**File**: `src/lib/api/services/glossary.service.ts`
+### E2E Test Assembly
 
-**Methods Needed**:
-- `getSpecializationId(name: string)` - fetch from API, return first match ID
-- `getBranchId()` - get current branch ID
-- `getJobPositionId(name: string)` - parse job position from list
+#### 17. Custom Test Fixtures
+Extend Playwright fixtures with dependency injection system. Auto-initialize all services and pages.  
+**File:** `src/lib/fixtures/custom-fixtures.ts`  
+**Details:** Export `test` object with auto-wired services and page objects
 
-**Test**: `src/tests/api/glossary.spec.ts`
-- Verify methods return valid IDs
-- Used by EmployeeService to create doctors with correct FK references
+#### 18. Full Dental Visit Cycle E2E Test
+Complete end-to-end scenario: Create patient & shift via API → Navigate visit page → Execute dental workflow (chart, treatment, questionnaire) → Complete visit.  
+**File:** `src/tests/e2e/full-visit-cycle.spec.ts`  
+**Assertion Points:**
+- Dental Chart renders tooth data
+- Treatment Plan services added and transferred
+- Visit status transitions (Arrived → In Progress → Completed)
+- Database reflects final state
 
----
-
-### Allure Reporter Integration
-**Status**: 🚧 In Progress  
-**Files to Update**:
-- `playwright.config.ts` - Add `['allure-playwright']` to reporters array, set output folder
-- Update Logger to attach high-severity events (ERROR, WARN) to Allure
-
-**Acceptance Criteria**:
-- [ ] `allure-results/` folder generated after test run
-- [ ] Failed test artifacts include logs, screenshots, traces
-- [ ] Report summary shows test count and pass/fail ratio
+#### 19. Fix api-check.spec.ts
+Current test creates patient but has no assertions. Add status 201 + response validation.  
+**File:** `src/tests/e2e/smoke/api-check.spec.ts`
 
 ---
 
-## 📋 Medium-Priority Backlog (Sprint 2-3)
+### Infrastructure & CI/CD
 
-### UI Components (Atoms & Organisms)
-All depend on Base Page Object (#4). Recommended order:
+#### 20. Dockerfile (Production Ready)
+Build OCI image based on Playwright with Russian locale.  
+**File:** `Dockerfile`  
+**Key Configs:**
+- Base: `mcr.microsoft.com/playwright:v1.40.0-jammy` or newer
+- ENV: `LANG=ru_RU.UTF-8`
+- COPY sources, install deps, set entrypoint to `npx playwright test`
 
-1. **InputField & SelectDropdown** (Atoms) - building blocks for all forms
-2. **Dental Chart Component** (Organism) - complex, high-risk. Use `page.route()` to mock API
-3. **Treatment Plan Component** (Organism) - dynamic grid, service selection
-4. **Medical Diary & Questionnaire** (Organisms) - form capture
-5. **Dashboard, Patient Card, SMS/Role/Branch Pages** - Auth flow enhancements
-
----
-
-### Logging & Observability
-**Status**: ❌ Missing  
-**Files to Create**:
-- `src/utils/logger.ts` - JSON Lines (CI) vs Colorized Text (local), Allure integration
-- `scripts/verify-auth.ts` - Check auth state validity, JWT decode, token expiry
-
-**Test Command**: `npm run debug:config` (add to package.json scripts)
+#### 21. GitLab CI Configuration
+CI pipeline with parallel sharding, artifact management, and Allure publishing.  
+**File:** `.gitlab-ci.yml`  
+**Details:**
+- Matrix job: `SHARD_INDEX` [1,2,3,4] × `TOTAL_SHARDS=4`
+- Script: `npx playwright test --shard=$CI_NODE_INDEX/$CI_NODE_TOTAL`
+- Artifacts: 7-day retention for traces/videos/screenshots; 30-day for Allure
+- Report merge job for final Allure dashboard
 
 ---
 
-## 📋 Lower-Priority Backlog (Sprint 3+)
+### Development Tooling
 
-### CI/CD Infrastructure
-- **Dockerfile** - Base: `mcr.microsoft.com/playwright:v1.40.0-jammy`, `LANG=ru_RU.UTF-8`
-- **.gitlab-ci.yml** - Parallel matrix with sharding formula: `--shard=$CI_NODE_INDEX/$CI_NODE_TOTAL`
-- **Artifact retention** - Failed tests: 7 days (traces/videos), Allure: 30 days
+#### 22. Contract Verifier Tool
+CLI to detect backend breaking changes by validating API responses against Zod schemas.  
+**File:** `scripts/contract-verifier.ts`  
+**Logic:**
+- Iterate all Zod schemas
+- Make minimal test requests to Dev environment
+- Exit 0 if valid, 1 if schema mismatch
 
-### Data Generation & Utilities
-- **Person/Medical Generators** - Encapsulate Faker logic
-- **Date Utilities** - Russian locale formatting
-- **API Endpoints Constants** - Centralized endpoint URLs
+#### 23. Component Workbench
+Isolated Playwright project for testing UI components without full auth flow. Uses `page.route` to mock all backend calls.  
+**Config:** Additional project in `playwright.config.ts`  
+**Purpose:** Debug Dental Chart interactions independently of database state
 
-### Verification & Debugging Tools
-- **Contract Verifier** (`scripts/contract-verifier.ts`) - Validate Zod schemas against Dev API
-- **Component Workbench** - New Playwright project skipping globalSetup, using page.route() mocks
-- **Data Setup Debugger** - Run fixture logic standalone, log payloads/responses
+#### 24. Data Setup Debugger Script
+Standalone Node.js script to debug API setup phase. Logs generated payloads and responses.  
+**File:** `scripts/data-setup-debugger.ts`  
+**Usage:** `npx ts-node scripts/data-setup-debugger.ts` to understand fixture failures
 
-### Critical Spike Scripts (Optional, Low Risk now)
-- `spikes/probe-auth-handshake.ts` - Already validated during setup phase
-- `spikes/probe-dental-chart-dom.ts` - Defer until UI components built
-- Similar probes for data formats and Docker connectivity
+#### 25. verify-auth.ts Script
+Validate that `admin.json` has fresh, valid tokens. Useful for CI debugging.  
+**File:** `scripts/verify-auth.ts`  
+**Checks:**
+- File exists
+- Parse JSON + extract token
+- Decode JWT or check expires timestamp
+- Fail if expiring within 10 minutes
+
+#### 26. npm run debug:config Command
+CLI utility to print resolved (redacted) configuration.  
+**Updates:** `package.json` scripts + `src/utils/config-debugger.ts`  
+**Output:** Colorized, human-readable config summary with secrets masked
 
 ---
 
-## Dependency Graph
+### Utility & Helper Modules
+
+#### 27. API Endpoints Constants
+Centralized enum/object of all API routes to prevent string duplication.  
+**File:** `src/lib/api/api-endpoints.ts`
+
+#### 28. Utility Modules
+**Files to create:**
+- `src/utils/date-utils.ts` — date formatting, arithmetic
+- `src/utils/generators/person.generator.ts` — realistic person data generation
+- `src/utils/generators/medical.generator.ts` — diagnoses, treatments, procedures
+
+#### 29. Index/Export Files
+**Files to create:**
+- `src/lib/entities/index.ts` — re-export all type definitions
+- `src/lib/api/services/index.ts` — re-export all services
+- `src/lib/fixtures/index.ts` — re-export all factories and fixtures
+
+#### 30. Swagger Models
+Auto-generate TypeScript types from backend Swagger/OpenAPI spec.  
+**File:** `src/lib/entities/swagger-models.ts`  
+**Tool:** Use `swagger-typescript-api` or hand-curate from API docs
+
+---
+
+### Project Configuration Files
+
+#### 31. Environment Example File
+**File:** `.env.example`  
+**Contents:** Template with all required variables (BASE_URL, ADMIN_USERNAME, etc.) without secrets
+
+#### 32. ESLint Configuration
+**File:** `.eslintrc.json`  
+**Rule Set:** Strict TypeScript, forbid `any`, enforce naming conventions
+
+#### 33. Prettier Configuration
+**File:** `.prettierrc`  
+**Settings:** 2-space indent, single quotes, trailing commas
+
+#### 34. README.md
+**Contents:**
+- Quick start (Install, Configure, Run)
+- Architecture overview diagram
+- Troubleshooting guide (common failures, how to debug)
+- Contributing guidelines
+
+---
+
+### Spikes / Proof-of-Concept Probes
+
+#### 35. Spike: Auth Handshake
+**File:** `spikes/probe-auth-handshake.ts`  
+**Purpose:** Verify that cookies saved in `admin.json` can be reused for API calls
+
+#### 36. Spike: Dental Chart DOM & Selectors
+**File:** `spikes/probe-dental-chart-dom.ts`  
+**Purpose:** Determine optimal locator strategy (CSS selectors vs SVG paths vs coordinates)
+
+#### 37. Spike: Data Format Validation
+**File:** `spikes/probe-data-formats.ts`  
+**Purpose:** Test if generated patient/shift payloads match backend validation rules
+
+#### 38. Spike: Docker Networking
+**File:** `spikes/probe-docker.sh`  
+**Purpose:** Verify container can reach test environment URLs; validate locale setup
+
+---
+
+## 📊 Blockers & Dependencies
+
+| Task | Blocks | Status |
+|------|--------|--------|
+| Visit Service | E2E test assembly | ⏸️ Ready to start |
+| Glossary Service | Reliable test data | ⏸️ Ready to start |
+| Logger component | Observability + Allure integration | ⏸️ Ready to start |
+| Retry logic | Flaky test reduction | ⏸️ Ready to start |
+| UI components | E2E scenario | ⏳ Large; start after #1-4 |
+| E2E test assembly | Deliverable demo | ⏳ Depends on Visit Service + UI |
+| Docker + CI | Production deployment | ⏳ Lower priority; after #18 |
+
+---
+
+## 🎯 Prioritization Rationale
+
+**Immediate Sprint Focus:**  
+Tasks #1-8 are **API & infrastructure layer** items:
+- Small/medium scope (2-4 hrs each)
+- Unblock E2E testing (Visit Service)
+- Improve reliability (Retry logic)
+- Enable debugging (Logger, Config validation)
+- Complete critical coverage (Glossary, Visit contract tests)
+- Approx. 18-24 hours total
+
+**Backlog Strategy:**  
+- **UI Layer (#9-19):** Largest effort block. Start after API layer is stable. Can be parallelized (team splits atoms, organisms, pages).
+- **Tooling (#22-26):** Enhances DX but not blocking tests. Implement after core suite passes.
+- **Config Files (#31-34):** Setup work; do incrementally as other tasks finalize.
+- **Spikes (#35-38):** Optional risk mitigation; run if uncertain about Dental Chart DOM or Docker setup.
+
+---
+
+## ✅ Implementation Checklist
+
+Use this to track progress:
 
 ```
-Immediate Priorities (critical path):
-  Visit Service (#1)
-    ↓
-  Custom Fixtures (#7)         API Request Manager (#3) [parallel]
-    ↓                           ↓
-  Full Visit E2E (#8)           Services refactor
-    
-Foundational (enable everything else):
-  Base Page Object (#4)
-    ↓
-  All UI Components (backlog)
+Immediate Sprint:
+[ ] 1. Visit Service
+[ ] 2. Glossary Service
+[ ] 3. Retry Logic
+[ ] 4. Logger Utility
+[ ] 5. Config Zod Validation
+[ ] 6. PatientFactory SNILS/OMS
+[ ] 7. Allure Configuration
+[ ] 8. Visit & Glossary Contract Tests
 
-Data Quality:
-  SNILS/OMS Generation (#5) →  Patient Zod Schema (#6)
-    ↓
-  PatientFactory confidence
+UI & E2E:
+[ ] 9-16. UI Components & Pages
+[ ] 17. Custom Fixtures
+[ ] 18. Full E2E Test
+[ ] 19. Fix api-check.spec.ts
 
-Blocking Nothing:
-  Staging Config (#2)
-  Glossary Service
-  Allure Integration
-  Logging
+Infra & Tooling:
+[ ] 20-26. Docker, CI, Scripts
+[ ] 27-34. Utilities & Config
+
+Spikes:
+[ ] 35-38. Proof-of-Concept Probes
 ```
 
 ---
 
-## Sprint 1 Estimate
+## 📝 Notes
 
-| Task | Hours | Priority |
-|------|-------|----------|
-| Visit Service + Types | 2-3h | P1 |
-| Staging Config | 0.5h | P1 |
-| API Request Manager | 3-4h | P1 |
-| Base Page Object | 2-3h | P1 |
-| SNILS/OMS Generation | 1-2h | P1 |
-| Patient Zod Schema | 1h | P1 |
-| Custom Fixtures | 2-3h | P1 |
-| Full Visit E2E | 2-3h | P1 |
-| **Total** | **14-21h** | |
-
-**Expected Outcome**: Hybrid testing strategy fully operational. Reliable data creation + E2E navigation. Ready for UI component build-out.
-
----
-
-## Implementation Order (Recommended Sequence)
-
-1. **Visit Types & Service** (enables data creation)
-2. **Staging Config** (quick win, unblocks environments)
-3. **API Request Manager** (refactor all services)
-4. **SNILS/OMS + Zod** (data quality infrastructure)
-5. **Base Page Object** (foundation for all POM)
-6. **Custom Fixtures** (wiring framework together)
-7. **Full Visit E2E** (validate complete flow)
-
-After Sprint 1 succeeds, tackle UI components in order of criticality: Dental Chart > Treatment Plan > Visit Details > Auth enhancements > Dashboard.
-
----
-
-## Definition of Done (Immediate Priorities)
-
-**Sprint 1 is complete when**:
-- ✅ All 8 immediate tasks implemented and tested
-- ✅ `npx playwright test` runs full suite without errors
-- ✅ E2E test passes reliably (3+ consecutive runs)
-- ✅ Code review complete (no TypeScript errors, proper error handling)
-- ✅ Documentation updated (README, comments)
-
-**At this point**, the framework is stable enough for team onboarding and ready for UI component integration phase.
+- **Staging Config:** `env-loader.ts` line 12 currently throws "not implemented yet"—can be a low-priority backlog item or part of #31-34.
+- **TODO Markers in Code:** Project.md specifies "Define the exact selector for the 'Login Success' indicator" and "Map all 32 teeth IDs to SVG path selectors"—these become concrete tasks during #11-12 implementation.
+- **Test Observability:** Once Logger (#4) is complete, integrate it into BaseService and custom fixtures for rich debugging output.

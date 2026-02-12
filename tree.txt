@@ -2030,13 +2030,15 @@
 │   │   │   ├── patient.types.ts
 │   │   │   └── schedule.types.ts
 │   │   └── fixtures
-│   │       └── patient.factory.ts
+│   │       ├── patient.factory.ts
+│   │       └── shift.factory.ts
 │   ├── pages
 │   │   └── auth
 │   │       └── login.page.ts
 │   └── tests
 │       ├── api
 │       │   ├── branch.spec.ts
+│       │   ├── create-shift.spec.ts
 │       │   └── employee.spec.ts
 │       ├── auth.setup.ts
 │       └── e2e
@@ -2046,4 +2048,4 @@
 ├── tree.txt
 └── tsconfig.json
 
-170 directories, 1877 files
+170 directories, 1879 files
