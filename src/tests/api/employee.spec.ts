@@ -21,13 +21,20 @@ test.describe('Employee Service', () => {
     // --- Verify ---
     expect(newDoctor.id).toBeDefined();
     expect(newDoctor.user.name).toBeDefined();
+    expect(newDoctor.employeeBranchId).toBeDefined();
+    expect(typeof newDoctor.employeeBranchId).toBe('number');
+
+    // Verify the link exists in company employee branches
+    expect(newDoctor.companyEmployeeBranches).toBeDefined();
+    expect(newDoctor.companyEmployeeBranches.length).toBeGreaterThan(0);
 
     // Verify the link exists
-    const linkToBranch = newDoctor.companyEmployeeBranches?.find(
+    const linkToBranch = newDoctor.companyEmployeeBranches.find(
         b => b.companyBranchId === branchId
     );
     
     expect(linkToBranch).toBeDefined();
-    console.log(`✅ Verified: Doctor ${newDoctor.id} is linked to Branch ${branchId}`);
+    expect(linkToBranch?.id).toBe(newDoctor.employeeBranchId);
+    console.log(`✅ Verified: Doctor ${newDoctor.id} is linked to Branch ${branchId} (employeeBranchId: ${newDoctor.employeeBranchId})`);
   });
 });

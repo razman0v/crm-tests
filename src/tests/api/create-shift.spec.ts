@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { BranchService } from '../../lib/api/services/branch.service';
 import { EmployeeService } from '../../lib/api/services/employee.service';
 import { ScheduleService } from '../../lib/api/services/schedule.service';
-import { ShiftFactory } from '../../lib/fixtures/shift.factory';
+import { ShiftFactory } from '../../lib/factories/shift.factory';
 import { faker } from '@faker-js/faker';
 
 test.describe('Schedule Service - Create Shift', () => {
@@ -100,7 +100,7 @@ test.describe('Schedule Service - Create Shift', () => {
       dataJson: '{"days": []}',
     } as any;
 
-    // Should throw validation error
-    await expect(scheduleService.createShift(invalidPayload)).rejects.toThrow(/Invalid shift payload/);
+    // Should throw validation error with clear message
+    await expect(scheduleService.createShift(invalidPayload)).rejects.toThrow(/Invalid shift payload.*employeeBranchId/);
   });
 });

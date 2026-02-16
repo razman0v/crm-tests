@@ -1,5 +1,5 @@
 import { test } from '@playwright/test';
-import { PatientFactory } from '../../../lib/fixtures/patient.factory';
+import { PatientFactory } from '../../../lib/factories/patient.factory';
 import { PatientsService } from '../../../lib/api/services/patients.service';
 
 test.describe('API Smoke Tests', () => {

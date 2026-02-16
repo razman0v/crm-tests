@@ -85,4 +85,21 @@ export class BaseService {
       { description: `POST ${endpoint}` }
     );
   }
+
+  /**
+   * Safely parse JSON response, handling empty responses gracefully
+   * Returns null if response body is empty or invalid JSON
+   */
+  protected safeParseJsonResponse<T>(responseText: string): T | null {
+    if (!responseText || responseText.trim() === '') {
+      return null;
+    }
+
+    try {
+      return JSON.parse(responseText) as T;
+    } catch (error) {
+      console.warn('[API] Failed to parse JSON response:', responseText);
+      return null;
+    }
+  }
 }

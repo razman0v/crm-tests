@@ -22,6 +22,14 @@ export default defineConfig({
   },
 
   projects: [
+    // 1. UNIT TESTS: Logic verification (No browser needed)
+    {
+      name: 'unit',
+      testDir: './src/tests/unit',        // Targets the lib directory 
+      testMatch: /.*\.test\.ts/,
+      use: { browserName: undefined },    // Specifically matches your .test.ts files
+    },
+
     // 1. SETUP: Авторизация
     {
       name: 'setup',

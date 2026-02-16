@@ -1,6 +1,6 @@
 import { ShiftDTO, ShiftSchema, ShiftResponse } from '../../entities/schedule.types';
 import { BaseService } from './base.service';
-import { ShiftFactory } from '../../fixtures/shift.factory';
+import { ShiftFactory } from '../../factories/shift.factory';
 
 export class ScheduleService extends BaseService {
   /**
