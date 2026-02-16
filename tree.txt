@@ -2022,30 +2022,36 @@
 │   │   │       ├── base.service.ts
 │   │   │       ├── branch.service.ts
 │   │   │       ├── employee.service.ts
+│   │   │       ├── glossary.service.ts
 │   │   │       ├── patients.service.ts
-│   │   │       └── schedule.service.ts
+│   │   │       ├── schedule.service.ts
+│   │   │       └── visit.service.ts
 │   │   ├── entities
 │   │   │   ├── branch.types.ts
 │   │   │   ├── employee.types.ts
 │   │   │   ├── patient.types.ts
-│   │   │   └── schedule.types.ts
+│   │   │   ├── schedule.types.ts
+│   │   │   └── visit.types.ts
 │   │   └── fixtures
 │   │       ├── patient.factory.ts
 │   │       └── shift.factory.ts
 │   ├── pages
 │   │   └── auth
 │   │       └── login.page.ts
-│   └── tests
-│       ├── api
-│       │   ├── branch.spec.ts
-│       │   ├── create-shift.spec.ts
-│       │   └── employee.spec.ts
-│       ├── auth.setup.ts
-│       └── e2e
-│           └── smoke
-│               └── api-check.spec.ts
+│   ├── tests
+│   │   ├── api
+│   │   │   ├── branch.spec.ts
+│   │   │   ├── create-shift.spec.ts
+│   │   │   ├── employee.spec.ts
+│   │   │   └── glossary.spec.ts
+│   │   ├── auth.setup.ts
+│   │   └── e2e
+│   │       └── smoke
+│   │           └── api-check.spec.ts
+│   └── utils
+│       └── retry.utils.ts
 ├── test-results
 ├── tree.txt
 └── tsconfig.json
 
-170 directories, 1879 files
+171 directories, 1884 files
