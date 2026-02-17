@@ -1,8 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
-import * as dotenv from 'dotenv';
 import { getConfig } from './src/config/env-loader';
-
-dotenv.config();
 
 const testConfig = getConfig();
 

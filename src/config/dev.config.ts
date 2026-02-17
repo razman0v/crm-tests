@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { TestConfig } from './config.interface';
 
 export const devConfig: TestConfig = {

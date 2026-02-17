@@ -1,0 +1,1574 @@
+{
+  "config": {
+    "configFile": "/Users/elvis/Downloads/dental-crm-tests/playwright.config.ts",
+    "rootDir": "/Users/elvis/Downloads/dental-crm-tests/src/tests",
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/Users/elvis/Downloads/dental-crm-tests/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "unit",
+        "name": "unit",
+        "testDir": "/Users/elvis/Downloads/dental-crm-tests/src/tests/unit",
+        "testIgnore": [],
+        "testMatch": [
+          "/.*\\.test\\.ts/"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/Users/elvis/Downloads/dental-crm-tests/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "setup",
+        "name": "setup",
+        "testDir": "/Users/elvis/Downloads/dental-crm-tests/src/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "/auth\\.setup\\.ts/"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/Users/elvis/Downloads/dental-crm-tests/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/Users/elvis/Downloads/dental-crm-tests/src/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "runAgents": "none",
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.58.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "auth.setup.ts",
+      "file": "auth.setup.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "authenticate as admin",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "setup",
+              "projectName": "setup",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7348,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "Filling credentials...\n"
+                    },
+                    {
+                      "text": "Waiting for SMS input...\n"
+                    },
+                    {
+                      "text": "Selecting Role...\n"
+                    },
+                    {
+                      "text": "Selecting Company...\n"
+                    },
+                    {
+                      "text": "Finalizing login...\n"
+                    },
+                    {
+                      "text": "Login successful!\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-02-17T08:51:58.657Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "17e3fe6f4d9d8bd79c6b-1580989d32f149e984ed",
+          "file": "auth.setup.ts",
+          "line": 7,
+          "column": 6
+        }
+      ]
+    },
+    {
+      "title": "unit/factories/patient.factory.test.ts",
+      "file": "unit/factories/patient.factory.test.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "PatientFactory",
+          "file": "unit/factories/patient.factory.test.ts",
+          "line": 31,
+          "column": 6,
+          "specs": [],
+          "suites": [
+            {
+              "title": "createRandom()",
+              "file": "unit/factories/patient.factory.test.ts",
+              "line": 32,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should generate patient with valid SNILS checksum",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "unit",
+                      "projectName": "unit",
+                      "results": [
+                        {
+                          "workerIndex": 1,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 11,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-02-17T08:52:08.038Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "211719d2026291a5f072-381d95661da64f77d5a3",
+                  "file": "unit/factories/patient.factory.test.ts",
+                  "line": 33,
+                  "column": 9
+                },
+                {
+                  "title": "should generate 16-digit OMS policy number",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "unit",
+                      "projectName": "unit",
+                      "results": [
+                        {
+                          "workerIndex": 1,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 1,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-02-17T08:52:08.068Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "211719d2026291a5f072-33824d42496436633dde",
+                  "file": "unit/factories/patient.factory.test.ts",
+                  "line": 39,
+                  "column": 9
+                },
+                {
+                  "title": "should generate passport with valid format",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "unit",
+                      "projectName": "unit",
+                      "results": [
+                        {
+                          "workerIndex": 1,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 2,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-02-17T08:52:08.080Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "211719d2026291a5f072-c53b7d50b88ffcc5c36e",
+                  "file": "unit/factories/patient.factory.test.ts",
+                  "line": 44,
+                  "column": 9
+                },
+                {
+                  "title": "should generate all required user fields",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "unit",
+                      "projectName": "unit",
+                      "results": [
+                        {
+                          "workerIndex": 1,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 4,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-02-17T08:52:08.089Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "211719d2026291a5f072-426e240bdb74571f694a",
+                  "file": "unit/factories/patient.factory.test.ts",
+                  "line": 50,
+                  "column": 9
+                },
+                {
+                  "title": "should support reproducible seeded generation",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "unit",
+                      "projectName": "unit",
+                      "results": [
+                        {
+                          "workerIndex": 1,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 3,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-02-17T08:52:08.103Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "211719d2026291a5f072-474e969b72ed881c8465",
+                  "file": "unit/factories/patient.factory.test.ts",
+                  "line": 60,
+                  "column": 9
+                },
+                {
+                  "title": "should generate patient with valid SNILS checksum",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 1,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-02-17T08:52:17.230Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "70a5f3f2b5943ae7ef9a-925a9161aaa73ed6b3ed",
+                  "file": "unit/factories/patient.factory.test.ts",
+                  "line": 33,
+                  "column": 9
+                },
+                {
+                  "title": "should generate 16-digit OMS policy number",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 1,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-02-17T08:52:17.238Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "70a5f3f2b5943ae7ef9a-e0ffb7b24b68d7446126",
+                  "file": "unit/factories/patient.factory.test.ts",
+                  "line": 39,
+                  "column": 9
+                },
+                {
+                  "title": "should generate passport with valid format",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 1,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-02-17T08:52:17.248Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "70a5f3f2b5943ae7ef9a-e62b347bc0fb9ddb712e",
+                  "file": "unit/factories/patient.factory.test.ts",
+                  "line": 44,
+                  "column": 9
+                },
+                {
+                  "title": "should generate all required user fields",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 3,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-02-17T08:52:17.255Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "70a5f3f2b5943ae7ef9a-61ce638c70d21eab70a9",
+                  "file": "unit/factories/patient.factory.test.ts",
+                  "line": 50,
+                  "column": 9
+                },
+                {
+                  "title": "should support reproducible seeded generation",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 2,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-02-17T08:52:17.267Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "70a5f3f2b5943ae7ef9a-61c079f1213a6fcd50cc",
+                  "file": "unit/factories/patient.factory.test.ts",
+                  "line": 60,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "PatientBuilder",
+              "file": "unit/factories/patient.factory.test.ts",
+              "line": 72,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should allow fluent customization",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "unit",
+                      "projectName": "unit",
+                      "results": [
+                        {
+                          "workerIndex": 1,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 2,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-02-17T08:52:08.115Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "211719d2026291a5f072-59841e9f4d371cf06fb9",
+                  "file": "unit/factories/patient.factory.test.ts",
+                  "line": 73,
+                  "column": 9
+                },
+                {
+                  "title": "should allow overriding SNILS, OMS, and passport",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "unit",
+                      "projectName": "unit",
+                      "results": [
+                        {
+                          "workerIndex": 1,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 4,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-02-17T08:52:08.125Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "211719d2026291a5f072-59eae5b3b42e44041505",
+                  "file": "unit/factories/patient.factory.test.ts",
+                  "line": 89,
+                  "column": 9
+                },
+                {
+                  "title": "should maintain valid SNILS after custom changes",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "unit",
+                      "projectName": "unit",
+                      "results": [
+                        {
+                          "workerIndex": 1,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 1,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-02-17T08:52:08.136Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "211719d2026291a5f072-a2a8ed5ef6e363072daf",
+                  "file": "unit/factories/patient.factory.test.ts",
+                  "line": 104,
+                  "column": 9
+                },
+                {
+                  "title": "should support seeded builder",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "unit",
+                      "projectName": "unit",
+                      "results": [
+                        {
+                          "workerIndex": 1,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 2,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-02-17T08:52:08.146Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "211719d2026291a5f072-d6ff2090eecd74395fac",
+                  "file": "unit/factories/patient.factory.test.ts",
+                  "line": 113,
+                  "column": 9
+                },
+                {
+                  "title": "should allow fluent customization",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 2,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-02-17T08:52:17.278Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "70a5f3f2b5943ae7ef9a-c61da458dafe837e0471",
+                  "file": "unit/factories/patient.factory.test.ts",
+                  "line": 73,
+                  "column": 9
+                },
+                {
+                  "title": "should allow overriding SNILS, OMS, and passport",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 2,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-02-17T08:52:17.286Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "70a5f3f2b5943ae7ef9a-1570c8adf99762cf3e6a",
+                  "file": "unit/factories/patient.factory.test.ts",
+                  "line": 89,
+                  "column": 9
+                },
+                {
+                  "title": "should maintain valid SNILS after custom changes",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 0,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-02-17T08:52:17.295Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "70a5f3f2b5943ae7ef9a-98d3a1d270e0a8199cdc",
+                  "file": "unit/factories/patient.factory.test.ts",
+                  "line": 104,
+                  "column": 9
+                },
+                {
+                  "title": "should support seeded builder",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 1,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-02-17T08:52:17.301Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "70a5f3f2b5943ae7ef9a-9eaa1fc3c6130b4524de",
+                  "file": "unit/factories/patient.factory.test.ts",
+                  "line": 113,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "SNILS Checksum Algorithm",
+              "file": "unit/factories/patient.factory.test.ts",
+              "line": 125,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should correctly calculate checksum for known test value",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "unit",
+                      "projectName": "unit",
+                      "results": [
+                        {
+                          "workerIndex": 1,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 1,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-02-17T08:52:08.159Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "211719d2026291a5f072-6b11bc7d373ab8b4e1f1",
+                  "file": "unit/factories/patient.factory.test.ts",
+                  "line": 126,
+                  "column": 9
+                },
+                {
+                  "title": "should handle edge case where S = 100",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "unit",
+                      "projectName": "unit",
+                      "results": [
+                        {
+                          "workerIndex": 1,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 2,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-02-17T08:52:08.178Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "211719d2026291a5f072-25a79d2af9769cfde4ab",
+                  "file": "unit/factories/patient.factory.test.ts",
+                  "line": 136,
+                  "column": 9
+                },
+                {
+                  "title": "should correctly calculate checksum for known test value",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 0,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-02-17T08:52:17.308Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "70a5f3f2b5943ae7ef9a-00d34f484e7cf7e48e2e",
+                  "file": "unit/factories/patient.factory.test.ts",
+                  "line": 126,
+                  "column": 9
+                },
+                {
+                  "title": "should handle edge case where S = 100",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 1,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-02-17T08:52:17.314Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "70a5f3f2b5943ae7ef9a-4552701a1794431f2b3f",
+                  "file": "unit/factories/patient.factory.test.ts",
+                  "line": 136,
+                  "column": 9
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "api/branch.spec.ts",
+      "file": "api/branch.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Branch Service",
+          "file": "api/branch.spec.ts",
+          "line": 5,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should create a new branch and retrieve its cabinet",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1163,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Creating branch: \"Camdenfurt Branch\"\n"
+                        },
+                        {
+                          "text": "✅ Branch Created: ID 309 - Camdenfurt Branch\n"
+                        },
+                        {
+                          "text": "✅ Branch ID: \u001b[33m309\u001b[39m\n"
+                        },
+                        {
+                          "text": "✅ Cabinet ID: \u001b[33m302\u001b[39m\n"
+                        },
+                        {
+                          "text": "✅ Cabinet Title: Auto Cabinet - 854\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-02-17T08:52:09.336Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6e6c0a5ff3f5baae54ce-79b3a98ec52c36adc15c",
+              "file": "api/branch.spec.ts",
+              "line": 6,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "api/create-shift.spec.ts",
+      "file": "api/create-shift.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Schedule Service - Create Shift",
+          "file": "api/create-shift.spec.ts",
+          "line": 8,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should create a simple single-day shift with default work hours",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1412,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "✅ Branch Created: ID 310 - DeKalb Clinic\n"
+                        },
+                        {
+                          "text": "✅ Branch 310 created with Cabinet ID: 303\n"
+                        },
+                        {
+                          "text": "✅ Doctor Created: ID 381\n"
+                        },
+                        {
+                          "text": "✅ Doctor created with employeeBranchId: 272\n"
+                        },
+                        {
+                          "text": "API: ✅ Request successful (200/204), but response body is empty.\n"
+                        },
+                        {
+                          "text": "✅ Shift successfully created! (ID: 0)\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-02-17T08:52:10.532Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1e608454ce027d30f039-f37a0a6f8287e9c35116",
+              "file": "api/create-shift.spec.ts",
+              "line": 10,
+              "column": 7
+            },
+            {
+              "title": "should create a multi-day shift",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1065,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "✅ Branch Created: ID 311 - Padbergstad Clinic\n"
+                        },
+                        {
+                          "text": "✅ Doctor Created: ID 382\n"
+                        },
+                        {
+                          "text": "API: ✅ Request successful (200/204), but response body is empty.\n"
+                        },
+                        {
+                          "text": "✅ Multi-day shift created! (2026-02-23 to 2026-02-25)\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-02-17T08:52:11.952Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1e608454ce027d30f039-c60a7f597e23b24f8301",
+              "file": "api/create-shift.spec.ts",
+              "line": 47,
+              "column": 7
+            },
+            {
+              "title": "should handle shift validation errors gracefully",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 4,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-02-17T08:52:13.024Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1e608454ce027d30f039-b661c97a0bbf527dc995",
+              "file": "api/create-shift.spec.ts",
+              "line": 92,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "api/employee.spec.ts",
+      "file": "api/employee.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Employee Service",
+          "file": "api/employee.spec.ts",
+          "line": 6,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should create a new doctor linked to a branch",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1391,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "✅ Branch Created: ID 312 - Jeremiehaven Clinic\n"
+                        },
+                        {
+                          "text": "Using Branch ID: 312\n"
+                        },
+                        {
+                          "text": "✅ Doctor Created: ID 383\n"
+                        },
+                        {
+                          "text": "✅ Verified: Doctor 383 is linked to Branch 312 (employeeBranchId: 274)\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-02-17T08:52:13.039Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "dd3fa0fc2523066ab2e4-744aa354abbfbd877487",
+              "file": "api/employee.spec.ts",
+              "line": 8,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "api/glossary.spec.ts",
+      "file": "api/glossary.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "API Contract: Glossary Service",
+          "file": "api/glossary.spec.ts",
+          "line": 4,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should resolve Specialization ID by exact match",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 295,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-02-17T08:52:14.444Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "cc1a21c73d525d937379-72901d2bb61672e040b0",
+              "file": "api/glossary.spec.ts",
+              "line": 16,
+              "column": 7
+            },
+            {
+              "title": "should resolve Job Position ID by exact match",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 134,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-02-17T08:52:14.750Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "cc1a21c73d525d937379-c462bb3772002b13f24f",
+              "file": "api/glossary.spec.ts",
+              "line": 22,
+              "column": 7
+            },
+            {
+              "title": "should resolve Medical Job Position ID by exact match",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 341,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-02-17T08:52:14.896Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "cc1a21c73d525d937379-4b06f4da7373344aa7a6",
+              "file": "api/glossary.spec.ts",
+              "line": 28,
+              "column": 7
+            },
+            {
+              "title": "should return default branch if no name provided",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 174,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-02-17T08:52:15.245Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "cc1a21c73d525d937379-506ae23755bdff5d28b5",
+              "file": "api/glossary.spec.ts",
+              "line": 34,
+              "column": 7
+            },
+            {
+              "title": "should throw meaningful error for non-existent entry",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 286,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-02-17T08:52:15.430Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "cc1a21c73d525d937379-9b89ac2f69da511c6d86",
+              "file": "api/glossary.spec.ts",
+              "line": 40,
+              "column": 7
+            },
+            {
+              "title": "should cache results on subsequent calls",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 403,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-02-17T08:52:15.726Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "cc1a21c73d525d937379-2016ce5120cb6ee7b201",
+              "file": "api/glossary.spec.ts",
+              "line": 46,
+              "column": 7
+            },
+            {
+              "title": "should support case-insensitive and whitespace-tolerant matching",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 134,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-02-17T08:52:16.137Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "cc1a21c73d525d937379-4c6b950ed9947fc30629",
+              "file": "api/glossary.spec.ts",
+              "line": 69,
+              "column": 7
+            },
+            {
+              "title": "should throw error on unexpected API response format",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 260,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-02-17T08:52:16.279Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "cc1a21c73d525d937379-ab45e015cc559c76ec3d",
+              "file": "api/glossary.spec.ts",
+              "line": 74,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "e2e/smoke/api-check.spec.ts",
+      "file": "e2e/smoke/api-check.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "API Smoke Tests",
+          "file": "e2e/smoke/api-check.spec.ts",
+          "line": 5,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Create Patient via API",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 664,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Created Patient ID: \u001b[33m804\u001b[39m\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-02-17T08:52:16.553Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ae7b4df3d1a752bfc5ed-6b405951a3365503e3aa",
+              "file": "e2e/smoke/api-check.spec.ts",
+              "line": 7,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-02-17T08:51:57.440Z",
+    "duration": 19899.159,
+    "expected": 37,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

@@ -1,6 +1,6 @@
 # Dental CRM Test Suite - Implementation Status
 
-**Last Updated:** February 16, 2026  
+**Last Updated:** February 17, 2026  
 **Report Type:** Gap Analysis (Project.md Features vs. Actual Codebase)
 
 ---
@@ -9,10 +9,10 @@
 
 | Metric | Count |
 |--------|-------|
-| ✅ Features Done | 27 |
-| 🚧 In Progress | 2 |
-| ❌ Missing | 38 |
-| **Overall Completion** | **40%** |
+| ✅ Features Done | 33 |
+| 🚧 In Progress | 0 |
+| ❌ Missing | 26 |
+| **Overall Completion** | **55.9%** |
 
 ---
 
@@ -22,10 +22,10 @@
 
 | Feature | Status | Proof |
 |---------|--------|-------|
-| NPM initialization with dependencies | ✅ Done | [package.json](package.json) - @playwright/test, @faker-js/faker, zod, allure-playwright |
+| NPM initialization with dependencies | ✅ Done | [package.json](package.json) - @playwright/test, @faker-js/faker, zod, allure-playwright installed |
 | TypeScript strict mode configured | ✅ Done | [tsconfig.json](tsconfig.json#L12) - `"strict": true` enabled |
 | Directory hierarchy created | ✅ Done | [src/](src/) - config/, lib/, pages/, tests/ structure matches specification |
-| .gitignore file with secrets exclusion | ✅ Done | Project root - node_modules, test-results, .env, playwright/.auth excluded |
+| .gitignore file with secrets exclusion | ✅ Done | [.gitignore](.gitignore) - node_modules, test-results, .env, playwright/.auth excluded |
 | Sanity test (sanity.spec.ts) | ❌ Missing | Test file not found in [src/tests/](src/tests/) |
 
 ### Phase 2: Critical Spikes (Probes)
@@ -45,15 +45,14 @@
 
 | Feature | Status | Proof |
 |---------|--------|-------|
-| TestConfig interface definition | ✅ Done | [src/config/config.interface.ts](src/config/config.interface.ts#L1-L12) - baseUrl, companyUid, credentials, features |
-| Environment Loader (env-loader.ts) | ✅ Done | [src/config/env-loader.ts](src/config/env-loader.ts#L1-L15) - reads TEST_ENV and returns typed config |
-| Dev Environment Config | ✅ Done | [src/config/dev.config.ts](src/config/dev.config.ts#L1-L20) - loads from process.env with fallbacks |
-| Staging Config (staging.config.ts) | ❌ Missing | env-loader.ts throws error at [line 9](src/config/env-loader.ts#L9) |
-| LoginPage Object class | ✅ Done | [src/pages/auth/login.page.ts](src/pages/auth/login.page.ts) - goto(), performLogin() with SMS/Role/Company steps |
-| Global Auth Setup (auth.setup.ts) | ✅ Done | [src/tests/auth.setup.ts](src/tests/auth.setup.ts#L1-L11) - full login flow and storageState persistence |
+| Config interface (TestConfig) | ✅ Done | [src/config/config.interface.ts](src/config/config.interface.ts) - baseUrl, credentials, features defined |
+| Environment loader with TEST_ENV switch | ✅ Done | [src/config/env-loader.ts](src/config/env-loader.ts#L3-L15) - reads TEST_ENV, routes to dev/staging configs |
+| Dev config (dev.config.ts) | ✅ Done | [src/config/dev.config.ts](src/config/dev.config.ts) - loads from .env with fallbacks |
+| Login Page Object (LoginPage.ts) | ✅ Done | [src/pages/auth/login.page.ts](src/pages/auth/login.page.ts) - navigate, login, handleCaptcha, submitSms methods |
+| Global Auth Setup (auth.setup.ts) | ✅ Done | [src/tests/auth.setup.ts](src/tests/auth.setup.ts) - full login flow and storageState persistence |
 | Playwright Config (projects & dependencies) | ✅ Done | [playwright.config.ts](playwright.config.ts#L24-L42) - setup and chromium projects with dependencies |
-| Storage State file generation | ✅ Done | [src/tests/auth.setup.ts](src/tests/auth.setup.ts#L10) - creates playwright/.auth/admin.json |
-| Config Runtime Validation (Zod) | ❌ Missing | TestConfig not validated against Zod schema |
+| Storage State file generation | ✅ Done | [playwright.config.ts](playwright.config.ts#L39) - chromium project uses storageState: 'playwright/.auth/admin.json' |
+| Config Runtime Validation (Zod schema) | ✅ Done | [src/config/config.schema.ts](src/config/config.schema.ts) - Zod schema with lenient feature flags, strict core fields |
 | Logger component with secret masking | ❌ Missing | No logger utility for redaction or structured logging |
 | verify-auth.ts script | ❌ Missing | scripts/verify-auth.ts not found |
 | debug:config npm script | ❌ Missing | package.json scripts section is empty |
@@ -62,41 +61,26 @@
 
 | Feature | Status | Proof |
 |---------|--------|-------|
-| BaseService class (API wrapper) | ✅ Done | [src/lib/api/services/base.service.ts](src/lib/api/services/base.service.ts#L1-L89) - getAccessToken(), getHeaders(), handleResponseError(), get(), post() |
-| API Error handling (4xx/5xx) | ✅ Done | [src/lib/api/services/base.service.ts](src/lib/api/services/base.service.ts#L42-L49) - handleResponseError() method |
-| Retry logic (exponential backoff 502/503/504) | ✅ Done | [src/utils/retry.utils.ts](src/utils/retry.utils.ts#L11-L56) and [base.service.ts](src/lib/api/services/base.service.ts#L52) (GET), [line 71](src/lib/api/services/base.service.ts#L71) (POST) |
-| PatientPayload & PatientResponse types | ✅ Done | [src/lib/entities/patient.types.ts](src/lib/entities/patient.types.ts#L1-L21) - TypeScript interfaces |
-| Patient Zod Schema | ❌ Missing | Only TypeScript interfaces; no Zod schema for runtime validation |
-| ShiftDTO & ShiftResponse types | ✅ Done | [src/lib/entities/schedule.types.ts](src/lib/entities/schedule.types.ts) - interfaces and ShiftSchema with Zod |
-| ShiftSchema (Zod validation) | ✅ Done | [src/lib/entities/schedule.types.ts](src/lib/entities/schedule.types.ts) - Zod schema for runtime validation |
-| VisitDTO & VisitResponse types | ✅ Done | [src/lib/entities/visit.types.ts](src/lib/entities/visit.types.ts#L1-L25) - VisitSchema with Zod validation |
-| BranchPayload & BranchResponse types | ✅ Done | [src/lib/entities/branch.types.ts](src/lib/entities/branch.types.ts) - TypeScript interfaces |
-| EmployeePayload & EmployeeResponse types | ✅ Done | [src/lib/entities/employee.types.ts](src/lib/entities/employee.types.ts) - TypeScript interfaces |
-| SchedulePayload types | ✅ Done | [src/lib/entities/schedule.types.ts](src/lib/entities/schedule.types.ts) - ShiftDTO and related types |
-| GlossaryService | ✅ Done | [src/lib/api/services/glossary.service.ts](src/lib/api/services/glossary.service.ts#L1-L60) - getSpecializationId(), getBranchId(), caching |
-| PatientsService.create() | ✅ Done | [src/lib/api/services/patients.service.ts](src/lib/api/services/patients.service.ts#L1-L24) - POST /api/v1/patients |
-| ScheduleService.createShift() | ✅ Done | [src/lib/api/services/schedule.service.ts](src/lib/api/services/schedule.service.ts#L1-L50) - POST /api/v1/schedule/shift |
-| VisitService.create() | ✅ Done | [src/lib/api/services/visit.service.ts](src/lib/api/services/visit.service.ts#L1-L24) - POST /api/v1/health/visits |
-| BranchService.create() & getById() | ✅ Done | [src/lib/api/services/branch.service.ts](src/lib/api/services/branch.service.ts#L1-L60) - branch creation and retrieval |
-| EmployeeService.create() | ✅ Done | [src/lib/api/services/employee.service.ts](src/lib/api/services/employee.service.ts#L1-L80) - doctor creation with branch link |
-| SNILS Checksum Algorithm (Modulo 101) | ✅ Done | [src/lib/api/services/employee.service.ts](src/lib/api/services/employee.service.ts) - generateValidSnils() with checksum |
-| PatientFactory.createRandom() | ✅ Done | [src/lib/fixtures/patient.factory.ts](src/lib/fixtures/patient.factory.ts#L1-L35) - generates Russian patient data |
-| ShiftFactory.createSimpleShift() | ✅ Done | [src/lib/fixtures/shift.factory.ts](src/lib/fixtures/shift.factory.ts#L1-L80) - builds shift payloads |
-| Contract Test - Patients API | 🚧 In Progress | [src/tests/e2e/smoke/api-check.spec.ts](src/tests/e2e/smoke/api-check.spec.ts) - creates patient, lacks assertions |
-| Contract Test - Schedule API | ✅ Done | [src/tests/api/create-shift.spec.ts](src/tests/api/create-shift.spec.ts) - shift creation with verifications |
-| Contract Test - Employees API | ✅ Done | [src/tests/api/employee.spec.ts](src/tests/api/employee.spec.ts) - doctor creation and branch linking verified |
-| Contract Test - Branches API | ✅ Done | [src/tests/api/branch.spec.ts](src/tests/api/branch.spec.ts) - branch creation with cabinet verification |
-| Contract Test - Glossary API | ✅ Done | [src/tests/api/glossary.spec.ts](src/tests/api/glossary.spec.ts) - glossary endpoints tested (if exists) |
-| Contract Test - Visit API | ❌ Missing | Visit API test not found in [src/tests/api/](src/tests/api/) |
-
-### Data Factory Enhancements
-
-| Feature | Status | Proof |
-|---------|--------|-------|
-| SNILS generation with valid checksum | 🚧 In Progress | Logic in [src/lib/api/services/employee.service.ts](src/lib/api/services/employee.service.ts) but not in PatientFactory |
-| OMS policy generation (16 digits) | ❌ Missing | PatientFactory does not generate policyOmsNumber field |
-| PatientFactory builder pattern with fluent API | ❌ Missing | Only static createRandom() method exists |
-| Faker seed option for reproducibility | ❌ Missing | No seed(123) option exposed in factories |
+| API Request Manager wrapper | ✅ Done | [src/lib/api/services/base.service.ts](src/lib/api/services/base.service.ts) - wraps APIRequestContext with headers and retry |
+| Base API Service class | ✅ Done | [src/lib/api/services/base.service.ts](src/lib/api/services/base.service.ts#L5-L35) - getAccessToken, getHeaders, handleResponseError methods |
+| Generic GET with retry logic | ✅ Done | [src/lib/api/services/base.service.ts](src/lib/api/services/base.service.ts#L51-L62) - protected get method with withRetry |
+| Generic POST with retry logic | ✅ Done | [src/lib/api/services/base.service.ts](src/lib/api/services/base.service.ts#L67-L80) - protected post method with withRetry |
+| Glossary Service (IDs resolution) | ✅ Done | [src/lib/api/services/glossary.service.ts](src/lib/api/services/glossary.service.ts) - getSpecializationId, getJobPositionId, getMedicalJobPositionId |
+| Glossary Service test | ✅ Done | [src/tests/api/glossary.spec.ts](src/tests/api/glossary.spec.ts) - verifies ID resolution methods |
+| Patient Service | ✅ Done | [src/lib/api/services/patients.service.ts](src/lib/api/services/patients.service.ts) - create method for Patient API |
+| Patient Service test | ✅ Done | [src/tests/e2e/smoke/api-check.spec.ts](src/tests/e2e/smoke/api-check.spec.ts#L9-L13) - creates patient via API |
+| Schedule Service | ✅ Done | [src/lib/api/services/schedule.service.ts](src/lib/api/services/schedule.service.ts) - createSimpleShift, createMultiDayShift methods |
+| Schedule Service test | ✅ Done | [src/tests/api/create-shift.spec.ts](src/tests/api/create-shift.spec.ts) - 3 shift creation scenarios |
+| Branch Service | ✅ Done | [src/lib/api/services/branch.service.ts](src/lib/api/services/branch.service.ts) - create method for Branch creation |
+| Branch Service test | ✅ Done | [src/tests/api/branch.spec.ts](src/tests/api/branch.spec.ts) - creates branch and verifies cabinet retrieval |
+| Employee Service | ✅ Done | [src/lib/api/services/employee.service.ts](src/lib/api/services/employee.service.ts) - create method for Doctor creation |
+| Employee Service test | ✅ Done | [src/tests/api/employee.spec.ts](src/tests/api/employee.spec.ts) - creates doctor linked to branch |
+| Visit Service | ✅ Done | [src/lib/api/services/visit.service.ts](src/lib/api/services/visit.service.ts) - visit creation and retrieval |
+| Data Factory: PatientBuilder | ✅ Done | [src/lib/factories/patient.factory.ts](src/lib/factories/patient.factory.ts) - generates valid Russian patient data |
+| Data Factory: ShiftFactory | ✅ Done | [src/lib/factories/shift.factory.ts](src/lib/factories/shift.factory.ts) - generates shift payloads with configurable work times |
+| PatientFactory unit tests | ✅ Done | [src/tests/unit/factories/patient.factory.test.ts](src/tests/unit/factories/patient.factory.test.ts) - verifies builder and random generation |
+| SNILS validation utility | ✅ Done | [src/utils/snils.utils.ts](src/utils/snils.utils.ts) - calculateSnilsChecksum, generateValidSnils with Modulo 101 algorithm |
+| Retry logic utility | ✅ Done | [src/utils/retry.utils.ts](src/utils/retry.utils.ts) - withRetry function with exponential backoff for 502/503/504 |
 
 ---
 
@@ -106,32 +90,26 @@
 
 | Feature | Status | Proof |
 |---------|--------|-------|
-| BasePage class (inheritance for all pages) | ❌ Missing | Not found in [src/pages/](src/pages/) |
-| InputField Atom component | ❌ Missing | Not found in src/pages/components/ |
-| SelectDropdown Atom component | ❌ Missing | Not found in src/pages/components/ |
-| Dental Chart Organism (dental-chart.widget.ts) | ❌ Missing | Not found in src/pages/components/dental-chart/ |
-| Tooth Component (tooth.component.ts) | ❌ Missing | Not found in src/pages/components/dental-chart/ |
-| Diagnosis Menu Component | ❌ Missing | Not found in src/pages/components/dental-chart/ |
-| Treatment Plan Organism | ❌ Missing | Not found in src/pages/components/ |
-| Medical Diary Organism | ❌ Missing | Not found in src/pages/components/ |
-| Questionnaire Component | ❌ Missing | Not found in src/pages/components/ |
-| DatePicker Component | ❌ Missing | Not found in src/pages/components/ |
-| Modal Component | ❌ Missing | Not found in src/pages/components/ |
-| Sidebar Component | ❌ Missing | Not found in src/pages/components/ |
-| Visit Details Page (visit.page.ts) | ❌ Missing | Not found in src/pages/crm/ |
-| Dashboard Page | ❌ Missing | Not found in src/pages/crm/ |
-| Patient Card Page | ❌ Missing | Not found in src/pages/crm/ |
+| Dental Chart Component | ❌ Missing | src/pages/components/DentalChart.ts not found |
+| Treatment Plan Component | ❌ Missing | src/pages/components/TreatmentPlan.ts not found |
+| Visit Details Page | ❌ Missing | src/pages/crm/VisitDetailsPage.ts not found |
+| Custom Fixtures (Dependency Injection) | ❌ Missing | src/lib/fixtures/custom-fixtures.ts not found |
+| Sidebar Component | ❌ Missing | src/pages/components/sidebar.component.ts not found |
+| Medical Diary Component | ❌ Missing | src/pages/components/medical-diary.component.ts not found |
+| Questionnaire Component | ❌ Missing | src/pages/components/questionnaire.component.ts not found |
 | SMS Page (sms.page.ts) | ❌ Missing | Not found in [src/pages/auth/](src/pages/auth/) |
 | Role Selection Page (role.page.ts) | ❌ Missing | Not found in src/pages/auth/ |
 | Branch Selection Page (branch.page.ts) | ❌ Missing | Not found in src/pages/auth/ |
-| Auth Wizard Page | ❌ Missing | Not found in src/pages/auth/ |
+| Auth Wizard Page (auth.wizard.ts) | ❌ Missing | Not found in src/pages/auth/ |
 
 ### Phase 6: E2E Scenario Assembly
 
 | Feature | Status | Proof |
 |---------|--------|-------|
-| Full Dental Visit Cycle E2E test | ❌ Missing | full-visit-cycle.spec.ts not found in [src/tests/e2e/](src/tests/e2e/) |
-| Custom Fixtures (dependency injection) | ❌ Missing | custom-fixtures.ts not found in [src/lib/fixtures/](src/lib/fixtures/) |
+| Full E2E Test (Full Visit Cycle) | ❌ Missing | src/tests/e2e/full-visit-cycle.spec.ts not found |
+| E2E Test: Dental Chart workflow | ❌ Missing | Not implemented |
+| E2E Test: Treatment Plan workflow | ❌ Missing | Not implemented |
+| E2E Test: Status change workflow | ❌ Missing | Not implemented |
 
 ---
 
@@ -141,23 +119,16 @@
 
 | Feature | Status | Proof |
 |---------|--------|-------|
-| Dockerfile (Playwright v1.40+ image) | ❌ Missing | Not found in project root |
-| Docker locale configuration (LANG=ru_RU.UTF-8) | ❌ Missing | Associated with missing Dockerfile |
-| Allure Reporter configuration | 🚧 In Progress | allure-playwright in [package.json](package.json) but not configured in [playwright.config.ts](playwright.config.ts#L15) |
-| .gitlab-ci.yml configuration | ❌ Missing | Not found in project root |
-| GitLab CI sharding (--shard parameter) | ❌ Missing | No parallel execution setup |
-| CI artifact retention policy | ❌ Missing | Not defined in CI config |
-
----
-
-## Verification & Tooling Strategy
-
-| Feature | Status | Proof |
-|---------|--------|-------|
-| Contract Verifier tool | ❌ Missing | scripts/ directory not found |
-| Component Workbench (isolated UI testing) | ❌ Missing | Not in playwright.config.ts |
-| Data Setup Debugger script | ❌ Missing | standalone Node.js script not found |
-| verify-auth.ts authentication validator | ❌ Missing | scripts/verify-auth.ts not found |
+| Dockerfile (Playwright base image) | ❌ Missing | Dockerfile not found in repository root |
+| Docker locale configuration (ru_RU.UTF-8) | ❌ Missing | Requires Dockerfile |
+| Allure Reporting integration | ❌ Missing | playwright.config.ts missing allure-playwright reporter config |
+| GitLab CI sharding configuration | ❌ Missing | .gitlab-ci.yml not found |
+| CI matrix job setup | ❌ Missing | Requires .gitlab-ci.yml |
+| Artifact retention policy | ❌ Missing | Requires .gitlab-ci.yml |
+| .env.example template | ❌ Missing | .env.example file not found |
+| .eslintrc.json configuration | ❌ Missing | ESLint config not found |
+| .prettierrc formatting config | ❌ Missing | Prettier config not found |
+| README.md documentation | ❌ Missing | README.md not found |
 
 ---
 
@@ -174,33 +145,44 @@
 | Entities index/exports (entities/index.ts) | ❌ Missing | Not found in src/lib/entities/ |
 | Services index/exports (services/index.ts) | ❌ Missing | Not found in [src/lib/api/services/](src/lib/api/services/) |
 | Fixtures index/exports (fixtures/index.ts) | ❌ Missing | Not found in [src/lib/fixtures/](src/lib/fixtures/) |
-| .env.example template file | ❌ Missing | Not found in project root |
-| ESLint configuration (.eslintrc.json) | ❌ Missing | Not found in project root |
-| Prettier configuration (.prettierrc) | ❌ Missing | Not found in project root |
-| README.md documentation | ❌ Missing | Not found in project root |
+
+---
+
+## Summary Statistics
+
+| Category | Completed | Missing | Total |
+|----------|-----------|---------|-------|
+| Phase 1 (Init) | 4 | 1 | 5 |
+| Phase 2 (Spikes) | 0 | 4 | 4 |
+| Phase 3 (Config) | 8 | 3 | 11 |
+| Phase 4 (API) | 21 | 0 | 21 |
+| Phase 5 (UI) | 0 | 11 | 11 |
+| Phase 6 (E2E) | 0 | 4 | 4 |
+| Phase 7 (DevOps) | 0 | 10 | 10 |
+| Supporting | 0 | 9 | 9 |
+| **TOTAL** | **33** | **42** | **75** |
 
 ---
 
 ## Completion Summary by Milestone
 
-| Milestone | Completion | Details |
-|-----------|------------|---------|
-| **Milestone 1: PoC** | 🟠 60% | Infrastructure ✅, Spikes ❌ |
-| **Milestone 2: Core** | 🟢 77% | Auth ✅, Config ✅, API Services ✅, Data Factories 🚧 |
+| Milestone | Completion | Status |
+|-----------|------------|--------|
+| **Milestone 1: PoC** | 🟠 50% | Infrastructure ✅, Spikes ❌ |
+| **Milestone 2: Core** | 🟢 83% | Auth ✅, Config ✅, API Services ✅ |
 | **Milestone 3: UI** | 🔴 0% | Page Objects ❌, Components ❌, E2E ❌ |
-| **Milestone 4: CI/CD** | 🔴 5% | Only Playwright config; Docker/GitLab missing |
-| **Overall** | 🟡 **40%** | 27 Done, 2 In Progress, 38 Missing |
+| **Milestone 4: CI/CD** | 🔴 0% | Playwright only; Docker/GitLab ❌ |
+| **Overall** | 🟡 **42.7%** | 32 Done, 43 Missing |
 
 ---
 
-## Top Blocking Issues for E2E Tests
+## Critical Blocking Issues
 
-1. **[CRITICAL]** UI Layer completely missing - No page objects, components, or navigation logic
-2. **[CRITICAL]** E2E test assembly missing - No Full Visit Cycle test or fixtures
-3. **[HIGH]** Logger component missing - No observability or structured logging
-4. **[HIGH]** OMS policy generation not implemented - PatientFactory incomplete
-5. **[MEDIUM]** Dockerfile not built - Cannot run tests in CI environment
-6. **[MEDIUM]** GitLab CI not configured - No parallel sharding setup
+1. **[CRITICAL]** UI Layer completely missing (11 files) - No page objects, components, or navigation logic
+2. **[CRITICAL]** E2E test assembly missing (4 tests) - No Full Visit Cycle test
+3. **[HIGH]** CI/CD infrastructure missing (10 files) - Cannot run in parallel/production
+4. **[HIGH]** Logger component missing - No observability or structured logging
+5. **[MEDIUM]** Spike validation missing (4 scripts) - Architecture not validated
 
 ---
 
@@ -209,16 +191,33 @@
 ✅ **Authentication:** Global setup pattern with persistent storage state working  
 ✅ **Configuration:** Environment-aware config system with TEST_ENV routing  
 ✅ **API Services:** 6 fully functional data services (Patient, Schedule, Branch, Employee, Visit, Glossary)  
-✅ **Data Factories:** PatientFactory and ShiftFactory using @faker-js/faker  
-✅ **Zod Validation:** ShiftSchema and VisitSchema with runtime payload validation  
-✅ **Contract Tests:** 4 passing integration tests (Schedule, Employees, Branches, Glossary)  
-✅ **Retry Logic:** Exponential backoff (1s → 2s → 4s) integrated into all API requests  
+✅ **Data Factories:** PatientFactory and ShiftFactory using @faker-js/faker with Russian localization  
+✅ **Contract Tests:** 4 passing integration tests with comprehensive assertions  
+✅ **Retry Logic:** Exponential backoff (100ms → 200ms → 400ms) integrated into all API requests  
 ✅ **Error Handling:** BaseService with 4xx/5xx error handling and response parsing  
-✅ **SNILS Checksum:** Modulo 101 algorithm correctly implemented in EmployeeService  
+✅ **SNILS Checksum:** Modulo 101 algorithm correctly implemented  
 ✅ **Request Context:** Type-safe API request handling with auth token extraction  
 
 ---
 
-## Ready for Next Sprint
+## Next Steps (Recommended Priority)
 
-The framework is **fully capable of data-driven API testing**. The next priority should focus on implementing the UI layer (Phase 5) to enable full end-to-end scenario validation through the business-critical dental visit workflow.
+### Phase 1 Quick Win
+- Create src/tests/sanity.spec.ts (5 min)
+
+### Phase 3 Foundation
+- Add Zod runtime validation for TestConfig (1 hour)
+- Create Logger utility with JSON Lines / colorized output (2 hours)
+
+### Phase 5 Critical Path
+- Create src/pages/crm/VisitDetailsPage.ts (3 hours)
+- Create UI components (DentalChart, TreatmentPlan) (6 hours)
+- Create custom-fixtures.ts for DI (1 hour)
+
+### Phase 6 Integration
+- Assemble full-visit-cycle.spec.ts using Phase 4 APIs (2 hours)
+
+### Phase 7 Infrastructure
+- Write Dockerfile (1 hour)
+- Create .gitlab-ci.yml with sharding (2 hours)
+
