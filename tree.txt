@@ -1,6 +1,5 @@
 .
 ├── Project.md
-├── code_driven_pipeline_strategy.md
 ├── implementation_status.md
 ├── next_steps.md
 ├── node_modules
@@ -2015,6 +2014,7 @@
 ├── src
 │   ├── config
 │   │   ├── config.interface.ts
+│   │   ├── config.schema.ts
 │   │   ├── dev.config.ts
 │   │   └── env-loader.ts
 │   ├── lib
@@ -2055,11 +2055,14 @@
 │   │       ├── factories
 │   │       │   └── patient.factory.test.ts
 │   │       └── utils
+│   │           └── logger.test.ts
 │   └── utils
+│       ├── logger.ts
 │       ├── retry.utils.ts
 │       └── snils.utils.ts
 ├── test-results
+├── test-results.json
 ├── tree.txt
 └── tsconfig.json
 
-176 directories, 1887 files
+176 directories, 1890 files

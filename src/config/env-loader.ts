@@ -1,6 +1,7 @@
 import { TestConfig } from './config.interface';
 import { TestConfigSchema } from './config.schema';
 import { devConfig } from './dev.config';
+import { logger } from '../utils/logger';
 
 /**
  * Load and validate configuration based on TEST_ENV environment variable
@@ -25,23 +26,38 @@ import { devConfig } from './dev.config';
 export function getConfig(): TestConfig {
   const env = process.env.TEST_ENV || 'dev';
   
+  logger.debug('Loading configuration', { testEnv: env });
+
   let config: TestConfig;
   switch (env) {
     case 'dev':
       config = devConfig;
+      logger.debug('Loaded dev configuration');
       break;
     case 'staging':
+      logger.error('Staging config not implemented yet');
       throw new Error('Staging config not implemented yet');
     default:
+      logger.error('Unknown TEST_ENV', { testEnv: env });
       throw new Error(`Unknown TEST_ENV: ${env}`);
   }
   
   // ✅ Validate config before returning (fail-fast on config errors)
   try {
     const validated = TestConfigSchema.parse(config);
+    logger.info('Configuration validated successfully', {
+      baseUrl: validated.baseUrl,
+      companyUid: validated.companyUid,
+      // password/token fields auto-masked by logger
+    });
     return validated;
   } catch (error) {
     // Provide clear error message with validation context
+    logger.error('Configuration validation failed', {
+      testEnv: env,
+      error: error instanceof Error ? error.message : String(error),
+    });
+
     if (error instanceof Error) {
       console.error(
         `\n❌ Configuration validation failed for TEST_ENV="${env}":\n` +
