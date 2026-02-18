@@ -197,3 +197,31 @@ If you want, I can:
 - Expand the `src/lib/api` examples to include retry logic and error classes.
 
 Request feedback: do you want this document shorter (summary) or to keep this full merged spec as the canonical instructions for AI agents?
+
+
+# Workflow for Task Completion
+
+**Trigger Phrase:** Whenever the user says "Mark Task# [Number] as Done", execute the following workflow:
+
+1. **Update `implementation_status.md`**:
+   - Mark the specific feature as ✅ Done in the corresponding Phase table.
+   - Update the **Executive Summary** table by incrementing the "Features Done" count, decrementing "Missing", and recalculating the **Overall Completion** percentage.
+
+2. **Update `next_steps.md`**:
+   - Move the completed task to the finished section.
+   - Update the **Current Completion** line at the top of the file with the new percentage and fraction (e.g., `X/59`).
+
+## Strict Rules for Status Files
+- **Tool Usage**: Use the #file or edit_file capability to modify the contents directly.
+- **NEVER** print or repeat the full content of any markdown status/todo file in your replies.
+- **Minimal Edits**: Use workspace edit tools to make ONLY the minimal necessary line changes or additions.
+- **Progress Accuracy**: Ensure the "Executive Summary" and "Current Completion" metrics are mathematically consistent after every update.
+- **Short Confirmation**: After applying changes, confirm with a very short message only:
+  - *Format*: "Item [X] marked as ✅ Done. Progress updated. Now on item [Y]: [brief title]"
+- **No Large Blocks**: Do NOT show full file content or large markdown blocks in the chat.
+
+## Critical Rule: Action Over Narration
+- Whenever a task is marked as completed, you MUST invoke your workspace/file-editing tools (e.g., `edit_file`, `write_file`) to apply changes to `implementation_status.md` and `next_steps.md` BEFORE sending your final reply.
+- DO NOT merely describe the changes you intend to make. 
+- If you cannot access the file system for any reason, state the error immediately rather than pretending to update the metrics.
+- Your response should only come AFTER the tool-call success confirmation.

@@ -9,10 +9,10 @@
 
 | Metric | Count |
 |--------|-------|
-| ✅ Features Done | 35 |
+| ✅ Features Done | 36 |
 | 🚧 In Progress | 0 |
-| ❌ Missing | 24 |
-| **Overall Completion** | **59.3%** |
+| ❌ Missing | 23 |
+| **Overall Completion** | **61.0%** |
 
 ---
 
@@ -26,7 +26,7 @@
 | TypeScript strict mode configured | ✅ Done | [tsconfig.json](tsconfig.json#L12) - `"strict": true` enabled |
 | Directory hierarchy created | ✅ Done | [src/](src/) - config/, lib/, pages/, tests/ structure matches specification |
 | .gitignore file with secrets exclusion | ✅ Done | [.gitignore](.gitignore) - node_modules, test-results, .env, playwright/.auth excluded |
-| Sanity test (sanity.spec.ts) | ❌ Missing | Test file not found in [src/tests/](src/tests/) |
+| Sanity test (sanity.spec.ts) | ✅ Done | [src/tests/e2e/smoke/sanity.spec.ts](src/tests/e2e/smoke/sanity.spec.ts) |
 
 ### Phase 2: Critical Spikes (Probes)
 

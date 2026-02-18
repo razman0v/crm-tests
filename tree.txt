@@ -1,5 +1,99 @@
 .
 ├── Project.md
+├── README.md
+├── allure-results
+│   ├── 0018b904-b2f7-4f2b-a7a2-22f3fdb5396b-result.json
+│   ├── 0751807c-1beb-4c6f-8466-c4fdbe427cf8-result.json
+│   ├── 07a25edb-1d07-4894-93fa-750d6525d976-result.json
+│   ├── 09241aa7-ae61-4c00-a289-e9198ee8256f-result.json
+│   ├── 0a230d1f-c930-4e37-aae7-d35c87b003fe-attachment.txt
+│   ├── 0d2b7b54-1163-4fc5-8a24-6eea6092a244-result.json
+│   ├── 0ebcbfe3-085b-4f44-b6b4-c902080acb9f-result.json
+│   ├── 16fa4676-2a85-4176-8a43-74812a5b07ce-result.json
+│   ├── 187954b9-c98c-49bf-8225-1a675246d377-result.json
+│   ├── 1aca3361-218f-4302-a5db-ba1e69517095-result.json
+│   ├── 1f27585a-7030-47e2-a15f-45eb6c77a4ee-result.json
+│   ├── 21ad3fa6-428b-49cc-898d-dedacc202a72-result.json
+│   ├── 22feb6c3-b31c-4648-b6e6-3915dfb5e65b-result.json
+│   ├── 26a39568-74b8-47dc-a58c-a4958f992ac0-result.json
+│   ├── 2703abaa-b965-4eac-99ce-18314cbd841f-result.json
+│   ├── 2a709e21-5cbb-42c2-8faf-3db312ef047d-result.json
+│   ├── 2c329917-d820-47b1-a1bc-e7d67c7010fd-result.json
+│   ├── 300b804e-2151-4dc6-81a4-f9f85c830998-result.json
+│   ├── 315fa3dd-8d2f-4638-9c12-1474c3b38851-result.json
+│   ├── 32268280-a12f-4f4e-90dd-9b71c3097c6f-result.json
+│   ├── 34480409-7652-463f-aacf-2a2888954d51-result.json
+│   ├── 366ed4bf-54bf-48db-aef9-2f195a564d21-result.json
+│   ├── 386aab67-cb4a-4c58-a2f5-51d8489e9601-result.json
+│   ├── 3a6f3594-4e44-4d62-966d-70e24ad972dc-result.json
+│   ├── 3ae4385b-9cbd-493b-811d-88a0da481806-attachment.txt
+│   ├── 3ca88c9e-14ad-48e5-9af8-1d5dc318d4b5-attachment.txt
+│   ├── 41f48d6e-bc0f-4446-96c2-b8ee0f472dfd-attachment.txt
+│   ├── 43461660-ce22-4f09-8f26-9624ff785943-attachment.txt
+│   ├── 44ca77fc-9015-4f30-a495-d1b1426bdab6-result.json
+│   ├── 479b5780-6f6f-46b2-9083-4e722559ebca-result.json
+│   ├── 4a85f54d-2a19-46e2-8f1d-84b236312cda-result.json
+│   ├── 4c2a9b7e-f485-4a40-a53d-408e8aadf672-result.json
+│   ├── 4cc6a916-7db3-4bce-a5ce-f589ebe95460-result.json
+│   ├── 4d6bd86c-d8c6-4a6d-bfd2-b9c069c60c34-result.json
+│   ├── 5701e008-6da2-470d-a6c8-8756da2220ef-result.json
+│   ├── 57229e3a-1004-46f9-8487-114418b0e92d-attachment.txt
+│   ├── 5f7a5d25-1f84-4335-a4b7-f9cd41950d38-result.json
+│   ├── 60b8eb26-1c92-4704-a9a2-5c56adc7e58f-result.json
+│   ├── 61d1b742-f26c-4d22-b5d9-109fcb758805-attachment.txt
+│   ├── 630e93cc-69a7-4873-bfa2-e49b15f2607a-result.json
+│   ├── 6391285f-d705-4fef-b87a-e9d7dd903fd8-result.json
+│   ├── 63e94b98-cc5c-4879-833f-115a231b8f76-result.json
+│   ├── 65b582f9-f433-4a0b-9721-9c734e096c41-result.json
+│   ├── 689d8724-50aa-430b-b962-c5ee058cde22-result.json
+│   ├── 6a59e1cd-1ea2-454c-ad81-28507dfc01d4-result.json
+│   ├── 726105fd-6100-4a5f-88ad-785550561c4b-result.json
+│   ├── 7298160c-847c-465f-8996-b7ab1e15fd4f-result.json
+│   ├── 7fa0a162-592c-4434-9498-05ae7c216351-result.json
+│   ├── 7ff92c30-bf68-47f5-bcc6-e3baa369cf06-result.json
+│   ├── 801289ca-f2fb-429f-b285-d6afaa922b1f-result.json
+│   ├── 80ae45a2-5425-4528-9823-996c1eb6f918-result.json
+│   ├── 80c59e6c-9339-440f-8191-21ffbc6250f1-result.json
+│   ├── 82ed0d70-d98d-436f-8e4d-c6391dd3ab33-result.json
+│   ├── 92d4f69b-f300-499f-bc10-d53a19da03e5-result.json
+│   ├── 94a25cae-a321-4747-a391-8ba2eea09078-attachment.txt
+│   ├── 98341f62-27fe-430f-9a9f-81ae4e1a73c9-attachment.txt
+│   ├── 9cfaedf3-193b-4f65-a681-12b1ebb8948e-result.json
+│   ├── 9d07e268-0db1-4bb4-b268-f9991ff9b030-result.json
+│   ├── a5632bfe-fe63-4805-baa2-e6fe6ccd5d04-result.json
+│   ├── acf50ed0-beb1-49a8-b2f0-ddc83cdec537-attachment.txt
+│   ├── b5924326-ce5f-4f84-a103-e74dbb4e085d-result.json
+│   ├── be0ee74c-6116-497e-81cc-5d1467370f60-attachment.txt
+│   ├── be2c36f2-a1e4-49ac-bc90-64a588af6d7e-result.json
+│   ├── bef23fcc-5fb9-43a8-a1fb-a1e463a541ab-result.json
+│   ├── c5857697-4879-436d-91bf-197a5b6e4b47-result.json
+│   ├── c6d52a96-47f0-4e8a-96ce-35f41ca8a947-result.json
+│   ├── ca23956b-f36c-4248-b954-8f5a00cb93d1-result.json
+│   ├── cebec05b-4e96-449f-b06f-dbbab65efbdd-attachment.txt
+│   ├── ced369a9-f24c-4f8c-8c4b-9ba0922a591a-result.json
+│   ├── cfab5298-d146-465d-9b34-0c31c77b5fd6-result.json
+│   ├── d2522d15-e609-4423-b239-69cce4c59d6b-result.json
+│   ├── d69257f0-13ed-4c86-b59c-0045042b3dac-result.json
+│   ├── d72080f5-1b7b-46fe-bb63-d42e696d4798-attachment.txt
+│   ├── d880b7a5-aa38-4f69-a84a-be1bf7bd5e23-result.json
+│   ├── d919531c-711b-4efa-a618-1b1270b15684-attachment.txt
+│   ├── dd0ffe09-60f4-41dd-92ad-30545935729b-result.json
+│   ├── dd1164be-c3d8-48bb-8589-f4bbaa99d10b-result.json
+│   ├── e161e7de-18dc-4268-b8c0-6845a3bea2f6-result.json
+│   ├── e1bab54c-afe5-41e5-a59b-50125b59c69a-result.json
+│   ├── e9129ad7-c632-4452-ab90-a1a9d2f1910f-result.json
+│   ├── ebcd169c-d817-468f-8060-28f6fd770605-result.json
+│   ├── ee00cafd-44e2-42ae-99ba-7fecb5ec8193-result.json
+│   ├── ee5c9841-7c8d-455e-ad69-a2ec4c900ead-result.json
+│   ├── ee95b848-6450-4e42-9457-ecc66666b3ba-result.json
+│   ├── eea1e9d1-1dec-4f19-abd5-7f25ad98fddb-attachment.txt
+│   ├── f148e62f-2865-4508-8ac6-041d0f492927-result.json
+│   ├── f6cbab81-b671-426e-a9f5-dc5929f46349-result.json
+│   ├── f9482ecf-8fec-4528-b5dd-858898b2a4e9-result.json
+│   ├── fa94b334-60fd-468c-b857-3f6db5eeb973-result.json
+│   ├── fb2971fc-6c27-415f-bfb5-1f9a883c7452-result.json
+│   ├── fc7bfe78-9c9c-460b-92ca-ea813bcce202-result.json
+│   └── fe127523-04c5-4821-8df3-49f5d87b9888-result.json
 ├── implementation_status.md
 ├── next_steps.md
 ├── node_modules
@@ -2065,4 +2159,4 @@
 ├── tree.txt
 └── tsconfig.json
 
-176 directories, 1890 files
+177 directories, 1983 files
