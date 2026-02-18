@@ -9,10 +9,10 @@
 
 | Metric | Count |
 |--------|-------|
-| ✅ Features Done | 34 |
+| ✅ Features Done | 35 |
 | 🚧 In Progress | 0 |
-| ❌ Missing | 25 |
-| **Overall Completion** | **57.6%** |
+| ❌ Missing | 24 |
+| **Overall Completion** | **59.3%** |
 
 ---
 
@@ -58,8 +58,8 @@
 | Logger integration: BaseService | ✅ Done | [src/lib/api/services/base.service.ts](src/lib/api/services/base.service.ts) - logging at token extraction, GET/POST boundaries, error handling |
 | Logger integration: env-loader | ✅ Done | [src/config/env-loader.ts](src/config/env-loader.ts) - logs config loading and validation errors |
 | Logger integration: PatientsService | ✅ Done | [src/lib/api/services/patients.service.ts](src/lib/api/services/patients.service.ts) - contextual logging around patient operations |
-| verify-auth.ts script | ❌ Missing | scripts/verify-auth.ts not found |
-| debug:config npm script | ❌ Missing | package.json scripts section is empty |
+| Allure Reporter Configuration | ✅ Done | [playwright.config.ts](playwright.config.ts) - allure-reporter + HTML + List reporters configured with storageState and artifact retention |
+| Sanity test (sanity.spec.ts) | ❌ Missing | Test file not found in [src/tests/](src/tests/) |
 
 ### Phase 4: API Layer & Data Services
 
