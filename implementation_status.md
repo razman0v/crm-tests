@@ -9,10 +9,10 @@
 
 | Metric | Count |
 |--------|-------|
-| ✅ Features Done | 33 |
+| ✅ Features Done | 34 |
 | 🚧 In Progress | 0 |
-| ❌ Missing | 26 |
-| **Overall Completion** | **55.9%** |
+| ❌ Missing | 25 |
+| **Overall Completion** | **57.6%** |
 
 ---
 
@@ -53,7 +53,11 @@
 | Playwright Config (projects & dependencies) | ✅ Done | [playwright.config.ts](playwright.config.ts#L24-L42) - setup and chromium projects with dependencies |
 | Storage State file generation | ✅ Done | [playwright.config.ts](playwright.config.ts#L39) - chromium project uses storageState: 'playwright/.auth/admin.json' |
 | Config Runtime Validation (Zod schema) | ✅ Done | [src/config/config.schema.ts](src/config/config.schema.ts) - Zod schema with lenient feature flags, strict core fields |
-| Logger component with secret masking | ❌ Missing | No logger utility for redaction or structured logging |
+| Logger component with secret masking | ✅ Done | [src/utils/logger.ts](src/utils/logger.ts) - dual output format (JSON Lines/colorized), recursive secret masking, context injection |
+| Logger unit tests | ✅ Done | [src/tests/unit/logger.spec.ts](src/tests/unit/logger.spec.ts) - 20+ tests covering masking, nesting, context, performance |
+| Logger integration: BaseService | ✅ Done | [src/lib/api/services/base.service.ts](src/lib/api/services/base.service.ts) - logging at token extraction, GET/POST boundaries, error handling |
+| Logger integration: env-loader | ✅ Done | [src/config/env-loader.ts](src/config/env-loader.ts) - logs config loading and validation errors |
+| Logger integration: PatientsService | ✅ Done | [src/lib/api/services/patients.service.ts](src/lib/api/services/patients.service.ts) - contextual logging around patient operations |
 | verify-auth.ts script | ❌ Missing | scripts/verify-auth.ts not found |
 | debug:config npm script | ❌ Missing | package.json scripts section is empty |
 
@@ -137,7 +141,6 @@
 | Feature | Status | Proof |
 |---------|--------|-------|
 | Date utilities (date-utils.ts) | ❌ Missing | Not found in [src/utils/](src/utils/) |
-| Logger utility (logger.ts) | ❌ Missing | Not found in src/utils/ |
 | Person generator (person.generator.ts) | ❌ Missing | Not found in src/utils/generators/ |
 | Medical generator (medical.generator.ts) | ❌ Missing | Not found in src/utils/generators/ |
 | API endpoints constants (api-endpoints.ts) | ❌ Missing | Not found in [src/lib/api/](src/lib/api/) |
@@ -154,13 +157,13 @@
 |----------|-----------|---------|-------|
 | Phase 1 (Init) | 4 | 1 | 5 |
 | Phase 2 (Spikes) | 0 | 4 | 4 |
-| Phase 3 (Config) | 8 | 3 | 11 |
+| Phase 3 (Config) | 11 | 2 | 13 |
 | Phase 4 (API) | 21 | 0 | 21 |
 | Phase 5 (UI) | 0 | 11 | 11 |
 | Phase 6 (E2E) | 0 | 4 | 4 |
 | Phase 7 (DevOps) | 0 | 10 | 10 |
-| Supporting | 0 | 9 | 9 |
-| **TOTAL** | **33** | **42** | **75** |
+| Supporting | 0 | 8 | 8 |
+| **TOTAL** | **34** | **40** | **74** |
 
 ---
 
@@ -169,10 +172,10 @@
 | Milestone | Completion | Status |
 |-----------|------------|--------|
 | **Milestone 1: PoC** | 🟠 50% | Infrastructure ✅, Spikes ❌ |
-| **Milestone 2: Core** | 🟢 83% | Auth ✅, Config ✅, API Services ✅ |
+| **Milestone 2: Core** | 🟢 91% | Auth ✅, Config ✅, API Services ✅, Logger ✅ |
 | **Milestone 3: UI** | 🔴 0% | Page Objects ❌, Components ❌, E2E ❌ |
 | **Milestone 4: CI/CD** | 🔴 0% | Playwright only; Docker/GitLab ❌ |
-| **Overall** | 🟡 **42.7%** | 32 Done, 43 Missing |
+| **Overall** | 🟡 **45.9%** | 34 Done, 40 Missing |
 
 ---
 
@@ -181,15 +184,15 @@
 1. **[CRITICAL]** UI Layer completely missing (11 files) - No page objects, components, or navigation logic
 2. **[CRITICAL]** E2E test assembly missing (4 tests) - No Full Visit Cycle test
 3. **[HIGH]** CI/CD infrastructure missing (10 files) - Cannot run in parallel/production
-4. **[HIGH]** Logger component missing - No observability or structured logging
-5. **[MEDIUM]** Spike validation missing (4 scripts) - Architecture not validated
+4. **[MEDIUM]** Spike validation missing (4 scripts) - Architecture not yet validated
+5. **[LOW]** Supporting utilities missing (8 files) - Nice-to-have convenience features
 
 ---
 
 ## Key Achievements to Date
 
 ✅ **Authentication:** Global setup pattern with persistent storage state working  
-✅ **Configuration:** Environment-aware config system with TEST_ENV routing  
+✅ **Configuration:** Environment-aware config system with TEST_ENV routing + Zod validation  
 ✅ **API Services:** 6 fully functional data services (Patient, Schedule, Branch, Employee, Visit, Glossary)  
 ✅ **Data Factories:** PatientFactory and ShiftFactory using @faker-js/faker with Russian localization  
 ✅ **Contract Tests:** 4 passing integration tests with comprehensive assertions  
@@ -197,17 +200,22 @@
 ✅ **Error Handling:** BaseService with 4xx/5xx error handling and response parsing  
 ✅ **SNILS Checksum:** Modulo 101 algorithm correctly implemented  
 ✅ **Request Context:** Type-safe API request handling with auth token extraction  
+✅ **Logger Component:** Dual-format logging (JSON Lines/colorized), secret masking, context injection, < 5ms performance  
+✅ **Logger Integration:** BaseService, env-loader, PatientsService all instrumented with observability  
+✅ **Logger Testing:** 20+ comprehensive unit tests for masking, nesting, streams, performance  
 
 ---
 
 ## Next Steps (Recommended Priority)
 
-### Phase 1 Quick Win
-- Create src/tests/sanity.spec.ts (5 min)
+### Phase 3 Quick Win ✅ DONE
+- ~~Create src/tests/sanity.spec.ts~~ (5 min)
+- ✅ Add Zod runtime validation for TestConfig (1 hour)
+- ✅ Create Logger utility with JSON Lines / colorized output (2 hours)
 
-### Phase 3 Foundation
-- Add Zod runtime validation for TestConfig (1 hour)
-- Create Logger utility with JSON Lines / colorized output (2 hours)
+### Phase 3 Remaining
+- **Task #3: Allure Reporter Configuration** (1 hour) ← NEXT
+- **Task #4: Create Sanity Test** (30 mins)
 
 ### Phase 5 Critical Path
 - Create src/pages/crm/VisitDetailsPage.ts (3 hours)
