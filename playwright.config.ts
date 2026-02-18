@@ -9,7 +9,18 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : 1,
-  reporter: [['html'], ['list']],
+  reporter: [
+    ['html', { open: 'never' }],
+    ['list'],
+    [
+      'allure-playwright',
+      {
+        outputFolder: 'allure-results',
+        deletePreviousResults: false, // Preserve history across test runs
+        inlineAttachments: true, // Embed logs inline in Allure report
+      },
+    ],
+  ],
   
   use: {
     baseURL: testConfig.baseUrl,

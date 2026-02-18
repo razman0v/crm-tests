@@ -1,14 +1,31 @@
-
-# Playwright
-node_modules/
+# Playwright & Testing
 /test-results/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+# Allure Reporting
 allure-results/
 allure-report/
-.DS_Store
+
+# Node
+node_modules/
+# Keep lock files in git to ensure consistent CI installs:
+# package-lock.json / yarn.lock / pnpm-lock.yaml
 
 # Environment variables
 .env
+.env.*.local
+.env.staging
+.env.production
+
+# IDE & OS
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
