@@ -10,10 +10,10 @@
 
 | Metric | Count |
 |--------|-------|
-| ✅ Features Done | 42 |
+| ✅ Features Done | 43 |
 | 🚧 In Progress | 0 |
-| ❌ Missing | 36 |
-| **Overall Completion** | **53.8%** |
+| ❌ Missing | 35 |
+| **Overall Completion** | **55.1%** |
 
 ---
 
@@ -92,12 +92,17 @@
 
 ## Milestone 3: Target Scenario Implementation
 
-### Phase 5: UI Components & Pages (1/12 ✅ 8%)
+### Phase 5: UI Components & Pages (3/15 ✅ 20%)
 
 | Feature | Status | Proof |
 |---------|--------|-------|
 | Base Page Object class | ✅ Done | [src/pages/base.page.ts](src/pages/base.page.ts#L1-L50) - abstract base class with goto(), waitForNavigationComplete(), assertion helpers, navigation utilities |
-| Dental Chart Component | ❌ Missing | src/pages/components/dental-chart/dental-chart.widget.ts not found |
+| InputField Atom Component | ✅ Done | [src/pages/components/atoms/input-field.atom.ts](src/pages/components/atoms/input-field.atom.ts#L1-L50) - fill(), type(), clear(), focus/blur, value getters with comprehensive logging |
+| SelectDropdown Atom Component | ✅ Done | [src/pages/components/atoms/select-dropdown.atom.ts](src/pages/components/atoms/select-dropdown.atom.ts#L1-L60) - selectByLabel(), selectByValue(), getSelectedLabel/Value(), getAllOptions() with custom/HTML select support |
+| Atoms Barrel Export (index.ts) | ✅ Done | [src/pages/components/atoms/index.ts](src/pages/components/atoms/index.ts#L1-L10) - clean imports for InputField and SelectDropdown |
+| InputField Unit Tests | ✅ Done | [src/tests/unit/components/input-field.spec.ts](src/tests/unit/components/input-field.spec.ts#L1-L100) - 15+ test cases covering fill, type, clear, visibility, enabled state |
+| SelectDropdown Unit Tests | ✅ Done | [src/tests/unit/components/select-dropdown.spec.ts](src/tests/unit/components/select-dropdown.spec.ts#L1-L150) - 20+ test cases for HTML select and custom dropdowns |
+| Dental Chart Component | ❌ Missing | src/pages/components/organisms/dental-chart/dental-chart.widget.ts not found |
 | Tooth Component | ❌ Missing | src/pages/components/dental-chart/tooth.component.ts not found |
 | Diagnosis Menu Component | ❌ Missing | src/pages/components/dental-chart/diagnosis-menu.component.ts not found |
 | Treatment Plan Component | ❌ Missing | src/pages/components/treatment-plan.component.ts not found |

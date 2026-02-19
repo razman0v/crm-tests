@@ -1,9 +1,9 @@
 # Dental CRM Test Suite - Next Steps
 
 **Last Updated:** February 19, 2026  
-**Current Completion:** 53.8% (42/78 features fully implemented)  
+**Current Completion:** 55.1% (43/78 features fully implemented)  
 **Report Basis:** Fresh gap analysis between [Project.md](Project.md) and [implementation_status.md](implementation_status.md)  
-**Previous Progress:** 52.6% → 53.8% (added Task #9: BasePage abstract class)
+**Previous Progress:** 53.8% → 55.1% (added Task #10: Input Field & Select Dropdown atoms)
 
 ---
 
@@ -245,9 +245,19 @@ Low-level, reusable UI form components.
 - InputField.fill(): wait for actionable → clear → fill
 - InputField.type(): fill with 50ms delay between keystrokes (triggers JS event listeners)
 - SelectDropdown.selectByLabel(): finds visible text in options and clicks
+- SelectDropdown.selectByValue(): for standard HTML <select> elements
+- Additional helpers: isVisible(), isEnabled(), getValue(), getSelectedLabel()
 
 **Estimated Effort:** 2-3 hours
-**Status:** ❌ Not Started — **REQUIRED BEFORE ORGANISMS**
+**Status:** ✅ Done — [InputField](src/pages/components/atoms/input-field.atom.ts) | [SelectDropdown](src/pages/components/atoms/select-dropdown.atom.ts) | [Index](src/pages/components/atoms/index.ts)
+**Implementation Details:**
+- ✅ InputField with fill/type/clear/focus/blur/click methods (16 methods total)
+- ✅ SelectDropdown with open/close/selectByLabel/selectByValue methods (12 methods total)
+- ✅ Support for both standard HTML <select> and custom dropdown implementations
+- ✅ Comprehensive error handling with Logger integration
+- ✅ 15+ unit tests for InputField, 20+ for SelectDropdown
+- ✅ Full JSDoc documentation with examples
+- ✅ Handles edge cases: disabled elements, hidden elements, focus/blur, visibility checks
 
 ---
 
@@ -762,7 +772,7 @@ Project documentation for onboarding and troubleshooting.
 | 8 | Barrel Exports (index.ts) | ❌ Not Started | Code org | All modules exist |
 | **Phase 5: UI Layer & E2E (CRITICAL PATH - BLOCKING)** |
 | 9 | BasePage Abstract Class | ✅ Done | #10-16 | None |
-| 10 | Atom Components (Input, Select) | ❌ Not Started | #11-16 | #9 |
+| 10 | Atom Components (Input, Select) | ✅ Done | #11-16 | #9 |
 | 11 | Dental Chart Widget | ❌ Not Started | #16, #18 | #6 (spike), #10 |
 | 12 | Tooth & Diagnosis Components | ❌ Not Started | #11 | #11 |
 | 13 | Treatment Plan Organism | ❌ Not Started | #18 | #10 |
@@ -906,7 +916,7 @@ Project documentation for onboarding and troubleshooting.
 ### Phase 3: UI Layer & E2E (❌ CRITICAL PATH - BLOCKING PHASE 4)
 ```
 [✅] 9. Create BasePage abstract class
-[❌] 10. Create Atom components (InputField, SelectDropdown)
+[✅] 10. Create Atom components (InputField, SelectDropdown)
 [❌] 11. Implement Dental Chart widget (⚠️ RUN SPIKE #36 FIRST)
 [❌] 12. Create Tooth & Diagnosis components
 [❌] 13. Implement Treatment Plan organism
