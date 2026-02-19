@@ -10,10 +10,10 @@
 
 | Metric | Count |
 |--------|-------|
-| ✅ Features Done | 41 |
+| ✅ Features Done | 42 |
 | 🚧 In Progress | 0 |
-| ❌ Missing | 37 |
-| **Overall Completion** | **52.6%** |
+| ❌ Missing | 36 |
+| **Overall Completion** | **53.8%** |
 
 ---
 
@@ -96,7 +96,7 @@
 
 | Feature | Status | Proof |
 |---------|--------|-------|
-| Base Page Object class | ✅ Done | [src/pages/auth/login.page.ts](src/pages/auth/login.page.ts#L1-L30) - extends Playwright Page with common patterns |
+| Base Page Object class | ✅ Done | [src/pages/base.page.ts](src/pages/base.page.ts#L1-L50) - abstract base class with goto(), waitForNavigationComplete(), assertion helpers, navigation utilities |
 | Dental Chart Component | ❌ Missing | src/pages/components/dental-chart/dental-chart.widget.ts not found |
 | Tooth Component | ❌ Missing | src/pages/components/dental-chart/tooth.component.ts not found |
 | Diagnosis Menu Component | ❌ Missing | src/pages/components/dental-chart/diagnosis-menu.component.ts not found |
