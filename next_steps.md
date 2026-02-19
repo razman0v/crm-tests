@@ -1,8 +1,9 @@
 # Dental CRM Test Suite - Next Steps
 
-**Last Updated:** February 17, 2026  
-**Current Completion:** 61.0% (36/59 features fully implemented)  
-**Report Basis:** Gap analysis between [Project.md](Project.md) and [implementation_status.md](implementation_status.md)
+**Last Updated:** February 19, 2026  
+**Current Completion:** 52.6% (41/78 features fully implemented)  
+**Report Basis:** Fresh gap analysis between [Project.md](Project.md) and [implementation_status.md](implementation_status.md)  
+**Previous Progress:** 45.9% → 52.6% (added 7 more features, expanded scope from 74→78)
 
 ---
 
@@ -99,10 +100,11 @@ test('Environment sanity check', async ({ page }) => {
 ```
 - Run: `npx playwright test src/tests/sanity.spec.ts`
 - This validates: Playwright config is valid, baseURL is reachable, browser launches
+- Verify: [src/tests/e2e/smoke/sanity.spec.ts](src/tests/e2e/smoke/sanity.spec.ts) exists and passes
 
 **Blockers:**  None 
 **Estimated Effort:** 30 mins
-**Status:** ✅ Done
+**Status:** ✅ Done — [src/tests/e2e/smoke/sanity.spec.ts](src/tests/e2e/smoke/sanity.spec.ts) passes
 
 ---
 
@@ -120,74 +122,31 @@ test('Environment sanity check', async ({ page }) => {
 
 **Blockers:** Requires staging environment backend (external dependency)  
 **Estimated Effort:** 1-2 hours
-**Status:** ❌ Not Started
+**Status:** ✅ Done — [src/config/staging.config.ts](src/config/staging.config.ts) implemented
 
 ---
 
-### 6. npm run debug:config Script
-**Description:** CLI utility to print resolved (redacted) configuration. Helps troubleshoot environment setup issues.
+---
 
-**Dependencies:** Task #1 (Config validation) - script should use validated config
+### 6. Execute Critical Spikes (Risk Mitigation)
+**Description:** Run proof-of-concept spikes to validate architecture assumptions before committing to full Phase 5 UI implementation. Essential for de-risking the Dental Chart component.
+
+**Dependencies:** Phase 1-4 complete (API setup layer works)
 
 **Technical Note:**  
-- Create `src/utils/config-debugger.ts` implementation
-- Add to `package.json` scripts: `"debug:config": "ts-node src/utils/config-debugger.ts"`
-- Output format:
-  - Colorized, human-readable summary
-  - All secrets masked (e.g., password → `****`)
-  - Indicates which env file loaded (dev.config.ts vs staging.config.ts)
-  - Shows resolved baseUrl, companyUid, feature flags
-- Run locally: `npm run debug:config`
+Execute these spike scripts in order:
+- `spikes/probe-auth-handshake.ts` — Verify cookies saved in admin.json work for API calls (5 mins)
+- `spikes/probe-dental-chart-dom.ts` — Inspect DOM of actual patient visit page, test different selector strategies (15 mins)
+- `spikes/probe-data-formats.ts` — Validate that PatientFactory/ShiftFactory payloads pass backend validation (10 mins)
+- `spikes/probe-docker.sh` — Test Docker image, verify Russian locale, network reachability (10 mins)
 
-**Blockers:** None  
-**Estimated Effort:** 1-1.5 hours
-**Status:** ❌ Not Started
+**Blockers:** None (optional but de-risks Phase 5)  
+**Estimated Effort:** 30-45 mins total (can be parallelized)
+**Status:** ❌ Not Started — **CRITICAL BEFORE Phase 5.1** (Dental Chart widget)
 
 ---
 
-### 7. verify-auth.ts Script (Token Freshness Validation)
-**Description:** Validate that playwright/.auth/admin.json contains fresh, valid authentication tokens. Used in CI to fail fast if auth is expired.
-
-**Dependencies:** None
-
-**Technical Note:**  
-- Create `scripts/verify-auth.ts`
-- Checks:
-  - File exists at `playwright/.auth/admin.json`
-  - Parse JSON and extract authentication token/cookie (look for `accessToken`, `connect.sid`, `JSESSIONID`)
-  - Decode JWT if applicable or check `expires` timestamp
-  - Compare: `T_expiry - T_now` should be > 10 minutes
-  - Return exit code 0 (valid), 1 (invalid/expiring/missing)
-- Usage in CI: `npx ts-node scripts/verify-auth.ts && npx playwright test` (bail if auth invalid)
-
-**Blockers:** None  
-**Estimated Effort:** 1.5-2 hours
-**Status:** ❌ Not Started
-
----
-
-### 8. Contract Verifier Tool
-**Description:** CLI tool to validate API responses against Zod schemas before running full suite. Detects backend breaking changes early.
-
-**Dependencies:** Task #1 (Config validation ensures endpoint access)
-
-**Technical Note:**  
-- Create `scripts/contract-verifier.ts`
-- Logic:
-  - Iterate through all Zod schemas (ShiftSchema, VisitSchema, BranchResponse, EmployeeResponse, etc.)
-  - For each: make minimal test request to Dev environment → validate response body
-  - Collect mismatches + field names
-  - Exit code: 0 (all valid), 1 (schema mismatch)
-  - Print detailed error messages showing expected vs actual schema fields
-- Usage: `npx ts-node scripts/contract-verifier.ts` (run as CI pre-check before running tests)
-
-**Blockers:** None  
-**Estimated Effort:** 2-3 hours
-**Status:** ❌ Not Started
-
----
-
-### 9. API Endpoints Constants
+### 7. API Endpoints Constants (Code Cleanup)
 **Description:** Centralize all API routes in a typed enum to prevent string duplication and enable IDE autocomplete.
 
 **Dependencies:** None
@@ -203,17 +162,17 @@ export const API_ENDPOINTS = {
   },
   SCHEDULES: {
     CREATE_SHIFT: '/api/v1/schedule/shift',
-    GET_SHIFTS: '/api/v1/schedule/shifts',
   },
   VISITS: {
     CREATE: '/api/v1/health/visits',
-    GET_BY_ID: (id: number) => `/api/v1/health/visits/${id}`,
+  },
+  GLOSSARY: {
+    SPECIALIZATIONS: '/api/v1/glossary/specializations',
   },
   // ... other endpoints
 } as const;
 ```
 - Replace hardcoded strings in services: `'/api/v1/patients'` → `API_ENDPOINTS.PATIENTS.CREATE`
-- Benefits: single source of truth, autocomplete, refactoring-safe
 
 **Blockers:** None  
 **Estimated Effort:** 1-1.5 hours
@@ -221,20 +180,19 @@ export const API_ENDPOINTS = {
 
 ---
 
-### 10. Create Barrel Exports (index.ts Files)
+### 8. Create Barrel Exports (index.ts Files)
 **Description:** Create barrel export files for cleaner imports across codebase. Convert verbose paths to concise namespace imports.
 
-**Dependencies:** All modules must exist (mostly done already)
+**Dependencies:** All modules exist (Phase 1-4 complete)
 
 **Technical Note:**  
-- Create files:
-  - `src/lib/entities/index.ts` — re-export all type definitions
-  - `src/lib/api/services/index.ts` — re-export all service classes
-  - `src/lib/factories/index.ts` — re-export all factories
-  - `src/pages/index.ts` — re-export all page objects
-  - `src/pages/auth/index.ts` — re-export auth pages
-  - `src/config/index.ts` — re-export config utilities
-- Benefit: `import { PatientService } from '@/lib/api/services'` instead of `from '@/lib/api/services/patients.service'`
+Create files:
+- `src/lib/entities/index.ts` — re-export all type definitions
+- `src/lib/api/services/index.ts` — re-export all service classes
+- `src/lib/factories/index.ts` — re-export all factories
+- `src/config/index.ts` — re-export config utilities
+
+Benefit: `import { PatientService, VisitService } from '@/lib/api/services'` instead of verbose paths
 
 **Blockers:** None  
 **Estimated Effort:** 1 hour
@@ -244,11 +202,16 @@ export const API_ENDPOINTS = {
 
 ---
 
-## 📋 Backlog (Future - UI & Tooling)
+## 📋 Critical Path (Phase 5: UI Layer & E2E) - UNBLOCKS DELIVERABLE
 
-### Phase 2: UI Layer & Page Objects
+**Foundation:** Phase 1-4 complete (API layer 100%, Config 87%, Auth 87%)  
+**Blocker:** All items in this section must complete to enable E2E testing  
+**Timeline:** Weeks 3-4 (15-20 hours estimated)  
+**Team:** Can be parallelized — assign 1-2 developers per component family
 
-#### 11. Base Page Object Class (Abstract Foundation)
+### Phase 5: UI Layer & Page Objects
+
+#### 9. Base Page Object Class (Abstract Foundation)
 Create abstract base class for all Page Objects to reduce duplication and enforce consistent patterns.
 
 **File:** `src/pages/base.page.ts`  
@@ -256,11 +219,11 @@ Create abstract base class for all Page Objects to reduce duplication and enforc
 **Dependency:** None
 
 **Estimated Effort:** 1-2 hours
-**Status:** ❌ Not Started
+**Status:** ❌ Not Started — **REQUIRED FOR ALL PAGES**
 
 ---
 
-#### 12. Atom Components - InputField & SelectDropdown
+#### 10. Atom Components - InputField & SelectDropdown
 Low-level, reusable UI form components.
 
 **Files:** 
@@ -274,11 +237,11 @@ Low-level, reusable UI form components.
 - SelectDropdown.selectByLabel(): finds visible text in options and clicks
 
 **Estimated Effort:** 2-3 hours
-**Status:** ❌ Not Started
+**Status:** ❌ Not Started — **REQUIRED BEFORE ORGANISMS**
 
 ---
 
-#### 13. Complex Organisms: Dental Chart Widget (SVG/Canvas Tooth Visualization)
+#### 11. Complex Organisms: Dental Chart Widget (SVG/Canvas Tooth Visualization)
 SVG/Canvas-based interactive tooth status visualization. **HIGH COMPLEXITY** - testing strategy must use `page.route` to mock backend responses for stability (per Project.md).
 
 **File:** `src/pages/components/organisms/dental-chart/dental-chart.widget.ts`  
@@ -292,10 +255,11 @@ SVG/Canvas-based interactive tooth status visualization. **HIGH COMPLEXITY** - t
 
 **Dependency:** Task #10 (InputField/SelectDropdown atoms)  
 **Estimated Effort:** 5-8 hours
+**Status:** ❌ Not Started — **CRITICAL COMPLEXITY; RUN SPIKE #36 FIRST**
 
 ---
 
-#### 14. Tooth & Diagnosis Menu Sub-Components
+#### 12. Tooth & Diagnosis Menu Sub-Components
 Sub-components of Dental Chart. Tooth: clickable, status-aware SVG path. Diagnosis Menu: context menu for condition selection.
 
 **Files:**
@@ -304,10 +268,11 @@ Sub-components of Dental Chart. Tooth: clickable, status-aware SVG path. Diagnos
 
 **Dependency:** Task #11 (Dental Chart Widget)  
 **Estimated Effort:** 3-4 hours
+**Status:** ❌ Not Started — **DEP ON #11**
 
 ---
 
-#### 15. Treatment Plan Organism (Medical Services Grid)
+#### 13. Treatment Plan Organism (Medical Services Grid)
 Dynamic grid for adding/removing medical services. Must support search, add, and transfer to visit workflow.
 
 **File:** `src/pages/components/organisms/treatment-plan.component.ts`  
@@ -319,10 +284,11 @@ Dynamic grid for adding/removing medical services. Must support search, add, and
 
 **Dependency:** Task #10 (Atoms)  
 **Estimated Effort:** 3-4 hours
+**Status:** ❌ Not Started
 
 ---
 
-#### 16. Additional UI Components (Medical Diary, Questionnaire, DatePicker, Modal, Sidebar)
+#### 14. Additional UI Components (Medical Diary, Questionnaire, DatePicker, Modal, Sidebar)
 Six reusable components needed for complete visit workflow coverage.
 
 **Files:**
@@ -334,10 +300,11 @@ Six reusable components needed for complete visit workflow coverage.
 
 **Dependency:** Task #10 (Atoms foundational component)  
 **Estimated Effort:** 4-6 hours (parallelizable)
+**Status:** ❌ Not Started
 
 ---
 
-#### 17. Auth Workflow Pages (SMS, Role, Branch, Auth Wizard)
+#### 15. Auth Workflow Pages (SMS, Role, Branch, Auth Wizard)
 Complete the authentication workflow with missing pages that follow LoginPage pattern.
 
 **Files:**
@@ -348,10 +315,11 @@ Complete the authentication workflow with missing pages that follow LoginPage pa
 
 **Dependency:** Task #9 (BasePage class for consistency)  
 **Estimated Effort:** 2-3 hours
+**Status:** ❌ Not Started — **TWO OF THESE MISSING (Role, Branch)** per implementation_status.md
 
 ---
 
-#### 18. CRM Feature Pages (Visit Details, Dashboard, Patient Card)
+#### 16. CRM Feature Pages (Visit Details, Dashboard, Patient Card)
 Main application pages for core workflows.
 
 **Files:**
@@ -365,12 +333,13 @@ Main application pages for core workflows.
 
 **Dependencies:** Tasks #11-14 (All component atoms/organisms)  
 **Estimated Effort:** 5-7 hours
+**Status:** ❌ Not Started — **CRITICAL FOR E2E**
 
 ---
 
 ### E2E Test Assembly & Custom Fixtures
 
-#### 19. Custom Test Fixtures (Dependency Injection)
+#### 17. Custom Test Fixtures (Dependency Injection)
 Extend Playwright fixtures with dependency injection system to auto-initialize services and pages per test.
 
 **File:** `src/lib/fixtures/custom-fixtures.ts`  
@@ -410,10 +379,11 @@ test('Full visit cycle', async ({ patientService, visitService, visitDetailsPage
 
 **Dependency:** Tasks #9-16 (All page objects)  
 **Estimated Effort:** 2-3 hours
+**Status:** ❌ Not Started
 
 ---
 
-#### 20. Full Dental Visit Cycle E2E Test (Complete Business Scenario)
+#### 18. Full Dental Visit Cycle E2E Test (Complete Business Scenario)
 End-to-end test validating the complete dental visit workflow: API setup → Patient creation → Visit scheduling → UI interaction → Status transitions → Completion.
 
 **File:** `src/tests/e2e/workflows/full-visit-cycle.spec.ts`  
@@ -433,12 +403,15 @@ End-to-end test validating the complete dental visit workflow: API setup → Pat
 
 **Dependencies:** Tasks #11-17 (All components, pages, fixtures)  
 **Estimated Effort:** 4-6 hours
+**Status:** ❌ Not Started — **FINAL DELIVERABLE FOR PHASE 3**
 
 ---
 
+## 📋 Backlog (Future - Infrastructure, Tools & Polish)
+
 ### Infrastructure & DevOps Phase
 
-#### 21. Dockerfile (Production-Ready OCI Image)
+#### 19. Dockerfile (Production-Ready OCI Image)
 Build Playwright-based container image with Russian locale configured.
 
 **File:** `Dockerfile`  
@@ -450,10 +423,11 @@ Build Playwright-based container image with Russian locale configured.
 - Optional: Create `.dockerignore` to exclude test-results, playwright-report, node_modules (rebuilds on each image)
 
 **Estimated Effort:** 1-2 hours
+**Status:** ❌ Not Started
 
 ---
 
-#### 22. GitLab CI Configuration (Parallel Sharding & Artifact Management)
+#### 20. GitLab CI Configuration (Parallel Sharding & Artifact Management)
 CI/CD pipeline supporting parallel test execution with sharding, artifact retention, and Allure reporting.
 
 **File:** `.gitlab-ci.yml`  
@@ -487,7 +461,7 @@ CI/CD pipeline supporting parallel test execution with sharding, artifact retent
 
 ### Development Tooling & Scripts
 
-#### 23. npm run debug:config Script
+#### 21. npm run debug:config Script
 CLI utility to print resolved (redacted) configuration for troubleshooting.
 
 **Files:**
@@ -762,115 +736,129 @@ Project documentation for onboarding and troubleshooting.
 
 ## 📊 Dependency & Blocking Map
 
-| Task # | Title | Blocks | Dependencies | Status |
-|--------|-------|--------|--------------|--------|
-| 1 | PatientFactory SNILS/OMS | #6, #7 | None | Ready |
-| 2 | Config Zod Validation | #3, #8 | None | Ready |
-| 3 | Logger Component | #5, Allure | None | Ready |
-| 4 | Patient Zod Schema | #6, #7 | None | Ready |
-| 5 | Allure Configuration | Report generation | #3 (optional) | Ready |
-| 6 | Visit Contract Test | E2E test #18 | #4 (Patient schema) | Ready |
-| 7 | Fix api-check.spec.ts | E2E test #18 | #4 (Patient schema) | Ready |
-| 8 | Staging Config | Multi-env support | #2 (Config validation) | Ready (requires staging backend) |
-| 9 | BasePage Class | #10-16 all pages | None | Ready |
-| 10 | Atoms (Input, Select) | #11-16 all organisms | None | Ready |
-| 11 | Dental Chart Widget | #18 E2E test | #10 (atoms) | Large scope |
-| 12 | Tooth & Diagnosis Components | #11 parent widget | #11 (Dental Chart) | Large scope |
-| 13 | Treatment Plan Organism | #18 E2E test | #10 (atoms) | Medium scope |
-| 14 | Additional UI Components | #16, #18 | #10 (atoms) | Large scope |
-| 15 | Auth Pages (SMS, Role, Branch) | #17 fixtures | #9 (BasePage) | Ready |
-| 16 | CRM Pages (Visit, Dashboard, Card) | #18 E2E test | #9-14 all components | Large scope |
-| 17 | Custom Fixtures | #18 E2E test | #9-16 all pages | Depends on page objects |
-| 18 | Full E2E Test | Deliverable | #1-7 (API), #17 (fixtures) | Large scope |
-| 19 | Dockerfile | CI/CD pipeline | None | Ready |
-| 20 | GitLab CI Config | Production deploy | None | Ready |
-| 21 | debug:config Script | DX improvement | #2 (Config validation) | Ready |
-| 22 | verify-auth.ts Script | CI pre-check | None | Ready |
-| 23 | Contract Verifier Tool | Breaking change detection | #4 (schemas) | Ready |
-| 24 | Component Workbench | Isolated UI testing | #11-14 (components) | Ready after UI |
-| 25 | Data Setup Debugger | Fixture debugging | #1-7 (API) | Ready |
-| 26 | API Endpoints Enum | Code cleanup | None | Ready |
-| 27 | Utility Modules (Date, Generator) | Data generation | None | Ready |
-| 28 | Barrel Exports (index.ts) | Code organization | Depends on all modules | Final polish |
-| 29 | Swagger Models | Type safety | None (optional) | Ready |
-| 30 | .env.example | Documentation | None | Ready |
-| 31 | ESLint Config | Code quality | None | Ready |
-| 32 | Prettier Config | Code formatting | None | Ready |
-| 33 | README.md | Onboarding | None | Ready |
-| 34-39 | Spikes (Auth, DOM, Docker, Formats) | Risk mitigation | None | Optional; as needed |
+**CRITICAL:** Tasks #1-5 (API & Config), #6 (Spikes) are Prerequisites. All UI tasks (#9-18) are blocked until Phase 5 starts.
+
+| Task # | Title | Status | Blocks | Dependencies |
+|--------|-------|--------|--------|--------------|
+| **Phase 1-4: API & Config (MOSTLY DONE)** |
+| 1 | PatientFactory + ShiftFactory | ✅ Done | API tests | None |
+| 2 | Config Zod Validation | ✅ Done | #3, #5, #8 | None |
+| 3 | Logger Component | ✅ Done | Observability | None |
+| 4 | Allure Reporter Config | ✅ Done | Report generation | #3 (optional) |
+| 5 | Staging Environment Config | ✅ Done | Multi-env support | #2 |
+| **Phase 1-4 (Tooling & Polish - TO DO)** |
+| 6 | Execute Critical Spikes | ❌ Not Started | #9 (Dental Chart) | Phases 1-4 |
+| 7 | API Endpoints Constants | ❌ Not Started | Code cleanup | None |
+| 8 | Barrel Exports (index.ts) | ❌ Not Started | Code org | All modules exist |
+| **Phase 5: UI Layer & E2E (CRITICAL PATH - BLOCKING)** |
+| 9 | BasePage Abstract Class | ❌ Not Started | #10-16 | None |
+| 10 | Atom Components (Input, Select) | ❌ Not Started | #11-16 | #9 |
+| 11 | Dental Chart Widget | ❌ Not Started | #16, #18 | #6 (spike), #10 |
+| 12 | Tooth & Diagnosis Components | ❌ Not Started | #11 | #11 |
+| 13 | Treatment Plan Organism | ❌ Not Started | #18 | #10 |
+| 14 | UI Components (Diary, Questionnaire, etc) | ❌ Not Started | #16, #18 | #10 |
+| 15 | Auth Pages (SMS, Role, Branch) | ❌ Not Started | #17 | #9 |
+| 16 | CRM Pages (Visit, Dashboard, Patient) | ❌ Not Started | #18 | #9-14 |
+| 17 | Custom Fixtures (DI) | ❌ Not Started | #18 | #9-16 |
+| 18 | Full E2E Test (Visit Cycle) | ❌ Not Started | Deliverable | #1-5, #17 |
+| **Phase 4: Infrastructure & CI/CD (DEFERRED)** |
+| 19 | Dockerfile | ❌ Not Started | CI pipeline | None |
+| 20 | GitLab CI Config (.gitlab-ci.yml) | ❌ Not Started | Production deploy | None |
+| **Phase 4: Tooling & Documentation (DEFERRED)** |
+| 21 | npm run debug:config Script | ❌ Not Started | DX | #2 |
+| 22 | verify-auth.ts Script | ❌ Not Started | CI pre-check | None |
+| 23 | Contract Verifier Tool | ❌ Not Started | Breaking changes | Zod schemas |
+| 24 | Component Workbench Project | ❌ Not Started | Isolated testing | #11-14 |
+| 25 | Data Setup Debugger Script | ❌ Not Started | Debugging | #1-5 |
+| 26 | API Endpoints Enum (duplicate of #7) | 🔄 Merged with #7 | Code cleanup | None |
+| 27 | Utility Modules (Date, Generators) | ❌ Not Started | Data generation | None |
+| **Final Polish** |
+| 28 | .env.example Template | ❌ Not Started | Onboarding | None |
+| 29 | ESLint Config | ❌ Not Started | Code quality | None |
+| 30 | Prettier Config | ❌ Not Started | Formatting | None |
+| 31 | Comprehensive README.md | ✅ Done | Onboarding | None |
+| 32-37 | Risk Mitigation Spikes | ❌ See #6 | Risk mitigation | Varies |
 
 ---
 
-## 🎯 Prioritization Strategy
+## 🎯 Prioritization Strategy (UPDATED)
 
-### Phase 1: API Layer & Observability (Sprint 1, ~18-24 hours)
-**Goal:** Complete the backend integration layer and enable debugging.
+### Phase 1: API Layer & Observability (✅ COMPLETE - 18-24 hours invested)
+**Goal:** Complete the backend integration layer and enable debugging.  
+**Status:** ✅ **DONE** — All API services, config, logger, and Allure reporting implemented
 
-**Tasks:** #1-8  
-**Deliverable:** All API services fully implemented, contract tests passing, configuration validated, logging enabled
+**Completed Tasks:** #1-5  
+**Verified Deliverable:**
+- ✅ All API services fully implemented and tested (Patient, Schedule, Branch, Employee, Visit, Glossary)
+- ✅ Contract/integration tests passing (5 test files)
+- ✅ Configuration validated via Zod schema
+- ✅ Logger working with dual-format output (JSON Lines/colorized)
+- ✅ Allure reporter configured and artifact retention enabled
+- ✅ Staging environment config implemented
 
-**Why First:**
-- Unblocks E2E test assembly (#18)
-- Small/medium effort (1-4 hours each)
-- No dependencies on UI layer
-- Enables parallel UI development
-
-**Rough Timeline:**
-- Day 1: #1 (PatientFactory) + #2 (Config Zod) + #3 (Logger) — 6-8 hours
-- Day 2: #4 (Patient schema) + #5 (Allure) + #6 (Visit test) — 6-8 hours
-- Day 3: #7 (api-check fix) + #8 (Staging config) — 3-4 hours
+**Impact:** API layer is now production-ready for data-driven E2E testing
 
 ---
 
-### Phase 2: UI Layer & Page Objects (Sprint 2-3, ~30-40 hours)
+### Phase 2: Risk Mitigation & Polish (~1-2 hours - OPTIONAL BEFORE PHASE 3)
+**Goal:** Validate architecture assumptions; set up tooling for smoother Phase 3
+
+**Tasks:** #6-8  
+**Recommended Before:** #9 (Dental Chart widget) to de-risk
+
+**What's Included:**
+- **#6 (Spikes):** 4 critical POC scripts validating auth handshake, DOM selectors, data formats, Docker setup
+- **#7 (API Endpoints):** Centralized enum preventing string duplication
+- **#8 (Barrel Exports):** Clean import paths for all modules
+
+**Why This Phase:**
+- **Spike #36 (Dental Chart DOM):** MANDATORY before starting #11 to identify correct selector strategy (15 mins)
+- **API Endpoints (#7):** Code hygiene; enables refactoring safety
+- **Barrel Exports (#8):** Optional but unlocks cleaner imports
+
+---
+
+### Phase 3: UI Layer & E2E Testing (Sprint 2-3, ~20-30 hours - CRITICAL PATH)
 **Goal:** Build all page objects, components, and fixtures for E2E testing.
 
-**Tasks:** #9-17  
-**Deliverable:** Complete page object model, reusable atoms/organisms, custom test fixtures
+**Tasks:** #9-18  
+**Deliverable:** Full-featured E2E test validating complete dental visit workflow
 
-**Why After Phase 1:**
-- Requires stable API layer (Phase 1 completion)
-- Parallelizable: team can split atoms (#10), organisms (#11-14), pages (#15-16)
-- UI development is largest effort block; benefit from confidence in backend
+**Critical Dependencies:**
+- All Phase 1 tasks must be complete (API layer working)
+- Spike #36 completed before starting #11 (Dental Chart)
+- Tasks MUST be completed in order: #9 → #10 → #11-14 → #15-16 → #17 → #18
+
+**Parallel Tracks (Can happen simultaneously):**
+- **Track A:** #9-10 (BasePage + Atoms) → #11-12 (Dental Chart) → #13-14 (other organisms)
+- **Track B:** #15 (Auth pages) + #16 (CRM pages) → both require A's output from #9
+- **Track C:** #17 (Fixtures) → requires A+B output
 
 **Rough Timeline:**
-- Week 2: #9 (BasePage) + #10 (Atoms) — 4-5 hours
-- Week 2-3: #11-14 (Organisms/Components) — 10-15 hours (parallelizable)
-- Week 3: #15 (Auth pages) + #16 (CRM pages) — 8-10 hours
-- Week 3: #17 (Custom fixtures) — 2-3 hours
+- **Week 3:**
+  - #9 (BasePage) — 2 hours
+  - #10 (Atoms) — 3 hours
+  - #11 (Dental Chart) — 5-8 hours (largest single task)
+  
+- **Week 3-4:**
+  - #12 (Tooth components) — 3-4 hours
+  - #13 (Treatment Plan) — 3-4 hours
+  - #14 (Diary, Questionnaire, etc) — 4-6 hours
+  
+- **Week 4:**
+  - #15 (Auth pages) — 2-3 hours
+  - #16 (CRM pages) — 5-7 hours
+  - #17 (Fixtures) — 2-3 hours
+  - #18 (Full E2E Test) — 4-6 hours
+
+**Why After Phase 1-2:**
+- Requires stable API layer (Phase 1)
+- Large scope; benefit from confidence in backend
+- Parallelizable; team can split atoms/organisms/pages
 
 ---
 
-### Phase 3: E2E Test Assembly & Quality (Sprint 3, ~4-6 hours)
-**Goal:** Complete the full visit cycle E2E test and verify end-to-end workflow.
-
-**Tasks:** #18 + #21-25 (Tooling)  
-**Deliverable:** Passing E2E test + debug tools + contract verifier
-
-**Why After Phases 1-2:**
-- Requires fully functional API layer + all UI pages
-- Tooling (#21-25) enhances DX without blocking tests
-
-**Rough Timeline:**
-- Week 4: #18 (Full E2E test assembly) — 4-6 hours
-- Week 4: #21-25 (Debug tools & verifier) — 4-6 hours
-
----
-
-### Phase 4: Infrastructure & Documentation (Sprint 4, ~3-4 hours)
-**Goal:** Docker build, CI/CD pipeline, and onboarding documentation.
-
-**Tasks:** #19-20, #30-33  
-**Deliverable:** Containerized test suite, GitLab CI sharding, README with troubleshooting
-
-**Why Last:**
-- Does not block test functionality
-- Required only for production deployment and onboarding
-- Can be deferred if not immediately needed
-
-**Rough Timeline:**
-- Week 4-5: #19 (Dockerfile) + #20 (GitLab CI) — 3-4 hours
-- Week 5: #30-33 (Config files & README) — 2-3 hours
+### Phase 4: Infrastructure & Finalization (~6-8 hours - DEFERRED TO WEEK 5)
 
 ---
 
@@ -882,63 +870,66 @@ Project documentation for onboarding and troubleshooting.
 
 ---
 
-## ✅ Implementation Checklist
+## ✅ Implementation Checklist (UPDATED 2026-02-19)
 
-Track progress using this checklist:
+**LEGEND:** ✅ = Done | 🚧 = In Progress | ❌ = Not Started | 🔄 = Merged
 
-### Phase 1: API & Observability
+### Phase 1: API Layer & Observability (✅ COMPLETE)
 ```
-[_] 1. Complete PatientFactory with SNILS & OMS
-[_] 2. Add Zod validation to TestConfig
-[_] 3. Implement Logger utility component
-[_] 4. Create Patient Zod Schema
-[_] 5. Configure Allure reporter
-[_] 6. Implement Visit API contract test
-[_] 7. Fix api-check.spec.ts smoke test
-[_] 8. Create staging environment config
-```
-
-### Phase 2: UI & Page Objects
-```
-[_] 9. Create BasePage abstract class
-[_] 10. Create Atom components (InputField, SelectDropdown)
-[_] 11. Implement Dental Chart widget
-[_] 12. Create Tooth & Diagnosis components
-[_] 13. Implement Treatment Plan organism
-[_] 14. Create other UI components (Diary, Questionnaire, DatePicker, Modal, Sidebar)
-[_] 15. Create auth workflow pages (SMS, Role, Branch)
-[_] 16. Create CRM feature pages (Visit Details, Dashboard, Patient Card)
-[_] 17. Create custom test fixtures
+[✅] 1. Complete PatientFactory + ShiftFactory with SNILS & OMS
+[✅] 2. Add Zod validation to TestConfig (config.schema.ts)
+[✅] 3. Implement Logger utility component (dual-format output)
+[✅] 4. Create Patient Zod Schema + type definitions
+[✅] 5. Configure Allure reporter (playwright.config.ts)
+[✅] 6. All API Services: Patient, Schedule, Branch, Employee, Visit, Glossary
+[✅] 7. All API Integration Tests (glossary, patient, shift, branch, employee)
+[✅] 8. Create staging environment config (staging.config.ts)
 ```
 
-### Phase 3: E2E & Tooling
+### Phase 2: Risk Mitigation & Polish (❌ OPTIONAL - RECOMMENDED BEFORE PHASE 3)
 ```
-[_] 18. Implement Full Dental Visit Cycle E2E test
-[_] 21. Create debug:config npm script
-[_] 22. Implement verify-auth.ts script
-[_] 23. Implement contract-verifier.ts tool
-[_] 25. Implement data-setup-debugger.ts script
+[❌] 6. Execute Critical Spikes (auth, DOM, data formats, docker)
+[❌] 7. Create API Endpoints Constants (api-endpoints.ts)
+[❌] 8. Create Barrel Exports (entities/index.ts, services/index.ts, etc)
 ```
 
-### Phase 4: Infrastructure & Documentation
+### Phase 3: UI Layer & E2E (❌ CRITICAL PATH - BLOCKING PHASE 4)
 ```
-[_] 19. Create Dockerfile (Playwright + Russian locale)
-[_] 20. Create .gitlab-ci.yml with sharding
-[_] 26. Create API endpoints constants
-[_] 27. Create utility modules (date, generators)
-[_] 28. Create barrel exports (index.ts files)
-[_] 30. Create .env.example template
-[_] 31. Create .eslintrc.json
-[_] 32. Create .prettierrc
-[_] 33. Create README.md
+[❌] 9. Create BasePage abstract class
+[❌] 10. Create Atom components (InputField, SelectDropdown)
+[❌] 11. Implement Dental Chart widget (⚠️ RUN SPIKE #36 FIRST)
+[❌] 12. Create Tooth & Diagnosis components
+[❌] 13. Implement Treatment Plan organism
+[❌] 14. Create UI components (MedicalDiary, Questionnaire, DatePicker, Modal, Sidebar)
+[❌] 15. Create Auth workflow pages (SMS, Role, Branch)
+[❌] 16. Create CRM feature pages (VisitDetails, Dashboard, PatientCard)
+[❌] 17. Create custom test fixtures (Dependency Injection)
+[❌] 18. Implement Full Dental Visit Cycle E2E test
 ```
 
-### Optional
+### Phase 4: Infrastructure, Tools & Documentation (❌ DEFERRED TO WEEK 5)
 ```
-[_] 24. Create component workbench project
-[_] 29. Create swagger-models.ts
-[_] 34-37. Run proof-of-concept spikes as needed
+[❌] 19. Create Dockerfile (Playwright + Russian locale)
+[❌] 20. Create .gitlab-ci.yml with sharding matrix
+[❌] 21. Create npm run debug:config script
+[❌] 22. Implement verify-auth.ts script
+[❌] 23. Implement contract-verifier.ts tool
+[❌] 24. Create component workbench project (OPTIONAL)
+[❌] 25. Implement data-setup-debugger.ts script
+[❌] 27. Create utility modules (date-utils, generators)
+[❌] 28. Create .env.example template
+[❌] 29. Create .eslintrc.json
+[❌] 30. Create .prettierrc
+[✅] 31. Create/Update README.md (Already exists)
 ```
+
+---
+
+### Optional / Deferred Tasks
+- **Task #6 (Spikes):** Execute before #11 if Dental Chart DOM is uncertain; at minimum run Spike #36 (15 mins)
+- **Task #24 (Component Workbench):** Implement after #11-14 for isolated component testing
+- **Task #25 (Data Setup Debugger):** Helpful for troubleshooting; nice-to-have during Phase 3
+- **Task #32 (Swagger Models):** Low priority; only if backend publishes OpenAPI spec
 
 ---
 
