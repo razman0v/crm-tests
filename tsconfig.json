@@ -8,7 +8,7 @@
     "strict": true,
     "noUnusedLocals": false,
     "esModuleInterop": true,
-    "module": "commonjs",
+    "module": "ESNext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "noEmit": true,

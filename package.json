@@ -12,7 +12,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "devDependencies": {
     "@faker-js/faker": "^10.2.0",
     "@playwright/test": "^1.58.1",

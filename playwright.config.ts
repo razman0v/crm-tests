@@ -4,7 +4,7 @@ import { getConfig } from './src/config/env-loader';
 const testConfig = getConfig();
 
 export default defineConfig({
-  testDir: './src/tests',
+  testDir: './',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
@@ -53,6 +53,18 @@ export default defineConfig({
         storageState: 'playwright/.auth/admin.json', 
       },
       dependencies: ['setup'], // Ждать завершения setup
+    },
+
+    {
+      name: 'spikes',
+      testDir: './spikes',    // Искать тесты только в папке spikes
+      testMatch: /probe-.*\.ts/,
+      use: { 
+        ...devices['Desktop Chrome'],
+        storageState: 'playwright/.auth/admin.json', 
+      },
+      // Если для спайков нужна авторизация, раскомментируйте строку ниже:
+      // dependencies: ['setup'],
     },
   ],
 });

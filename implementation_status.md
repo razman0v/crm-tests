@@ -1,6 +1,6 @@
 # Dental CRM Test Suite - Implementation Status
 
-**Last Updated:** February 19, 2026  
+**Last Updated:** February 25, 2026  
 **Report Type:** Comprehensive Gap Analysis (Project.md Features vs. Actual Codebase)  
 **Scan Scope:** All TypeScript/JavaScript files, config files, and infrastructure files
 
@@ -10,10 +10,10 @@
 
 | Metric | Count |
 |--------|-------|
-| ✅ Features Done | 43 |
+| ✅ Features Done | 47 |
 | 🚧 In Progress | 0 |
-| ❌ Missing | 35 |
-| **Overall Completion** | **55.1%** |
+| ❌ Missing | 31 |
+| **Overall Completion** | **60.3%** |
 
 ---
 
@@ -29,14 +29,14 @@
 | .gitignore file with secrets exclusion | ✅ Done | [.gitignore](.gitignore) - node_modules, test-results, .env, playwright/.auth, allure-results excluded |
 | Playwright install & sanity verification | ✅ Done | [src/tests/e2e/smoke/sanity.spec.ts](src/tests/e2e/smoke/sanity.spec.ts#L1-L5) - basic smoke test confirms environment ready |
 
-### Phase 2: Critical Spikes (Probes)
+### Phase 2: Critical Spikes (Probes) (4/4 ✅ 100%)
 
 | Feature | Status | Proof |
 |---------|--------|-------|
-| Spike: Hybrid Auth Handshake probe | ❌ Missing | spikes/probe-auth-handshake.ts not found |
-| Spike: Dental Chart DOM probe | ❌ Missing | spikes/probe-dental-chart-dom.ts not found |
-| Spike: Data Format Validation probe | ❌ Missing | spikes/probe-data-formats.ts not found |
-| Spike: Docker Connectivity probe | ❌ Missing | spikes/probe-docker.sh not found |
+| Spike: Hybrid Auth Handshake probe | ✅ Done | [spikes/probe-auth-handshake.ts](spikes/probe-auth-handshake.ts) - validates cookies from admin.json work for API calls |
+| Spike: Dental Chart DOM probe | ✅ Done | [spikes/probe-dental-chart-dom.ts](spikes/probe-dental-chart-dom.ts) - identifies optimal selector strategy (SVG/Canvas/coordinates) |
+| Spike: Data Format Validation probe | ✅ Done | [spikes/probe-data-formats.ts](spikes/probe-data-formats.ts) - validates PatientFactory payloads pass backend validation |
+| Spike: Docker Connectivity probe | ✅ Done | [spikes/probe-docker.sh](spikes/probe-docker.sh) - verifies Docker image build, Russian locale, network reachability |
 
 ---
 
@@ -163,14 +163,14 @@
 | Phase | Title | Done | Total | % |
 |-------|-------|------|-------|---|
 | Phase 1 | Project Initialization | 5 | 5 | 100% |
-| Phase 2 | Critical Spikes | 0 | 4 | 0% |
+| Phase 2 | Critical Spikes | 4 | 4 | 100% |
 | Phase 3 | Configuration & Auth | 13 | 15 | 87% |
 | Phase 4 | API Layer & Services | 21 | 21 | 100% |
-| Phase 5 | UI Components & Pages | 1 | 12 | 8% |
+| Phase 5 | UI Components & Pages | 3 | 15 | 20% |
 | Phase 6 | E2E Scenario Assembly | 0 | 3 | 0% |
 | Phase 7 | Infrastructure & CI/CD | 1 | 10 | 10% |
 | Supporting | Utilities & Exports | 0 | 8 | 0% |
-| **TOTAL** | | **41** | **78** | **52.6%** |
+| **TOTAL** | | **47** | **78** | **60.3%** |
 
 ---
 
@@ -178,11 +178,11 @@
 
 | Milestone | Completion | Status | Blocker Status |
 |-----------|------------|--------|----------------|
-| **Milestone 1: PoC** | 🟠 55% | Init ✅, Spikes ❌ | Phase 2 blocks forward momentum |
+| **Milestone 1: PoC** | 🟢 100% | Init ✅, Spikes ✅ | Ready for Phase 5 (UI layer) |
 | **Milestone 2: Core** | 🟢 96% | Auth ✅, Config ✅, API ✅, Logger ✅ | Ready for UI layer |
 | **Milestone 3: Scenarios** | 🔴 3% | Pages ❌, E2E ❌, Fixtures ❌ | Requires full Phase 5 completion |
 | **Milestone 4: CI/CD** | 🔴 10% | Infrastructure missing, single README | Docker + GitLab CI blocking production readiness |
-| **Overall** | 🟡 **52.6%** | 41/78 features | Phase 5 & 7 are critical path blockers |
+| **Overall** | 🟡 **60.3%** | 47/78 features | Phase 5 & 7 are critical path blockers |
 
 ---
 

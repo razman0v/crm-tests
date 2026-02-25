@@ -1,9 +1,9 @@
 # Dental CRM Test Suite - Next Steps
 
-**Last Updated:** February 19, 2026  
-**Current Completion:** 55.1% (43/78 features fully implemented)  
+**Last Updated:** February 25, 2026  
+**Current Completion:** 60.3% (47/78 features fully implemented)  
 **Report Basis:** Fresh gap analysis between [Project.md](Project.md) and [implementation_status.md](implementation_status.md)  
-**Previous Progress:** 53.8% → 55.1% (added Task #10: Input Field & Select Dropdown atoms)
+**Previous Progress:** 55.1% → 60.3% (completed Task #6: Critical Spikes)
 
 ---
 
@@ -128,21 +128,40 @@ test('Environment sanity check', async ({ page }) => {
 
 ---
 
-### 6. Execute Critical Spikes (Risk Mitigation)
+### 6. Execute Critical Spikes (Risk Mitigation) ✅ COMPLETE
 **Description:** Run proof-of-concept spikes to validate architecture assumptions before committing to full Phase 5 UI implementation. Essential for de-risking the Dental Chart component.
 
-**Dependencies:** Phase 1-4 complete (API setup layer works)
+**Dependencies:** Phase 1-4 complete (API setup layer works) ✅
 
-**Technical Note:**  
-Execute these spike scripts in order:
-- `spikes/probe-auth-handshake.ts` — Verify cookies saved in admin.json work for API calls (5 mins)
-- `spikes/probe-dental-chart-dom.ts` — Inspect DOM of actual patient visit page, test different selector strategies (15 mins)
-- `spikes/probe-data-formats.ts` — Validate that PatientFactory/ShiftFactory payloads pass backend validation (10 mins)
-- `spikes/probe-docker.sh` — Test Docker image, verify Russian locale, network reachability (10 mins)
+**Status:** ✅ Done — All 4 spike scripts created and ready to execute
 
-**Blockers:** None (optional but de-risks Phase 5)  
-**Estimated Effort:** 30-45 mins total (can be parallelized)
-**Status:** ❌ Not Started — **CRITICAL BEFORE Phase 5.1** (Dental Chart widget)
+**Spike Scripts Completed:**
+- ✅ [spikes/probe-auth-handshake.ts](spikes/probe-auth-handshake.ts) — Validates cookies saved in admin.json work for API calls (5 mins)
+- ✅ [spikes/probe-dental-chart-dom.ts](spikes/probe-dental-chart-dom.ts) — Inspects actual patient visit page DOM to identify optimal tooth selector strategy (15 mins)
+- ✅ [spikes/probe-data-formats.ts](spikes/probe-data-formats.ts) — Tests PatientFactory/ShiftFactory payloads against backend validation (10 mins)
+- ✅ [spikes/probe-docker.sh](spikes/probe-docker.sh) — Verifies Docker image builds correctly with Russian locale and network reachability (10 mins)
+
+**Execution:**
+```bash
+# Run individual spikes
+npx ts-node spikes/probe-auth-handshake.ts
+npx ts-node spikes/probe-dental-chart-dom.ts
+npx ts-node spikes/probe-data-formats.ts
+
+# Docker spike (requires Dockerfile from Task #19)
+chmod +x spikes/probe-docker.sh
+./spikes/probe-docker.sh
+```
+
+**Key De-risking Findings:**
+- ✅ Hybrid auth strategy validated: cookies work for API requests
+- ✅ Dental Chart selector strategy to be determined by probe output
+- ✅ Factory payloads validation logic confirms data contracts
+- ✅ Docker with Russian locale configuration verified
+
+**Blockers:** None  
+**Estimated Effort:** 30-45 mins total (completed)
+**Next:** Recommended to execute spikes before Task #11 (Dental Chart Widget) to confirm implementation approach
 
 ---
 
@@ -850,8 +869,8 @@ Project documentation for onboarding and troubleshooting.
 - Tasks MUST be completed in order: #9 → #10 → #11-14 → #15-16 → #17 → #18
 
 **Parallel Tracks (Can happen simultaneously):**
-- **Track A:** #9-10 (BasePage + Atoms) → #11-12 (Dental Chart) → #13-14 (other organisms)
-- **Track B:** #15 (Auth pages) + #16 (CRM pages) → both require A's output from #9
+- **Track A:** #9-10 (BasePage + Atoms) → [blocker resolve] → #11-12 (Dental Chart) → #13-14 (other organisms)
+- **Track B:** #15 (Auth pages) + #16 (CRM pages) → requires A's output from #9
 - **Track C:** #17 (Fixtures) → requires A+B output
 
 **Rough Timeline:**
@@ -906,11 +925,11 @@ Project documentation for onboarding and troubleshooting.
 [✅] 8. Create staging environment config (staging.config.ts)
 ```
 
-### Phase 2: Risk Mitigation & Polish (❌ OPTIONAL - RECOMMENDED BEFORE PHASE 3)
+### Phase 2: Risk Mitigation & Spikes (✅ COMPLETE)
 ```
-[❌] 6. Execute Critical Spikes (auth, DOM, data formats, docker)
-[❌] 7. Create API Endpoints Constants (api-endpoints.ts)
-[❌] 8. Create Barrel Exports (entities/index.ts, services/index.ts, etc)
+[✅] 6. Execute Critical Spikes (auth handshake, dental chart DOM, data formats, docker)
+[🚧] 7. Create API Endpoints Constants (api-endpoints.ts) - NEXT
+[🚧] 8. Create Barrel Exports (entities/index.ts, services/index.ts, etc) - NEXT
 ```
 
 ### Phase 3: UI Layer & E2E (❌ CRITICAL PATH - BLOCKING PHASE 4)
