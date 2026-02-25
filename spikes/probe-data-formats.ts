@@ -3,6 +3,7 @@ import { getConfig } from '../src/config/env-loader';
 import { PatientFactory } from '../src/lib/factories/patient.factory';
 import { chromium } from 'playwright';
 import * as fs from 'fs';
+import { logger, Logger } from '../src/utils/logger';
 
 /**
  * Spike: Data Format Validation
@@ -18,8 +19,8 @@ const test = base.extend({});
 test.describe('Spike: Data Format Validation', () => {
   test('Validate PatientFactory payloads against backend API', async () => {
     const config = getConfig();
-    console.log(`\n🔍 Spike: Data Format Validation`);
-    console.log(`📍 Environment: ${config.baseUrl}`);
+    logger.info(`\n🔍 Spike: Data Format Validation`);
+    logger.info(`📍 Environment: ${config.baseUrl}`);
 
     try {
       const browser = await chromium.launch();
@@ -41,20 +42,20 @@ test.describe('Spike: Data Format Validation', () => {
         if (cookieToken) accessToken = cookieToken.value;
       }
 
-      console.log('📋 Step 1: Generate test payloads with PatientFactory');
+      logger.info('📋 Step 1: Generate test payloads with PatientFactory');
       const testPayloads = [];
       for (let i = 0; i < 3; i++) {
         const payload = PatientFactory.builder().build();
         testPayloads.push(payload);
-        console.log(`   ✅ Generated patient ${i + 1}:`);
-        console.log(`      Name: ${payload.user.surname} ${payload.user.name} ${payload.user.patronymic || ''}`);
-        console.log(`      Phone: ${payload.user.phone}`);
-        console.log(`      SNILS: ${payload.user.snils}`);
-        console.log(`      OMS: ${payload.policyOmsNumber}`);
-        console.log(`      Birth Date: ${payload.user.birthday}`);
+        logger.info(`   ✅ Generated patient ${i + 1}:`);
+        logger.info(`      Name: ${payload.user.surname} ${payload.user.name} ${payload.user.patronymic || ''}`);
+        logger.info(`      Phone: ${payload.user.phone}`);
+        logger.info(`      SNILS: ${payload.user.snils}`);
+        logger.info(`      OMS: ${payload.policyOmsNumber}`);
+        logger.info(`      Birth Date: ${payload.user.birthday}`);
       }
 
-      console.log('\n📋 Step 2: POST payloads to /api/v1/patients');
+      logger.info('\n📋 Step 2: POST payloads to /api/v1/patients');
       let successCount = 0;
       let failureCount = 0;
 
@@ -74,36 +75,36 @@ test.describe('Spike: Data Format Validation', () => {
           }
         );
 
-        console.log(`\n   Test ${i + 1}: ${payload.user.surname} ${payload.user.name}`);
-        console.log(`   📡 Status: ${response.status()}`);
+        logger.info(`\n   Test ${i + 1}: ${payload.user.surname} ${payload.user.name}`);
+        logger.info(`   📡 Status: ${response.status()}`);
 
         if (response.status() === 201 || response.status() === 200) {
-          console.log(`   ✅ SUCCESS - Patient created`);
+          logger.info(`   ✅ SUCCESS - Patient created`);
           const data = await response.json();
-          console.log(`   📌 Patient ID: ${data.id || 'N/A'}`);
+          logger.info(`   📌 Patient ID: ${data.id || 'N/A'}`);
           successCount++;
         } else if (response.status() === 400) {
-          console.log(`   ❌ VALIDATION ERROR`);
+          logger.info(`   ❌ VALIDATION ERROR`);
           const error = await response.json().catch(() => response.text());
-          console.log(`   Details: ${JSON.stringify(error, null, 2).substring(0, 500)}`);
+          logger.info(`   Details: ${JSON.stringify(error, null, 2).substring(0, 500)}`);
           failureCount++;
         } else {
-          console.log(`   ⚠️  Unexpected status: ${response.status()}`);
-          console.log(`   Details: ${await response.text().then((t) => t.substring(0, 200))}`);
+          logger.warn(`   ⚠️  Unexpected status: ${response.status()}`);
+          logger.warn(`   Details: ${await response.text().then((t) => t.substring(0, 200))}`);
           failureCount++;
         }
       }
 
-      console.log(`\n📊 Results Summary:`);
-      console.log(`   ✅ Successful: ${successCount}/${testPayloads.length}`);
-      console.log(`   ❌ Failed: ${failureCount}/${testPayloads.length}`);
+      logger.info(`\n📊 Results Summary:`);
+      logger.info(`   ✅ Successful: ${successCount}/${testPayloads.length}`);
+      logger.info(`   ❌ Failed: ${failureCount}/${testPayloads.length}`);
 
       if (failureCount === 0) {
-        console.log(`\n✅ SPIKE RESULT: PatientFactory payloads VALID`);
-        console.log(`   All generated payloads passed backend validation`);
+        logger.info(`\n✅ SPIKE RESULT: PatientFactory payloads VALID`);
+        logger.info(`   All generated payloads passed backend validation`);
       } else {
-        console.log(`\n⚠️  SPIKE RESULT: PatientFactory needs adjustment`);
-        console.log(
+        logger.warn(`\n⚠️  SPIKE RESULT: PatientFactory needs adjustment`);
+        logger.warn(
           `   Some payloads failed validation. Review error messages above and iterate generators`
         );
       }
@@ -111,7 +112,9 @@ test.describe('Spike: Data Format Validation', () => {
       await context.close();
       await browser.close();
     } catch (error) {
-      console.error('❌ Spike execution failed:', error);
+      logger.error('❌ Spike execution failed:', 
+        error instanceof Error ? { message: error.message } : { error: String(error) 
+        });
       throw error;
     }
   });

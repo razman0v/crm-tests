@@ -1,6 +1,7 @@
 import { test as base } from '@playwright/test';
 import { getConfig } from '../src/config/env-loader';
 import { chromium } from 'playwright';
+import { logger, Logger } from '../src/utils/logger';
 
 /**
  * Spike: Hybrid Auth Handshake
@@ -16,8 +17,8 @@ const test = base.extend({});
 test.describe('Spike: Hybrid Auth Handshake', () => {
   test('Verify cookies from auth.json work for API calls', async () => {
     const config = getConfig();
-    console.log(`\n🔍 Spike: Hybrid Auth Handshake`);
-    console.log(`📍 Environment: ${config.baseUrl}`);
+    logger.info(`\n🔍 Spike: Hybrid Auth Handshake`);
+    logger.info(`📍 Environment: ${config.baseUrl}`);
 
     try {
       // Step 1: Launch browser and attempt to load storage state
@@ -26,7 +27,7 @@ test.describe('Spike: Hybrid Auth Handshake', () => {
         storageState: 'playwright/.auth/admin.json',
       });
 
-      console.log('✅ Storage state loaded from playwright/.auth/admin.json');
+      logger.info('✅ Storage state loaded from playwright/.auth/admin.json');
 
       // Step 2: Create API request context with storage state
       const page = await context.newPage();
@@ -39,9 +40,9 @@ test.describe('Spike: Hybrid Auth Handshake', () => {
       );
 
       if (!accessTokenCookie) {
-        console.log(
+        logger.warn(
           '⚠️  No accessToken cookie found. Available cookies:',
-          cookies.map((c) => c.name)
+          { cookieNames: cookies.map((c) => c.name) }
         );
       }
 
@@ -59,31 +60,33 @@ test.describe('Spike: Hybrid Auth Handshake', () => {
         }
       );
 
-      console.log(`📡 GET /api/v1/glossary/specializations`);
-      console.log(`📊 Response Status: ${response.status()}`);
+      logger.info(`📡 GET /api/v1/glossary/specializations`);
+      logger.info(`📊 Response Status: ${response.status()}`);
 
       if (response.status() === 200) {
         const data = await response.json();
-        console.log(`✅ SUCCESS: Auth handshake verified!`);
-        console.log(
+        logger.info(`✅ SUCCESS: Auth handshake verified!`);
+        logger.info(
           `   Received ${Array.isArray(data) ? data.length : Object.keys(data).length} specializations`
         );
-        console.log(`\n✅ SPIKE RESULT: Hybrid Auth Strategy is VIABLE`);
+        logger.info(`\n✅ SPIKE RESULT: Hybrid Auth Strategy is VIABLE`);
       } else if (response.status() === 401) {
-        console.error(
+        logger.error(
           `❌ FAILED: Received 401 Unauthorized. Cookies from admin.json do not work for API calls.`
         );
-        console.error(`   Response body:`, await response.text());
-        console.log(`\n❌ SPIKE RESULT: ARCHITECTURE REDESIGN REQUIRED`);
+        logger.error(`   Response body:`, { body: await response.text() });
+        logger.error(`\n❌ SPIKE RESULT: ARCHITECTURE REDESIGN REQUIRED`);
       } else {
-        console.warn(`⚠️  Unexpected status: ${response.status()}`);
-        console.warn(`   Response:`, await response.text());
+        logger.warn(`⚠️  Unexpected status: ${response.status()}`);
+        logger.warn(`   Response:`, { body: await response.text() });
       }
 
       await context.close();
       await browser.close();
     } catch (error) {
-      console.error('❌ Spike execution failed:', error);
+      logger.error('❌ Spike execution failed:', 
+        error instanceof Error ? { message: error.message } : { error: String(error) 
+        });
       throw error;
     }
   });
