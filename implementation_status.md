@@ -10,10 +10,10 @@
 
 | Metric | Count |
 |--------|-------|
-| ✅ Features Done | 47 |
+| ✅ Features Done | 50 |
 | 🚧 In Progress | 0 |
-| ❌ Missing | 31 |
-| **Overall Completion** | **60.3%** |
+| ❌ Missing | 28 |
+| **Overall Completion** | **64.1%** |
 
 ---
 
@@ -150,11 +150,11 @@
 | Date utilities (date-utils.ts) | ❌ Missing | Not found in [src/utils/](src/utils/) |
 | Person generator (person.generator.ts) | ❌ Missing | Not found in src/utils/generators/ |
 | Medical generator (medical.generator.ts) | ❌ Missing | Not found in src/utils/generators/ |
-| API endpoints constants (api-endpoints.ts) | ❌ Missing | Not found in [src/lib/api/](src/lib/api/) |
+| API endpoints constants (api-endpoints.ts) | ✅ Done | [src/lib/api/api-endpoints.ts](src/lib/api/api-endpoints.ts) - 30+ endpoints across 8 families with JSDoc documentation |
 | Swagger models documentation (swagger-models.ts) | ❌ Missing | Not found in [src/lib/entities/](src/lib/entities/) |
-| Services index/exports (services/index.ts) | ❌ Missing | Not found in [src/lib/api/services/](src/lib/api/services/) |
-| Fixtures index/exports (fixtures/index.ts) | ❌ Missing | Not found in [src/lib/fixtures/](src/lib/fixtures/) |
-| Entities index/exports (entities/index.ts) | ❌ Missing | Not found in [src/lib/entities/](src/lib/entities/) |
+| Services index/exports (services/index.ts) | ✅ Done | [src/lib/api/services/index.ts](src/lib/api/services/index.ts) - clean namespace imports for all service classes |
+| Fixtures index/exports (fixtures/index.ts) | ✅ Done | [src/lib/fixtures/index.ts](src/lib/fixtures/index.ts) - clean namespace imports for PatientFactory, ShiftFactory |
+| Entities index/exports (entities/index.ts) | ✅ Done | [src/lib/entities/index.ts](src/lib/entities/index.ts) - clean namespace imports for all type definitions |
 
 ---
 
@@ -169,8 +169,8 @@
 | Phase 5 | UI Components & Pages | 3 | 15 | 20% |
 | Phase 6 | E2E Scenario Assembly | 0 | 3 | 0% |
 | Phase 7 | Infrastructure & CI/CD | 1 | 10 | 10% |
-| Supporting | Utilities & Exports | 0 | 8 | 0% |
-| **TOTAL** | | **47** | **78** | **60.3%** |
+| Supporting | Utilities & Exports | 3 | 8 | 37.5% |
+| **TOTAL** | | **50** | **78** | **64.1%** |
 
 ---
 
@@ -182,7 +182,7 @@
 | **Milestone 2: Core** | 🟢 96% | Auth ✅, Config ✅, API ✅, Logger ✅ | Ready for UI layer |
 | **Milestone 3: Scenarios** | 🔴 3% | Pages ❌, E2E ❌, Fixtures ❌ | Requires full Phase 5 completion |
 | **Milestone 4: CI/CD** | 🔴 10% | Infrastructure missing, single README | Docker + GitLab CI blocking production readiness |
-| **Overall** | 🟡 **60.3%** | 47/78 features | Phase 5 & 7 are critical path blockers |
+| **Overall** | 🟡 **64.1%** | 50/78 features | Phase 5 & 7 are critical path blockers |
 
 ---
 

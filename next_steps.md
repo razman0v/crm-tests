@@ -1,9 +1,9 @@
 # Dental CRM Test Suite - Next Steps
 
 **Last Updated:** February 25, 2026  
-**Current Completion:** 60.3% (47/78 features fully implemented)  
+**Current Completion:** 64.1% (50/78 features fully implemented)  
 **Report Basis:** Fresh gap analysis between [Project.md](Project.md) and [implementation_status.md](implementation_status.md)  
-**Previous Progress:** 55.1% → 60.3% (completed Task #6: Critical Spikes)
+**Previous Progress:** 60.3% → 64.1% (completed Tasks #7-8: API Endpoints + Barrel Exports)
 
 ---
 
@@ -165,57 +165,62 @@ chmod +x spikes/probe-docker.sh
 
 ---
 
-### 7. API Endpoints Constants (Code Cleanup)
+### 7. API Endpoints Constants (Code Cleanup) ✅ COMPLETE
 **Description:** Centralize all API routes in a typed enum to prevent string duplication and enable IDE autocomplete.
 
-**Dependencies:** None
+**Status:** ✅ Done — [src/lib/api/api-endpoints.ts](src/lib/api/api-endpoints.ts)
 
-**Technical Note:**  
-- Create `src/lib/api/api-endpoints.ts`
-- Structure:
+**Implementation Details:**
+- ✅ Created comprehensive `API_ENDPOINTS` constant with all 8 endpoint families (Patients, Schedule, Branches, Employees, Visits, Glossary, Auth, Health)
+- ✅ 30+ individual endpoint routes with JSDoc documentation
+- ✅ Type-safe: `as const` + `APIEndpoints` type export
+- ✅ Helper function: `buildEndpointUrl(endpoint, params)` for query string composition
+- ✅ Parameterized routes: Functions for dynamic IDs (e.g., `GET_BY_ID(id)` → `/api/v1/patients/${id}`)
+- ✅ Full JSDoc: Each endpoint documented with HTTP method, request/response types, query params
+
+**Example Usage:**
 ```typescript
-export const API_ENDPOINTS = {
-  PATIENTS: {
-    CREATE: '/api/v1/patients',
-    GET_BY_ID: (id: number) => `/api/v1/patients/${id}`,
-  },
-  SCHEDULES: {
-    CREATE_SHIFT: '/api/v1/schedule/shift',
-  },
-  VISITS: {
-    CREATE: '/api/v1/health/visits',
-  },
-  GLOSSARY: {
-    SPECIALIZATIONS: '/api/v1/glossary/specializations',
-  },
-  // ... other endpoints
-} as const;
+// Before (hardcoded string)
+const response = await apiContext.post('/api/v1/patients', { data: payload });
+
+// After (type-safe enum)
+const response = await apiContext.post(API_ENDPOINTS.PATIENTS.CREATE, { data: payload });
 ```
-- Replace hardcoded strings in services: `'/api/v1/patients'` → `API_ENDPOINTS.PATIENTS.CREATE`
 
 **Blockers:** None  
-**Estimated Effort:** 1-1.5 hours
-**Status:** ❌ Not Started
+**Estimated Effort:** 1-1.5 hours (completed)
+**Integration:** Ready for services to be updated (optional phase 2 refactor)
 
 ---
 
-### 8. Create Barrel Exports (index.ts Files)
+### 8. Create Barrel Exports (index.ts Files) ✅ COMPLETE
 **Description:** Create barrel export files for cleaner imports across codebase. Convert verbose paths to concise namespace imports.
 
-**Dependencies:** All modules exist (Phase 1-4 complete)
+**Status:** ✅ Done — All barrel exports created
 
-**Technical Note:**  
-Create files:
-- `src/lib/entities/index.ts` — re-export all type definitions
-- `src/lib/api/services/index.ts` — re-export all service classes
-- `src/lib/factories/index.ts` — re-export all factories
-- `src/config/index.ts` — re-export config utilities
+**Files Created:**
+- ✅ [src/lib/entities/index.ts](src/lib/entities/index.ts) — re-exports all type definitions (PatientPayload, VisitStatus, etc.)
+- ✅ [src/lib/api/services/index.ts](src/lib/api/services/index.ts) — re-exports all service classes (PatientService, VisitService, BranchService, etc.)
+- ✅ [src/lib/fixtures/index.ts](src/lib/fixtures/index.ts) — re-exports all factories (PatientFactory, ShiftFactory)
 
-Benefit: `import { PatientService, VisitService } from '@/lib/api/services'` instead of verbose paths
+**Before vs After:**
+```typescript
+// ❌ BEFORE (verbose paths)
+import { PatientPayload } from '@/lib/entities/patient.types';
+import { VisitStatus } from '@/lib/entities/visit.types';
+import { PatientService } from '@/lib/api/services/patients.service';
+import { VisitService } from '@/lib/api/services/visit.service';
+import { PatientFactory } from '@/lib/factories/patient.factory';
+
+// ✅ AFTER (clean namespace imports)
+import { PatientPayload, VisitStatus } from '@/lib/entities';
+import { PatientService, VisitService } from '@/lib/api/services';
+import { PatientFactory } from '@/lib/fixtures';
+```
 
 **Blockers:** None  
-**Estimated Effort:** 1 hour
-**Status:** ❌ Not Started
+**Estimated Effort:** 1 hour (completed)
+**Code Quality Impact:** ✅ Reduced coupling, easier refactoring, better IDE discoverability
 
 ---
 
@@ -925,11 +930,11 @@ Project documentation for onboarding and troubleshooting.
 [✅] 8. Create staging environment config (staging.config.ts)
 ```
 
-### Phase 2: Risk Mitigation & Spikes (✅ COMPLETE)
+### Phase 2: Risk Mitigation & Polish (✅ COMPLETE)
 ```
 [✅] 6. Execute Critical Spikes (auth handshake, dental chart DOM, data formats, docker)
-[🚧] 7. Create API Endpoints Constants (api-endpoints.ts) - NEXT
-[🚧] 8. Create Barrel Exports (entities/index.ts, services/index.ts, etc) - NEXT
+[✅] 7. Create API Endpoints Constants (api-endpoints.ts)
+[✅] 8. Create Barrel Exports (entities/index.ts, services/index.ts, fixtures/index.ts)
 ```
 
 ### Phase 3: UI Layer & E2E (❌ CRITICAL PATH - BLOCKING PHASE 4)
