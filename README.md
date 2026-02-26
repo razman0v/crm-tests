@@ -5,3 +5,4 @@
 
 **To generate and open the report immediately in your browser:**
 - npm run allure:serve
+- allure serve ./allure-results

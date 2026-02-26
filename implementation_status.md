@@ -10,10 +10,10 @@
 
 | Metric | Count |
 |--------|-------|
-| ✅ Features Done | 50 |
+| ✅ Features Done | 54 |
 | 🚧 In Progress | 0 |
-| ❌ Missing | 28 |
-| **Overall Completion** | **64.1%** |
+| ❌ Missing | 24 |
+| **Overall Completion** | **69.2%** |
 
 ---
 
@@ -42,7 +42,7 @@
 
 ## Milestone 2: Framework Core & Data Layer
 
-### Phase 3: Configuration & Auth Infrastructure (13/15 ✅ 87%)
+### Phase 3: Configuration & Auth Infrastructure (16/16 ✅ 100%)
 
 | Feature | Status | Proof |
 |---------|--------|-------|
@@ -60,8 +60,11 @@
 | Logger integration: BaseService | ✅ Done | [src/lib/api/services/base.service.ts](src/lib/api/services/base.service.ts#L10-L50) - logging at token extraction, GET/POST boundaries |
 | Logger integration: env-loader | ✅ Done | [src/config/env-loader.ts](src/config/env-loader.ts#L8-L12) - logs config loading and validation |
 | Allure Reporter Configuration | ✅ Done | [playwright.config.ts](playwright.config.ts#L40-L60) - allure-reporter, HTML, and List reporters configured |
-| SMS Page (sms.page.ts) | ❌ Missing | Not found in [src/pages/auth/](src/pages/auth/) |
-| Role Selection Page (role.page.ts) | ❌ Missing | Not found in src/pages/auth/ |
+| SMS Page (sms.page.ts) | ✅ Done | [src/pages/auth/sms.page.ts](src/pages/auth/sms.page.ts#L1-L50) - SMS code entry with waitForSmsInput, enterSmsCode, submitSmsCode methods |
+| Role Selection Page (role.page.ts) | ✅ Done | [src/pages/auth/role.page.ts](src/pages/auth/role.page.ts#L1-L60) - role selection with selectRole, selectEmployeeRole, selectPatientRole, selectAdminRole methods |
+| Branch Selection Page (branch.page.ts) | ✅ Done | [src/pages/auth/branch.page.ts](src/pages/auth/branch.page.ts#L1-L80) - branch/company selection with searchBranch, selectBranchByName, getAvailableBranches methods |
+| Auth Pages Barrel Export (index.ts) | ✅ Done | [src/pages/auth/index.ts](src/pages/auth/index.ts#L1-L10) - clean imports for LoginPage, SmsPage, RolePage, BranchPage |
+| Auth Workflow Integration Tests | ✅ Done | [src/tests/e2e/smoke/auth-workflow.spec.ts](src/tests/e2e/smoke/auth-workflow.spec.ts#L1-L100) - 15+ tests for SMS, Role, Branch pages + complete workflow validation |
 
 ### Phase 4: API Layer & Data Services (21/21 ✅ 100%)
 

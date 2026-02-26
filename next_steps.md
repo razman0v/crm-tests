@@ -1,9 +1,9 @@
 # Dental CRM Test Suite - Next Steps
 
-**Last Updated:** February 25, 2026  
-**Current Completion:** 64.1% (50/78 features fully implemented)  
+**Last Updated:** February 26, 2026  
+**Current Completion:** 69.2% (54/78 features fully implemented)  
 **Report Basis:** Fresh gap analysis between [Project.md](Project.md) and [implementation_status.md](implementation_status.md)  
-**Previous Progress:** 60.3% → 64.1% (completed Tasks #7-8: API Endpoints + Barrel Exports)
+**Previous Progress:** 64.1% → 69.2% (completed Task #15: Auth Pages - SMS, Role, Branch)
 
 ---
 
@@ -352,14 +352,24 @@ Six reusable components needed for complete visit workflow coverage.
 Complete the authentication workflow with missing pages that follow LoginPage pattern.
 
 **Files:**
-- `src/pages/auth/sms.page.ts` — SMS code entry
-- `src/pages/auth/role.page.ts` — role selection dropdown
-- `src/pages/auth/branch.page.ts` — branch selection
-- `src/pages/auth/auth-wizard.page.ts` — optional: multi-step auth container
+- ✅ `src/pages/auth/sms.page.ts` — SMS code entry with helper methods
+- ✅ `src/pages/auth/role.page.ts` — role selection dropdown  
+- ✅ `src/pages/auth/branch.page.ts` — branch selection with search
+- ✅ `src/pages/auth/index.ts` — barrel exports for all auth pages
 
 **Dependency:** Task #9 (BasePage class for consistency)  
-**Estimated Effort:** 2-3 hours
-**Status:** ❌ Not Started — **TWO OF THESE MISSING (Role, Branch)** per implementation_status.md
+**Estimated Effort:** 2-3 hours (completed)
+**Status:** ✅ Done
+
+**Implementation Details:**
+- ✅ [SmsPage](src/pages/auth/sms.page.ts) - extends BasePage with `waitForSmsInput()`, `enterSmsCode()`, `enterSmsCodeFromConfig()`, `submitSmsCode()` methods
+- ✅ [RolePage](src/pages/auth/role.page.ts) - extends BasePage with `selectRole()`, `selectEmployeeRole()`, `selectPatientRole()`, `selectAdminRole()`, `getSelectedRole()`, `submitRoleSelection()` methods
+- ✅ [BranchPage](src/pages/auth/branch.page.ts) - extends BasePage with `openBranchDropdown()`, `searchBranch()`, `selectBranchByName()`, `selectBranchFromConfig()`, `getAvailableBranches()`, `submitBranchSelection()` methods
+- ✅ [Barrel Export](src/pages/auth/index.ts) - clean namespace imports for all auth page objects
+- ✅ [Integration Tests](src/tests/e2e/smoke/auth-workflow.spec.ts) - 15+ test cases covering SMS, Role, Branch pages + complete workflow flow with error handling
+- All three pages follow BasePage pattern with comprehensive logging integration
+- Full JSDoc documentation with usage examples throughout
+- Test coverage: SMS validation, role selection, branch selection, config injection, logging, error handling
 
 ---
 
