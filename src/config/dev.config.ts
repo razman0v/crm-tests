@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { TestConfig } from './config.interface';
 
 export const devConfig: TestConfig = {
-  baseUrl: process.env.BASE_URL || 'http://localhost/3000',
+  baseUrl: process.env.BASE_URL || 'http://localhost:3000',
   companyUid: process.env.COMPANY_UID || '',
   
   credentials: {
@@ -16,6 +16,8 @@ export const devConfig: TestConfig = {
     captchaEnabled: false,
     smsCode: process.env.SMS_CODE || '',
     secondCompanyName: process.env.SECOND_COMPANY_NAME || '',
-    mainPageUrl: process.env.MAIN_PAGE_URL || '',
+    // mainPageUrl MUST be a path, not a full URL
+    // Examples: '/dashboard', '/visits', '/home'
+    mainPageUrl: process.env.MAIN_PAGE_URL || '/dashboard',
   },
 };
