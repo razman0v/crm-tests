@@ -42,6 +42,7 @@ export default defineConfig({
     {
       name: 'setup',
       testMatch: /auth\.setup\.ts/,
+      use: { ...devices['Desktop Chrome'] },
     },
 
     // 2. E2E Tests: Основные тесты

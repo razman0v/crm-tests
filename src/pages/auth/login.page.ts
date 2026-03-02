@@ -32,7 +32,7 @@ export class LoginPage extends BasePage {
 
   async goto() {
     this.logger.debug('LoginPage: navigating to login');
-    await super.goto('/');
+    await super.goto();
   }
 
   async performLogin() {
@@ -58,7 +58,7 @@ export class LoginPage extends BasePage {
     await this.companyOption.click();
 
     this.logger.debug('LoginPage: finalizing login');
-    await this.waitForNavigationComplete();
+    await this.loginButton.click();
     this.logger.info('LoginPage: ✅ login successful');
   }
 }

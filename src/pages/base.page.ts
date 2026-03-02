@@ -49,8 +49,8 @@ export abstract class BasePage {
    * await page.goto('/visits/42');
    * await page.goto('/dashboard');
    */
-  async goto(path: string = '/'): Promise<void> {
-    const url = `${this.config.baseUrl}${path}`;
+  async goto(path: string = ''): Promise<void> {
+    const url = new URL(path, this.config.baseUrl).toString();
     this.logger.info('Navigating to URL', { url, path });
     await this.page.goto(url, { waitUntil: 'networkidle' });
     await this.waitForNavigationComplete();

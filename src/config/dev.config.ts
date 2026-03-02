@@ -16,8 +16,6 @@ export const devConfig: TestConfig = {
     captchaEnabled: false,
     smsCode: process.env.SMS_CODE || '',
     secondCompanyName: process.env.SECOND_COMPANY_NAME || '',
-    // mainPageUrl MUST be a path, not a full URL
-    // Examples: '/dashboard', '/visits', '/home'
-    mainPageUrl: process.env.MAIN_PAGE_URL || '/dashboard',
+    mainPageUrl: process.env.MAIN_PAGE_URL || '',
   },
 };
