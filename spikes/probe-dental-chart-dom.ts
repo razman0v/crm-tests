@@ -1,7 +1,7 @@
-import { test as base } from '@playwright/test';
+import { test as base, expect } from '@playwright/test';
 import { getConfig } from '../src/config/env-loader';
-import { chromium } from 'playwright';
-import { logger, Logger } from '../src/utils/logger';
+import { logger } from '../src/utils/logger';
+import { VisitPage } from '../src/pages/visit.page';
 
 /**
  * Spike: Dental Chart DOM & Selector Strategy
@@ -10,23 +10,34 @@ import { logger, Logger } from '../src/utils/logger';
  *
  * Execution: Navigate to patient visit page → inspect DOM via DevTools → test different
  * selector patterns → document winning pattern for task #11
+ * 
+ * NOTE: This spike requires a valid visit with patient data in the environment.
+ * Update VISIT_ID constant if your test environment uses different IDs.
  */
+
+const VISIT_ID = 1708; // TODO: Make configurable via env var or fixture
+
+// Temporary coordinate map for spike logging/debugging
+const TOOTH_COORDINATES: Record<number, string> = {
+  41: 'x=41',
+  42: 'x=42',
+};
 
 const test = base.extend({});
 
 test.describe('Spike: Dental Chart DOM & Selector Strategy', () => {
-  test('Inspect Dental Chart DOM and validate selector strategies', async () => {
+  test('Inspect Dental Chart DOM and validate selector strategies', async ({ browser, request }, testInfo) => {
     const config = getConfig();
     logger.info(`\n🔍 Spike: Dental Chart DOM & Selector Strategy`);
     logger.info(`📍 Environment: ${config.baseUrl}`);
 
-    try {
-      const browser = await chromium.launch();
-      const context = await browser.newContext({
-        storageState: 'playwright/.auth/admin.json',
-      });
+    let context;
+    let page;
 
-      const page = await context.newPage();
+    try {
+      context = await browser.newContext({ storageState: 'playwright/.auth/admin.json' });
+      page = await context.newPage();
+      const visitPage = new VisitPage(page, config);
 
       // Enable console message logging
       page.on('console', (msg) => {
@@ -35,112 +46,87 @@ test.describe('Spike: Dental Chart DOM & Selector Strategy', () => {
         }
       });
 
-      logger.info('📋 Step 1: Navigate to a patient visit page...');
-      // Attempt to navigate to visit list or dashboard
-      await page.goto(`${config.baseUrl}/`, { waitUntil: 'networkidle' });
+      logger.info(`\n📋 Step 1: Navigate to patient visit page (ID: ${VISIT_ID})...`);
 
-      // Try to find a visit or navigate to visits list
-      const visitLink = page.locator('a:has-text("Visits"), a:has-text("Прием")').first();
-      if (await visitLink.isVisible({ timeout: 5000 }).catch(() => false)) {
-        logger.info('   ✅ Found visit navigation link');
-        await visitLink.click();
-        await page.waitForLoadState('networkidle');
-      } else {
-        logger.warn('   ⚠️  Could not find visit link, attempting direct navigation');
-        // Try direct navigation with a sample visit ID (may fail if no visits exist)
-        await page.goto(`${config.baseUrl}/visits/1`, {
-          waitUntil: 'networkidle',
-        }).catch(() => {
-          logger.info('   ℹ️  Direct visit navigation not available');
+      // Navigate to visit - expect successful navigation
+      await page.goto(`${config.baseUrl}/schedule/visits/${VISIT_ID}`, { waitUntil: 'networkidle' })
+        .catch(() => {
+          throw new Error(`Failed to navigate to visit ${VISIT_ID}. Verify the visit ID exists in your environment.`);
         });
-      }
+
+      // logger.info('✅ Successfully navigated to visit page');
+      // await visitPage.clickStateButton().catch(() => {
+      //   throw new Error('Failed to click state button. Ensure the visit is in a state that allows this action.');
+      // });
+      // logger.info('✅ Clicked state button');
+      // await visitPage.clickStateButton().catch(() => {
+      //   throw new Error('Failed to click state button again. Ensure the visit transitioned to the next state.');
+      // });
+      // logger.info('✅ Clicked state button again');
 
       // Step 2: Locate Dental Chart element
       logger.info('\n📋 Step 2: Inspecting Dental Chart DOM...');
+      await visitPage.clickDentalChartButton()
+      await page.waitForTimeout(5000); // Wait for chart to render
 
-      // Check for SVG-based chart
-      const svgChart = page.locator('svg[data-testid*="dental"], svg.dental-chart, svg[class*="dental"]').first();
-      const svgExists = await svgChart.isVisible({ timeout: 3000 }).catch(() => false);
 
-      if (svgExists) {
-        logger.info('   ✅ Found SVG-based Dental Chart');
-        const svgHtml = await svgChart.evaluate((el) => el.outerHTML.substring(0, 500));
-        logger.info(`   📄 SVG Structure (first 500 chars): ${svgHtml}`);
+logger.info('\n📋 Шаг 2: Извлечение координат всех зубов...');
 
-        // Test different selector strategies
-        logger.info('\n📋 Step 3: Testing selector strategies for teeth...');
+      // 1. Умный сканер: ищет только те координаты left, внутри которых реально есть SVG
+      const extractedCoordinates = await page.evaluate(() => {
+        const svgs = Array.from(document.querySelectorAll('.TeethMap__teeth-svg svg'));
+        const coords = new Set<number>();
 
-        // Strategy 1: Data attributes
-        const teethByData = page.locator('g[data-tooth-id], g[data-tooth-number], path[data-tooth]');
-        const teethByDataCount = await teethByData.count();
-        logger.info(`   Strategy 1 (data attributes): Found ${teethByDataCount} teeth`);
-
-        // Strategy 2: CSS classes
-        const teethByClass = page.locator('g.tooth, path.tooth, g[class*="tooth"]');
-        const teethByClassCount = await teethByClass.count();
-        logger.info(`   Strategy 2 (CSS classes): Found ${teethByClassCount} teeth`);
-
-        // Strategy 3: SVG paths with specific patterns
-        const teethByPath = page.locator('path[d*="M"]'); // SVG path elements
-        const teethByPathCount = await teethByPath.count();
-        logger.info(`   Strategy 3 (SVG paths): Found ${teethByPathCount} path elements`);
-
-        if (teethByDataCount > 0) {
-          logger.info(`\n✅ RECOMMENDED STRATEGY: Data attributes (found ${teethByDataCount} teeth)`);
-          logger.info(`   Selector pattern: g[data-tooth-id], path[data-tooth-number]`);
-          logger.info(`   Implementation: map tooth IDs 1-32 to [data-tooth-id="N"]`);
-        } else if (teethByClassCount > 0) {
-          logger.info(`\n✅ RECOMMENDED STRATEGY: CSS classes (found ${teethByClassCount} teeth)`);
-          logger.info(`   Selector pattern: g.tooth:nth-of-type(N), path[class*="tooth-"]`);
-        } else {
-          logger.warn(`\n⚠️  UNCERTAIN STRATEGY: Could not identify stable selector`);
-          logger.info(`   Manual inspection required. SVG structure:`);
-          const chartHtml = await svgChart.evaluate(
-            (el) => el.outerHTML.substring(0, 2000)
-          );
-          logger.info(chartHtml);
-        }
-      } else {
-        // Check for Canvas-based chart
-        const canvas = page.locator('canvas[data-testid*="dental"], canvas.dental-chart').first();
-        const canvasExists = await canvas.isVisible({ timeout: 3000 }).catch(() => false);
-
-        if (canvasExists) {
-          logger.info('   ✅ Found Canvas-based Dental Chart');
-          logger.info(`\n⚠️  STRATEGY: Coordinate-based interaction required`);
-          logger.info(`   Cannot use CSS selectors; must use page.mouse.click(x, y)`);
-          logger.info(`   Will need tooth position mapping via spike inspection`);
-          logger.info(
-            `   Implementation: Extract canvas boundingBox, map tooth positions, click by coordinates`
-          );
-        } else {
-          logger.info('   ❌ No Dental Chart found on this page');
-          logger.info(
-            '   Ensure you are on a visit details page with a Dental Chart component'
-          );
-        }
-      }
-
-      // Step 4: Summary
-      logger.info('\n📋 Step 4: Spike Summary');
-      logger.info(`   ✅ DOM inspection complete`);
-      logger.info(`   📌 Recommendation for Task #11: Use findings above to select selector strategy`);
-      logger.info(
-        `   📌 If SVG + data attrs: implement selectTooth(id) with g[data-tooth-id="{id}"].click()`
-      );
-      logger.info(
-        `   📌 If Canvas: implement selectTooth(id) with coordinate mapping + page.mouse.click(x, y)`
-      );
-
-      await context.close();
-      await browser.close();
-
-      logger.info(`\n✅ SPIKE RESULT: Dental Chart selector strategy IDENTIFIED`);
-   } catch (error) {
-      logger.error('❌ Spike execution failed:', 
-        error instanceof Error ? { message: error.message } : { error: String(error) 
+        svgs.forEach(svg => {
+          // Поднимаемся вверх от SVG, пока не найдем контейнер с координатой left
+          let el = svg.parentElement;
+          while (el && el.tagName === 'DIV') {
+            if (el.style.left) {
+              const leftVal = parseFloat(el.style.left);
+              // Игнорируем отрицательные значения и мелкие локальные смещения
+              if (leftVal > 10) {
+                coords.add(leftVal);
+                break; // Нашли главную координату колонки, переходим к следующему SVG
+              }
+            }
+            el = el.parentElement;
+          }
         });
-      throw error;
+
+        // Возвращаем отсортированный массив (от левого края экрана к правому)
+        return Array.from(coords).sort((a, b) => a - b).map(v => `${v}px`);
+      });
+
+      logger.info(`🚀 Найдено уникальных колонок с зубами: ${extractedCoordinates.length}`);
+      logger.info(`📋 Массив координат (слева направо):`);
+      logger.info(JSON.stringify(extractedCoordinates, null, 2));
+
+      // 2. Проверка работоспособности позиционного локатора
+      if (extractedCoordinates.length > 0) {
+        logger.info('\n📋 Шаг 3: Проверка доступности зуба по координате...');
+        
+        // Берем первую найденную координату (самый левый зуб на экране, скорее всего 18/48)
+        const testLeftCoord = extractedCoordinates[0]; 
+        
+        // Создаем локатор, игнорируя пробелы после двоеточия
+        const testTooth = page.locator(`.TeethMap__teeth-svg div[style*="left: ${testLeftCoord}"], .TeethMap__teeth-svg div[style*="left:${testLeftCoord}"]`).locator('svg path').first();
+
+        // Проверяем, что элемент действительно в DOM и виден
+        await expect(testTooth).toBeVisible({ timeout: 5000 });
+        
+        // Извлекаем boundingBox, чтобы доказать, что по нему можно кликнуть
+        const box = await testTooth.boundingBox();
+        logger.info(`✅ УСПЕХ: Зуб по координате ${testLeftCoord} найден!`);
+        logger.info(`   Физические координаты для клика: X: ${box?.x}, Y: ${box?.y}`);
+        
+        // Визуальная подсветка (если смотришь в режиме --headed)
+        await testTooth.evaluate(el => (el as SVGElement).style.fill = 'red').catch(() => {});
+      } else {
+        logger.error('❌ ОШИБКА: Координаты не найдены. Проверьте, отрисовался ли SVG чарта.');
+      }
+    } finally {
+      if (page) await page.close();
+      if (context) await context.close();
     }
   });
 });

@@ -68,12 +68,12 @@ export abstract class BasePage {
    */
   async waitForNavigationComplete(timeout: number = 10000): Promise<void> {
     this.logger.debug('Waiting for navigation to complete', { timeout });
-    
+
     try {
       // Wait for network to become idle
       await this.page.waitForLoadState('networkidle', { timeout });
       this.logger.debug('Network idle achieved');
-      
+
       // Optional: Wait for specific common elements to be visible if needed
       // This prevents false positives from premature readiness
       await this.page.waitForTimeout(100);
@@ -111,6 +111,28 @@ export abstract class BasePage {
       return true;
     } catch {
       return false;
+    }
+  }
+
+  /**
+   * Исследует коллекцию элементов.
+   * Ждет появления хотя бы одного элемента, затем возвращает общее количество.
+   * Идеально подходит для Spike-тестов или необязательных компонентов.
+   * @param locator - Локатор коллекции (например, зубы или строки таблицы)
+   * @param timeout - Время ожидания в мс (по умолчанию 3000)
+   * @returns Количество найденных элементов (0, если ничего не найдено)
+   */
+  async probeCollection(locator: Locator, timeout: number = 3000): Promise<number> {
+    this.logger.debug('Probing element collection', { timeout });
+    try {
+      // Ждем появления первого элемента в коллекции
+      await locator.first().waitFor({ state: 'visible', timeout });
+      const count = await locator.count();
+      this.logger.debug('Collection probe successful', { count });
+      return count;
+    } catch (error) {
+      this.logger.debug('Collection probe: no elements appeared within timeout', { timeout });
+      return 0;
     }
   }
 
@@ -272,8 +294,8 @@ export abstract class BasePage {
    */
   async takeScreenshot(filename: string): Promise<void> {
     this.logger.info('Taking screenshot', { filename });
-    await this.page.screenshot({ 
-      path: `./test-results/screenshots/${filename}-${Date.now()}.png` 
+    await this.page.screenshot({
+      path: `./test-results/screenshots/${filename}-${Date.now()}.png`
     });
   }
 }
