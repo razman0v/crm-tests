@@ -1,4 +1,4 @@
-export interface TestConfig {
+export interface config {
   baseUrl: string;
   companyUid: string;
   credentials: {

@@ -1,6 +1,6 @@
 import { Page, Locator } from '@playwright/test';
 import { BasePage } from '../base.page';
-import { TestConfig } from '../../config/config.interface';
+import { config } from '../../config/config.interface';
 
 /**
  * Branch/Company Selection Page Object
@@ -21,7 +21,7 @@ export class BranchPage extends BasePage {
   readonly branchOption: Locator;
   readonly continueButton: Locator;
 
-  constructor(page: Page, config: TestConfig) {
+  constructor(page: Page, config: config) {
     super(page, config);
 
     // Branch/Company selection dropdown
@@ -170,7 +170,7 @@ export class BranchPage extends BasePage {
       this.logger.error('Branch name not configured', { 
         featurePath: 'config.features.secondCompanyName'
       });
-      throw new Error('Branch/Company name not configured in TestConfig.features');
+      throw new Error('Branch/Company name not configured in config.features');
     }
     
     await this.selectBranchByName(branchName);

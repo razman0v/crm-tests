@@ -46,7 +46,7 @@
 
 | Feature | Status | Proof |
 |---------|--------|-------|
-| Config interface (TestConfig) | ✅ Done | [src/config/config.interface.ts](src/config/config.interface.ts#L1-L20) - baseUrl, apiUrl, credentials, features, timeouts defined |
+| Config interface (config) | ✅ Done | [src/config/config.interface.ts](src/config/config.interface.ts#L1-L20) - baseUrl, apiUrl, credentials, features, timeouts defined |
 | Environment loader with TEST_ENV switch | ✅ Done | [src/config/env-loader.ts](src/config/env-loader.ts#L1-L15) - reads TEST_ENV, routes to dev/staging configs |
 | Dev config (dev.config.ts) | ✅ Done | [src/config/dev.config.ts](src/config/dev.config.ts#L1-L30) - loads from .env with fallbacks |
 | Staging config (staging.config.ts) | ✅ Done | [src/config/staging.config.ts](src/config/staging.config.ts#L1-L30) - staging environment configuration |

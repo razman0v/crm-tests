@@ -1,7 +1,7 @@
 import 'dotenv/config';
-import { TestConfig } from './config.interface';
+import { config } from './config.interface';
 
-export const devConfig: TestConfig = {
+export const devConfig: config = {
   baseUrl: process.env.BASE_URL || 'http://localhost:3000',
   companyUid: process.env.COMPANY_UID || '',
   

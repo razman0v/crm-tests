@@ -1,6 +1,6 @@
 import { Page, Locator } from '@playwright/test';
 import { BasePage } from '../base.page';
-import { TestConfig } from '../../config/config.interface';
+import { config } from '../../config/config.interface';
 
 /**
  * Role Selection Page Object
@@ -25,7 +25,7 @@ export class RolePage extends BasePage {
   readonly adminRole: Locator;
   readonly continueButton: Locator;
 
-  constructor(page: Page, config: TestConfig) {
+  constructor(page: Page, config: config) {
     super(page, config);
 
     // Role radio buttons/selection options

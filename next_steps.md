@@ -10,12 +10,12 @@
 ## 🚀 Immediate Priorities (Next Sprint)
 
 ### 1. Config Runtime Validation (Zod Schema) ⭐ BLOCKING
-**Description:** Add Zod schema validation to TestConfig. Currently only TypeScript interfaces exist, exposing risk of invalid config at runtime. Many features depend on validated config.
+**Description:** Add Zod schema validation to config. Currently only TypeScript interfaces exist, exposing risk of invalid config at runtime. Many features depend on validated config.
 
 **Dependencies:** Zod already installed in package.json
 
 **Technical Note:**  
-- Create `src/config/config.schema.ts` with `ConfigSchema` Zod definition matching `TestConfig` interface
+- Create `src/config/config.schema.ts` with `ConfigSchema` Zod definition matching `config` interface
 - Update `src/config/env-loader.ts` to validate config before returning: `ConfigSchema.parse(devConfig)`
 - Throw detailed `ZodError` with field names if validation fails
 - Test by running with incomplete `.env` — should fail with clear field errors
@@ -245,7 +245,7 @@ Create abstract base class for all Page Objects to reduce duplication and enforc
 **Estimated Effort:** 1-2 hours
 **Status:** ✅ Done — [src/pages/base.page.ts](src/pages/base.page.ts)
 **Implementation Details:**
-- ✅ Abstract base class with constructor accepting Page and TestConfig
+- ✅ Abstract base class with constructor accepting Page and config
 - ✅ Navigation: `goto(path)`, `goBack()`, `reload()` with networkidle waits
 - ✅ Wait utilities: `waitForElement(locator, timeout)`, `waitForNavigationComplete()`
 - ✅ Visibility checks: `isElementVisible()`, `assertElementVisible()`, `assertElementHidden()`
@@ -931,7 +931,7 @@ Project documentation for onboarding and troubleshooting.
 ### Phase 1: API Layer & Observability (✅ COMPLETE)
 ```
 [✅] 1. Complete PatientFactory + ShiftFactory with SNILS & OMS
-[✅] 2. Add Zod validation to TestConfig (config.schema.ts)
+[✅] 2. Add Zod validation to config (config.schema.ts)
 [✅] 3. Implement Logger utility component (dual-format output)
 [✅] 4. Create Patient Zod Schema + type definitions
 [✅] 5. Configure Allure reporter (playwright.config.ts)

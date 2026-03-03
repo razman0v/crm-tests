@@ -1,5 +1,5 @@
-import { TestConfig } from './config.interface';
-import { TestConfigSchema } from './config.schema';
+import { config } from './config.interface';
+import { configSchema } from './config.schema';
 import { devConfig } from './dev.config';
 import { logger } from '../utils/logger';
 
@@ -9,7 +9,7 @@ import { logger } from '../utils/logger';
  * Process:
  * 1. Read TEST_ENV (defaults to 'dev')
  * 2. Load environment-specific config (dev.config.ts, staging.config.ts, etc.)
- * 3. Validate config against TestConfigSchema
+ * 3. Validate config against configSchema
  * 4. Return validated, type-safe config or throw ZodError
  * 
  * Error handling:
@@ -21,14 +21,14 @@ import { logger } from '../utils/logger';
  * 
  * @throws {Error} If TEST_ENV is unknown
  * @throws {ZodError} If config fails validation (missing required fields, invalid values)
- * @returns {TestConfig} Validated, type-safe configuration object
+ * @returns {config} Validated, type-safe configuration object
  */
-export function getConfig(): TestConfig {
+export function getConfig(): config {
   const env = process.env.TEST_ENV || 'dev';
   
   logger.debug('Loading configuration', { testEnv: env });
 
-  let config: TestConfig;
+  let config: config;
   switch (env) {
     case 'dev':
       config = devConfig;
@@ -44,7 +44,7 @@ export function getConfig(): TestConfig {
   
   // ✅ Validate config before returning (fail-fast on config errors)
   try {
-    const validated = TestConfigSchema.parse(config);
+    const validated = configSchema.parse(config);
     logger.info('Configuration validated successfully', {
       baseUrl: validated.baseUrl,
       companyUid: validated.companyUid,

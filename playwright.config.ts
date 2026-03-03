@@ -1,7 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 import { getConfig } from './src/config/env-loader';
 
-const testConfig = getConfig();
+const config = getConfig();
 
 export default defineConfig({
   testDir: './',
@@ -23,7 +23,7 @@ export default defineConfig({
   ],
   
   use: {
-    baseURL: testConfig.baseUrl,
+    baseURL: config.baseUrl,
     trace: 'on-first-retry',
     video: 'on-first-retry',
     screenshot: 'only-on-failure',

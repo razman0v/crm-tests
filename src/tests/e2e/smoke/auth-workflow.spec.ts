@@ -2,7 +2,7 @@ import { test, expect, Page } from '@playwright/test';
 import { SmsPage } from '../../../pages/auth/sms.page';
 import { RolePage } from '../../../pages/auth/role.page';
 import { BranchPage } from '../../../pages/auth/branch.page';
-import { TestConfig } from '../../../config/config.interface';
+import { config } from '../../../config/config.interface';
 
 /**
  * Integration Tests for Auth Workflow Pages (SMS, Role, Branch)
@@ -17,8 +17,8 @@ import { TestConfig } from '../../../config/config.interface';
  * - Integrated Workflow: Full auth flow across all three pages
  */
 
-// Mock TestConfig for testing
-const mockConfig: TestConfig = {
+// Mock config for testing
+const mockConfig: config = {
   baseUrl: 'http://localhost:3000/',
   credentials: {
     admin: {

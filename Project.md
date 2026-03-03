@@ -664,7 +664,7 @@ Build the 'Engine' of the framework: Configuration, Global Authentication, and t
 Implement environment\-aware configuration and the 'Global Setup' pattern to log in once and share state\.
 
 ##### Code: Configuration Interface
-Create \`src/config/config\.interface\.ts\`\. Define \`TestConfig\` interface with \`baseUrl\`, \`apiBaseUrl\`, \`credentials\` \(user/pass\), \`timeouts\`, and \`features\` \(captchaEnabled: boolean, smsCode: string\)\.
+Create \`src/config/config\.interface\.ts\`\. Define \`config\` interface with \`baseUrl\`, \`apiBaseUrl\`, \`credentials\` \(user/pass\), \`timeouts\`, and \`features\` \(captchaEnabled: boolean, smsCode: string\)\.
 
 ##### Code: Environment Loader
 Create \`src/config/environment\.ts\`\. Implement logic to read \`process\.env\.TEST\_ENV\` \(defaults to 'dev'\)\. Return the typed config object populated from \`\.env\` and defaults\. Ensure secrets are strictly read from \`process\.env\`\.

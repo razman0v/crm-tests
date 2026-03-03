@@ -1,11 +1,11 @@
 import { Page, Locator, expect } from '@playwright/test';
 import { BasePage } from './base.page';
-import { TestConfig } from '../config/config.interface';
+import { config } from '../config/config.interface';
 
 export class MainPage extends BasePage {
   readonly logo: Locator;
 
-  constructor(page: Page, config: TestConfig) {
+  constructor(page: Page, config: config) {
     super(page, config);
     this.logo = page.getByRole('link');
   }

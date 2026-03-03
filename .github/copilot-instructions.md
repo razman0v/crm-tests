@@ -17,7 +17,7 @@ This is a **Playwright-based end-to-end and API test suite** for a dental CRM ap
 
 ### Page Object Model
 - **LoginPage** (`src/pages/auth/login.page.ts`): Encapsulates login UI interactions with regex-based selectors for internationalization (Russian/English labels)
-- Passes `TestConfig` to pages for environment-aware selectors and credentials
+- Passes `config` to pages for environment-aware selectors and credentials
 
 ### Configuration Management
 - **env-loader.ts**: Single source of truth—routes to environment-specific config files
@@ -44,7 +44,7 @@ npx playwright test --ui
 - **Add new tests**: Create files in `src/tests/e2e/` matching `*.spec.ts`
 - **Add pages**: Create new `src/pages/[feature]/*.page.ts` classes extending Playwright `Page`
 - **Add services**: Create in `src/lib/api/services/` following `PatientsService` pattern (request + auth)
-- **Add configs**: Extend `TestConfig` interface, create env file, update `env-loader.ts` switch statement
+- **Add configs**: Extend `config` interface, create env file, update `env-loader.ts` switch statement
 
 ## Project-Specific Conventions
 
@@ -58,7 +58,7 @@ npx playwright test --ui
 
 - **Auth Flow**: Setup phase logs in → stores cookies → tests inherit authenticated context via `storageState` in `playwright.config.ts`
 - **API + UI Tests**: API service uses same cookie auth as UI tests—no separate token management needed
-- **Config Injection**: Every page/service receives `TestConfig` at construction to access credentials, URLs, and feature flags
+- **Config Injection**: Every page/service receives `config` at construction to access credentials, URLs, and feature flags
 
 # Dental CRM Test Suite - AI Coding Agent Instructions
 
@@ -107,7 +107,7 @@ Conventions to follow when changing or adding code:
 - Services accept Playwright `request` context and must validate the presence of auth token before making calls.
 
 ## Configuration
-- Centralized config loader: `src/config/env-loader.ts` reads `TEST_ENV` (defaults to `dev`) and returns the typed `TestConfig`.
+- Centralized config loader: `src/config/env-loader.ts` reads `TEST_ENV` (defaults to `dev`) and returns the typed `config`.
 - `src/config/dev.config.ts` pulls secrets from environment variables: `BASE_URL`, `ADMIN_USERNAME`, `ADMIN_PASSWORD`, `COMPANY_UID`, `SMS_CODE`, `SECOND_COMPANY_NAME`.
 
 Runtime checks and expectations:

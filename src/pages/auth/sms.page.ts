@@ -1,6 +1,6 @@
 import { Page, Locator } from '@playwright/test';
 import { BasePage } from '../base.page';
-import { TestConfig } from '../../config/config.interface';
+import { config } from '../../config/config.interface';
 
 /**
  * SMS Code Entry Page Object
@@ -18,7 +18,7 @@ export class SmsPage extends BasePage {
   readonly smsInput: Locator;
   readonly submitButton: Locator;
 
-  constructor(page: Page, config: TestConfig) {
+  constructor(page: Page, config: config) {
     super(page, config);
 
     // SMS input fields (OTP character entry)
@@ -93,7 +93,7 @@ export class SmsPage extends BasePage {
       this.logger.error('SMS code not configured', { 
         featurePath: 'config.features.smsCode' 
       });
-      throw new Error('SMS code not configured in TestConfig.features.smsCode');
+      throw new Error('SMS code not configured in config.features.smsCode');
     }
     
     await this.enterSmsCode(smsCode);

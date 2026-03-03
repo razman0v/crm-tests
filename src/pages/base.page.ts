@@ -1,5 +1,5 @@
 import { Page, expect, Locator } from '@playwright/test';
-import { TestConfig } from '../config/config.interface';
+import { config } from '../config/config.interface';
 import { Logger } from '../utils/logger';
 
 /**
@@ -13,7 +13,7 @@ import { Logger } from '../utils/logger';
  * class VisitDetailsPage extends BasePage {
  *   readonly dentalChart: Locator;
  *   
- *   constructor(page: Page, config: TestConfig) {
+ *   constructor(page: Page, config: config) {
  *     super(page, config);
  *     this.dentalChart = page.locator('[data-testid="dental-chart"]');
  *   }
@@ -26,7 +26,7 @@ import { Logger } from '../utils/logger';
  */
 export abstract class BasePage {
   readonly page: Page;
-  readonly config: TestConfig;
+  readonly config: config;
   protected readonly logger: Logger;
 
   /**
@@ -34,7 +34,7 @@ export abstract class BasePage {
    * @param page - Playwright Page object
    * @param config - Test configuration with credentials and feature flags
    */
-  constructor(page: Page, config: TestConfig) {
+  constructor(page: Page, config: config) {
     this.page = page;
     this.config = config;
     this.logger = new Logger();
@@ -42,7 +42,7 @@ export abstract class BasePage {
 
   /**
    * Navigate to a specific path within the application.
-   * Uses baseUrl from TestConfig.
+   * Uses baseUrl from config.
    * 
    * @param path - Path to navigate to (e.g., '/visits/123', '/dashboard')
    * @example

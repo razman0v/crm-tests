@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 /**
- * Zod schema for TestConfig runtime validation
+ * Zod schema for config runtime validation
  * 
  * **Strict validation** on core fields: baseUrl, credentials
  * **Lenient validation** on optional features: smsCode, secondCompanyName, mainPageUrl
@@ -9,7 +9,7 @@ import { z } from 'zod';
  * Example error: "companyUid is required and cannot be empty"
  */
 
-export const TestConfigSchema = z.object({
+export const configSchema = z.object({
   baseUrl: z
     .string()
     .url('baseUrl must be a valid URL (e.g., http://localhost:3000)'),
@@ -51,7 +51,7 @@ export const TestConfigSchema = z.object({
 });
 
 /**
- * Type-safe configuration validated against TestConfigSchema
+ * Type-safe configuration validated against configSchema
  * Automatically inferred from schema to prevent type/validation drift
  */
-export type TestConfigValidated = z.infer<typeof TestConfigSchema>;
+export type configValidated = z.infer<typeof configSchema>;
