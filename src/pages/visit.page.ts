@@ -83,9 +83,8 @@ export class VisitPage extends BasePage {
     this.cancelButton = page.getByRole('button', { name: /Отменить|Cancel/i });
     this.deleteButton = page.getByRole('button', { name: /Удалить|Delete/i });
     this.confirmDeleteButton = page.getByRole('button', { name: /Да|Yes|Confirm/i });
-    // Matches all known states of the visit state-transition button
     this.stateButton = page.getByRole('button', {
-      name: /Пациент пришел|Начать визит|Завершить визит/i,
+      name: /Пациент пришел|Начать визит|Завершить визит|Завершить прием/i,
     });
 
     // Dental Chart
@@ -158,8 +157,6 @@ export class VisitPage extends BasePage {
   async clickTooth(toothId: number): Promise<void> {
     this.logger.info(`VisitPage: клик по зубу ${toothId}`);
     const tooth = this.getToothLocator(toothId);
-    
-    // force: true может понадобиться, если SVG перекрыт прозрачным слоем сетки
     await tooth.click(); 
   }
 
@@ -171,6 +168,7 @@ export class VisitPage extends BasePage {
    * Examples: "Пациент пришел", "Начать визит", "Завершить визит"
    */
   async getStateButtonText(): Promise<string> {
+    await this.stateButton.waitFor({ state: 'visible' });
     const text = await this.stateButton.textContent();
     this.logger.debug('VisitPage: state button text', { text });
     return text?.trim() ?? '';
@@ -180,40 +178,35 @@ export class VisitPage extends BasePage {
    * Clicks the state-transition button once and waits for the label to change.
    * Returns { before, after } text so callers can assert the transition.
    */
-  async clickStateButton(): Promise<{ before: string; after: string }> {
-    this.logger.info('VisitPage: clicking state button');
-
+  async clickStateButton(expectedText: string): Promise<void> {
     await this.stateButton.waitFor({ state: 'visible' });
-    const before = await this.getStateButtonText();
-    this.logger.debug('VisitPage: state before click', { before });
+    const currentText = await this.getStateButtonText();
 
+    if (currentText.toLowerCase().includes(expectedText.toLowerCase())) {
+      this.logger.info(`VisitPage: already at state "${expectedText}", skipping click.`);
+      return; 
+    }
+
+    this.logger.info(`VisitPage: transitioning from "${currentText}" to "${expectedText}"`);
     await this.stateButton.click();
 
-    // Wait for the button label to change — no full page navigation expected
-    await expect(this.stateButton).not.toContainText(new RegExp(before, 'i'), { timeout: 5000 })
-      .catch(() => {
-        this.logger.warn('VisitPage: state button label did not change after click');
-      });
-
-    const after = await this.getStateButtonText();
-    this.logger.info('VisitPage: ✅ state button clicked', { before, after });
-    return { before, after };
+    await this.assertStateButtonText(expectedText);
+    this.logger.info(`VisitPage: successfully transitioned to "${expectedText}"`);
   }
 
   /**
    * Asserts the state button currently shows the expected label.
    */
-  async assertStateButtonText(expectedText: string | RegExp): Promise<void> {
-    await expect(this.stateButton).toContainText(
-      typeof expectedText === 'string' ? new RegExp(expectedText, 'i') : expectedText,
-    );
+  async assertStateButtonText(expectedText: string): Promise<void> {
+      const specificButton = this.page.getByRole('button', { name: expectedText, exact: true });
+      await expect(specificButton).toBeVisible();
   }
 
   async clickDentalChartButton(): Promise<void> {
     this.logger.info('VisitPage: clicking dental chart button');
     await this.dentalChart.waitFor({ state: 'attached' });
     await this.dentalChart.click();
-    this.logger.info('VisitPage: ✅ dental chart button clicked');
+    this.logger.info('VisitPage: dental chart button clicked');
   }
 
   // ─── Form ────────────────────────────────────────────────────────────────────
