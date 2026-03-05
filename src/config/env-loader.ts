@@ -25,7 +25,7 @@ import { logger } from '../utils/logger';
  */
 export function getConfig(): config {
   const env = process.env.TEST_ENV || 'dev';
-  
+
   logger.debug('Loading configuration', { testEnv: env });
 
   let config: config;
@@ -41,7 +41,12 @@ export function getConfig(): config {
       logger.error('Unknown TEST_ENV', { testEnv: env });
       throw new Error(`Unknown TEST_ENV: ${env}`);
   }
-  
+
+  config.baseUrl = config.baseUrl.endsWith('/')
+    ? config.baseUrl
+    : `${config.baseUrl}/`;
+
+
   // ✅ Validate config before returning (fail-fast on config errors)
   try {
     const validated = configSchema.parse(config);

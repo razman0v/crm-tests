@@ -35,7 +35,7 @@ test.describe('Spike: Dental Chart DOM & Selector Strategy', () => {
 
       logger.info(`Step 1: Navigate to patient visit page (ID: ${VISIT_ID})...`);
 
-      await page.goto(`${config.baseUrl}/schedule/visits/${VISIT_ID}`, { waitUntil: 'domcontentloaded' })
+      await page.goto(`${config.baseUrl}schedule/visits/${VISIT_ID}`, { waitUntil: 'domcontentloaded' })
         .catch((e) => {
           throw new Error(`Failed to navigate to visit ${VISIT_ID}: ${e.message}`);
         });
