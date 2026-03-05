@@ -48,7 +48,7 @@ export class VisitPage extends BasePage {
 
   // Dental Chart
   readonly dentalChart: Locator;
-  readonly dentalChartTooth: (toothId: number) => Locator;
+  //readonly dentalChartTooth: (toothId: number) => Locator;
 
   // Feedback
   readonly successMessage: Locator;
@@ -89,16 +89,14 @@ export class VisitPage extends BasePage {
 
     // Dental Chart
     this.dentalChart = page.getByRole('link', { name: 'Зубная формула' });
-    this.dentalChartTooth = (toothId: number) =>
-      page.locator(`[data-tooth-id="${toothId}"]`);
+    // this.dentalChartTooth = (toothId: number) =>
+    //   page.locator(`[data-tooth-id="${toothId}"]`);
 
     // Feedback
     this.successMessage = page.locator('[data-testid="success-message"]');
     this.errorMessage = page.locator('[data-testid="error-message"]');
     this.loadingIndicator = page.locator('[data-testid="loading"]');
   }
-
-
 
   // ─── Navigation ─────────────────────────────────────────────────────────────
 
@@ -284,19 +282,19 @@ export class VisitPage extends BasePage {
    * Clicks a tooth by its ID on the dental chart.
    * Validates visibility first to prevent silent failures.
    */
-  async selectTooth(toothId: number): Promise<void> {
-    this.logger.info('VisitPage: selecting tooth', { toothId });
+  // async selectTooth(toothId: number): Promise<void> {
+  //   this.logger.info('VisitPage: selecting tooth', { toothId });
 
-    const tooth = this.dentalChartTooth(toothId);
-    const isVisible = await this.isElementVisible(tooth);
-    if (!isVisible) {
-      throw new Error(`Tooth ${toothId} not found on dental chart or not visible`);
-    }
+  //   const tooth = this.dentalChartTooth(toothId);
+  //   const isVisible = await this.isElementVisible(tooth);
+  //   if (!isVisible) {
+  //     throw new Error(`Tooth ${toothId} not found on dental chart or not visible`);
+  //   }
 
-    await tooth.click();
-    await this.page.waitForTimeout(300);
-    this.logger.info('VisitPage: ✅ tooth selected', { toothId });
-  }
+  //   await tooth.click();
+  //   await this.page.waitForTimeout(300);
+  //   this.logger.info('VisitPage: ✅ tooth selected', { toothId });
+  // }
 
   // ─── Save / Cancel / Delete ──────────────────────────────────────────────────
 

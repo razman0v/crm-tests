@@ -112,7 +112,7 @@ test.describe('Spike: Dental Chart DOM & Selector Strategy', () => {
       const testTooth = page.locator(`.TeethMap__teeth-svg div[style*="left: ${testLeftCoord}"], .TeethMap__teeth-svg div[style*="left:${testLeftCoord}"]`).locator('svg path').first();
 
       // Проверяем, что элемент действительно в DOM и виден
-      await expect(testTooth).toBeVisible();
+      await expect(testTooth).toBeVisible(); // Удалить если в Allure report ошибка
 
       // Извлекаем boundingBox
       const box = await testTooth.boundingBox();
@@ -121,7 +121,7 @@ test.describe('Spike: Dental Chart DOM & Selector Strategy', () => {
       logger.info(`Физические координаты для клика: X: ${box?.x}, Y: ${box?.y}`);
 
       // Визуальная подсветка
-      await testTooth.evaluate(el => (el as SVGElement).style.fill = 'red').catch(() => { });
+      await testTooth.evaluate(el => (el as SVGElement).style.fill = 'red').catch(() => { }); // Удалить если в Allure report ошибка
 
     } finally {
       if (page) await page.close();

@@ -1,7 +1,7 @@
-import { test as base } from '@playwright/test';
+import { test as base, expect } from '@playwright/test';
 import { getConfig } from '../src/config/env-loader';
 import { chromium } from 'playwright';
-import { logger, Logger } from '../src/utils/logger';
+import { logger } from '../src/utils/logger';
 
 /**
  * Spike: Hybrid Auth Handshake

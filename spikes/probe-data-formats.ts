@@ -1,9 +1,9 @@
-import { test as base } from '@playwright/test';
+import { test as base, expect } from '@playwright/test';
 import { getConfig } from '../src/config/env-loader';
 import { PatientFactory } from '../src/lib/factories/patient.factory';
 import { chromium } from 'playwright';
 import * as fs from 'fs';
-import { logger, Logger } from '../src/utils/logger';
+import { logger } from '../src/utils/logger';
 
 /**
  * Spike: Data Format Validation

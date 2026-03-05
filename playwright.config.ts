@@ -16,7 +16,7 @@ export default defineConfig({
       'allure-playwright',
       {
         outputFolder: 'allure-results',
-        deletePreviousResults: false, // Preserve history across test runs
+        deletePreviousResults: true, // Clean results before each run
         inlineAttachments: true, // Embed logs inline in Allure report
       },
     ],
