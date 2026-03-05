@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../../lib/fixtures';
 import { BranchService } from '../../lib/api/services/branch.service';
 import { faker } from '@faker-js/faker';
 

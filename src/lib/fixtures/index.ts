@@ -1,26 +1,31 @@
-import { test as base } from '@playwright/test';
-import { logger } from '../../utils/logger'; // 
+import { test as base, expect } from '@playwright/test';
+import { logger } from '../../utils/logger';
 
-/**
- * Custom Playwright Fixture
- * Extends the base test to include automatic browser console logging 
- * and centralizes access to factories.
- */
-export const test = base.extend({
-  page: async ({ page }, use) => {
-    // Automatically forward browser console messages to our project logger
+export const test = base.extend<{}, { workerStorageState: string }>({
+  workerStorageState: [async ({}, use) => {
+    await use('playwright/.auth/admin.json');
+  }, { scope: 'worker' }],
+
+  page: async ({ browser, workerStorageState }, use) => {
+    const context = await browser.newContext({ 
+      storageState: workerStorageState 
+    });
+    const page = await context.newPage();
+
     page.on('console', (msg) => {
       const type = msg.type();
       const text = msg.text();
-      
-      if (type === 'error') {
-        logger.error(`[PAGE ERROR] ${text}`);
-      } else if (type === 'log' || type === 'info') {
-        logger.info(`[PAGE LOG] ${text}`);
-      }
+      if (type === 'error') logger.error(`[PAGE ERROR] ${text}`);
+      else if (type === 'warning') logger.warn(`[PAGE WARN] ${text}`);
+      else if (type === 'log' || type === 'info') logger.info(`[PAGE LOG] ${text}`);
+    });
+
+    page.on('pageerror', (error) => {
+      logger.error(`[PAGE EXCEPTION] ${error.message}`);
     });
 
     await use(page);
+    await context.close();
   },
 });
 

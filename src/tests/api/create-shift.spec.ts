@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../../lib/fixtures';
 import { BranchService } from '../../lib/api/services/branch.service';
 import { EmployeeService } from '../../lib/api/services/employee.service';
 import { ScheduleService } from '../../lib/api/services/schedule.service';

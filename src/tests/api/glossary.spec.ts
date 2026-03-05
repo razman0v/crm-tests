@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../../lib/fixtures';
 import { GlossaryService } from '../../lib/api/services/glossary.service';
 
 test.describe('API Contract: Glossary Service', () => {

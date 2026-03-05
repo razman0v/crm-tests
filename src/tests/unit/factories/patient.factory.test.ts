@@ -2,7 +2,7 @@
  * Unit Tests for PatientFactory
  * Validates SNILS checksum calculation and all data generation
  */
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../../../lib/fixtures';
 import { PatientFactory, PatientBuilder } from '../../../lib/factories/patient.factory';
 
 // Helper: Validate SNILS checksum (same logic as factory)

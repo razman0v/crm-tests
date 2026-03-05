@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../../../lib/fixtures';
 import { MainPage } from '../../../pages/main.page';
 import { getConfig } from '../../../config/env-loader';
 import { LoginPage } from '../../../pages/auth/login.page';

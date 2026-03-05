@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../../../lib/fixtures';
 import { Logger, logger } from '../../../utils/logger';
 
 /**
