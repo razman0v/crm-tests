@@ -4,7 +4,7 @@ import { config } from './config.interface';
 export const devConfig: config = {
   baseUrl: process.env.BASE_URL || 'http://localhost:3000',
   companyUid: process.env.COMPANY_UID || '',
-  
+
   credentials: {
     admin: {
       username: process.env.ADMIN_USERNAME || '',

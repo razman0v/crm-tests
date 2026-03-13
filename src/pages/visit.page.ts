@@ -13,10 +13,45 @@ import { config } from '../config/config.interface';
  */
 
 export const TOOTH_COORDINATES: Record<number, string> = {
-  41: '74.5px',
-  42: '66.5px',
-  43: '58.5px',
-  // Остальные добавишь по аналогии (шаг ~8px)
+  // Upper right quadrant (18-11)
+  18: '74.5px',
+  17: '66.5px',
+  16: '58.5px',
+  15: '50.5px',
+  14: '42.5px',
+  13: '34.5px',
+  12: '26.5px',
+  11: '18.5px',
+
+  // Upper left quadrant (21-28)
+  21: '10.5px',
+  22: '18.5px',
+  23: '26.5px',
+  24: '34.5px',
+  25: '42.5px',
+  26: '50.5px',
+  27: '58.5px',
+  28: '66.5px',
+
+  // Lower left quadrant (38-31)
+  38: '74.5px',
+  37: '66.5px',
+  36: '58.5px',
+  35: '50.5px',
+  34: '42.5px',
+  33: '34.5px',
+  32: '26.5px',
+  31: '18.5px',
+
+  // Lower right quadrant (41-48)
+  41: '10.5px',
+  42: '18.5px',
+  43: '26.5px',
+  44: '34.5px',
+  45: '42.5px',
+  46: '50.5px',
+  47: '58.5px',
+  48: '66.5px',
 };
 
 export class VisitPage extends BasePage {
@@ -133,14 +168,21 @@ export class VisitPage extends BasePage {
   }
 
   /**
-   * Находит локатор зуба по его FDI номеру, используя сетку координат (Grid Mapping).
-   * Игнорирует пробелы в CSS стилях для кроссбраузерной стабильности.
+   * Finds a tooth locator by FDI number using grid-mapping strategy.
+   * Ignores whitespace in CSS for cross-browser stability.
+   * @param toothId FDI tooth ID (11-48)
+   * @returns Locator for the tooth SVG path
+   * @throws Error with available tooth IDs if ID not found
    */
+
   getToothLocator(toothId: number): Locator {
     const leftCoord = TOOTH_COORDINATES[toothId];
 
     if (!leftCoord) {
-      throw new Error(`Координата для зуба ${toothId} не найдена в TOOTH_COORDINATES`);
+      throw new Error(
+        `Tooth ID ${toothId} not found in TOOTH_COORDINATES. ` +
+        `Check TOOTH_COORDINATES. Available: ${Object.keys(TOOTH_COORDINATES).join(', ')}`
+      );
     }
 
     return this.page
@@ -150,12 +192,18 @@ export class VisitPage extends BasePage {
   }
 
   /**
-   * Кликает по зубу
+   * Clicks a tooth by its FDI ID on the dental chart.
+   * Validates visibility first to prevent silent failures.
    */
   async clickTooth(toothId: number): Promise<void> {
-    this.logger.info(`VisitPage: клик по зубу ${toothId}`);
+    this.logger.info('VisitPage: clicking tooth', { toothId });
+
     const tooth = this.getToothLocator(toothId);
-    await tooth.click(); 
+    await tooth.waitFor({ state: 'visible', timeout: 3000 });
+    await tooth.click();
+    await this.page.waitForTimeout(300); // Allow state update
+
+    this.logger.info('VisitPage: ✅ tooth clicked', { toothId });
   }
 
 
@@ -182,7 +230,7 @@ export class VisitPage extends BasePage {
 
     if (currentText.toLowerCase().includes(expectedText.toLowerCase())) {
       this.logger.info(`VisitPage: already at state "${expectedText}", skipping click.`);
-      return; 
+      return;
     }
 
     this.logger.info(`VisitPage: transitioning from "${currentText}" to "${expectedText}"`);
@@ -196,8 +244,8 @@ export class VisitPage extends BasePage {
    * Asserts the state button currently shows the expected label.
    */
   async assertStateButtonText(expectedText: string): Promise<void> {
-      const specificButton = this.page.getByRole('button', { name: expectedText, exact: true });
-      await expect(specificButton).toBeVisible();
+    const specificButton = this.page.getByRole('button', { name: expectedText, exact: true });
+    await expect(specificButton).toBeVisible();
   }
 
   async clickDentalChartButton(): Promise<void> {

@@ -3,138 +3,286 @@
 ├── Project.md
 ├── README.md
 ├── allure-results
-│   ├── 00ef6f49-91e1-423c-ac5f-299d0cacd078-attachment.md
-│   ├── 016a98f7-dbb3-4972-aec4-bb08919ce868-attachment.txt
-│   ├── 02b8a5ec-e9b3-4440-911e-11d643c7308f-attachment.md
-│   ├── 03332e03-14ce-4b70-8ded-cccc4be3fe13-attachment.png
-│   ├── 044a9f85-941e-4b05-aff3-678111ef5091-attachment.txt
-│   ├── 06f19477-9aa4-4b7f-b04f-d52e26f3c973-result.json
-│   ├── 072d46c2-45b2-4b98-b12c-1a6aa595c10f-result.json
-│   ├── 0b1163cb-c0a1-4145-8373-36135808a747-attachment.txt
-│   ├── 0b214a68-e7e7-437b-a52c-c56eec5cc635-attachment.png
-│   ├── 0dfbb774-5141-4a49-96b2-143cac9c2433-attachment.txt
-│   ├── 12090e5d-e573-4f97-9d73-f3fa78bebf2d-result.json
-│   ├── 166bf581-e789-4966-81d6-ff98ab5e03dd-attachment.txt
-│   ├── 17fc859e-4495-49a8-ad56-7d9dc50df17a-result.json
-│   ├── 1a6b2fcf-cbf8-45c1-8a84-3f3367d38edf-attachment.txt
-│   ├── 1bd749e6-acff-4ef9-8dfa-52c1ec719ad8-attachment.txt
-│   ├── 1c70939e-1075-4e9c-9c85-139280fec670-attachment.md
-│   ├── 1d146366-5863-4eb4-9cc2-48c6fc4b01f4-attachment.txt
-│   ├── 1e0f98f5-76ef-4507-96ca-0a50f0930e0d-attachment.txt
-│   ├── 1f41386d-6dc1-44ae-8e7b-3c6f57fe9033-result.json
-│   ├── 25080abc-ac94-44bd-acac-ea033364437e-result.json
-│   ├── 261c1e27-dc90-48f5-a725-89d3569ee87a-attachment.txt
-│   ├── 28710cd2-60b0-4736-89fd-bfd1333f2966-attachment.txt
-│   ├── 298dba0c-8b1c-4216-a256-804563e3e5eb-result.json
-│   ├── 29d2c6bc-3616-4532-ab62-67d33846bb5b-attachment.txt
-│   ├── 2aac51ca-f532-40e3-8b00-61cb70ba2af9-attachment.txt
-│   ├── 2ade025a-9f0b-4890-87c2-0a1fe0c892e5-attachment.txt
-│   ├── 2dffe196-0dc9-4d91-b425-698146f16d69-result.json
-│   ├── 322a18b2-27c3-4240-bc40-5f3c0d481a00-result.json
-│   ├── 3247e9fb-9705-45cf-9a74-f49376877bd0-attachment.txt
-│   ├── 343e31f5-5d49-4615-ad7d-d7eea9c18283-attachment.txt
-│   ├── 399aeee3-eb31-4684-992c-668998f1f4b7-result.json
-│   ├── 3a20bbab-97c3-4f46-9276-833367488f9f-result.json
-│   ├── 3b46d7cd-2f2f-4b56-8c73-3b5447b4899b-result.json
-│   ├── 3e485803-0bf4-4e54-8b2f-a940e9792776-result.json
-│   ├── 407d08ec-582d-4e11-a010-79f142bd373b-attachment.txt
-│   ├── 40e2d154-5131-4da5-8a1b-fb6c8b6684eb-result.json
-│   ├── 42ee3a2a-858b-4e11-be16-906249a39f8b-result.json
-│   ├── 461fe4e3-314d-4a92-8240-8344da0a8178-attachment.png
-│   ├── 467383be-626d-40d8-baa0-92a6ee90b259-attachment.md
-│   ├── 47231d0d-c3c1-49c3-a43f-ad67576a3409-attachment.txt
-│   ├── 48d6c04d-5632-472b-a99e-de61aa200f12-attachment.txt
-│   ├── 494cc2b0-8c05-4877-b1ef-b91f0391c4cf-result.json
-│   ├── 4f853b8f-554e-4552-9b9c-28c6c08778ad-result.json
-│   ├── 593cee47-8814-4cbb-a08b-0b5884441c48-result.json
-│   ├── 5a2ef5d5-6888-4e31-80a9-4f4e77b6411f-result.json
-│   ├── 5efd3815-4c5a-49e1-8797-e6292b8f3d63-attachment.txt
-│   ├── 5f6bfdcd-a7a0-487c-b0d5-3c1fb221ee5e-result.json
-│   ├── 60621abc-8a4f-4cd8-8060-c91e44edd3f3-attachment.txt
-│   ├── 60882898-5766-4901-83ef-917e22e6bd20-attachment.png
-│   ├── 638b9a0f-8dae-4b77-94df-a2685ca1ae47-attachment.txt
-│   ├── 67124556-7e12-4dae-a36f-b274c681a9cc-result.json
-│   ├── 674608f0-9764-4d73-9e64-ad2cd6e39651-attachment.txt
-│   ├── 69711eb6-522e-42de-8982-7c32dbf3299d-result.json
-│   ├── 6a630470-a58e-4af0-9f9b-5405e771a235-attachment.txt
-│   ├── 6cc8b1e2-0d58-403c-b0c7-5c8d27a249ac-result.json
-│   ├── 72ef3734-c97b-48b3-81ec-e7d7469ba081-attachment.txt
-│   ├── 75035002-aae6-4f1b-896c-f418f15859c8-attachment.png
-│   ├── 756259f7-3230-451d-baab-53ab21a20a4e-result.json
-│   ├── 7edf1f91-338a-4486-b29c-2e71dc37c3d8-attachment.txt
-│   ├── 7f283385-f0d8-4a32-ac13-ef15b6aec823-result.json
-│   ├── 7f7ef60a-9403-4280-8e55-2fec16446dea-attachment.txt
-│   ├── 803d8ec7-57ce-4944-b832-7fa1e5d0f0c0-attachment.txt
-│   ├── 80d8e574-7f65-46d6-a1ea-bb1b2a067405-result.json
-│   ├── 825ba4cf-0289-4e0b-ae85-f94ae7683daf-result.json
-│   ├── 8395780a-9cc3-48c4-ae52-fadd3201d8af-result.json
-│   ├── 83b64e17-f3c7-4f59-9350-9960168f31f1-attachment.txt
-│   ├── 83c014e6-3e0c-4f10-8beb-d6e8ba0d361a-attachment.txt
-│   ├── 852fd022-bf7a-4d21-9e6a-acf15adb4a04-result.json
-│   ├── 85858ff3-5700-4273-ba09-bac00abf25a9-attachment.txt
-│   ├── 85d893e2-f91a-4fff-8330-f810d3c7e19d-result.json
-│   ├── 86e93975-933c-45d7-9a1a-7c96244f4cd2-attachment.png
-│   ├── 87674aa1-4815-40f8-a65d-bb5a02b3a79a-result.json
-│   ├── 88549f8a-7311-4b3d-915f-1e0ab0ec489d-attachment.md
-│   ├── 8ef33eff-f0ca-4a57-9647-666090c85777-attachment.txt
-│   ├── 924262fb-5780-423f-888b-c15419e088fc-attachment.png
-│   ├── 93d61004-3318-408f-8ec7-9867f52bd84b-result.json
-│   ├── 959c2ec1-285f-418b-a641-c90200712cb0-attachment.txt
-│   ├── 95e8d073-6b3e-45e4-8772-3fd425278390-result.json
-│   ├── 96e03c97-0005-4994-9d2b-33c2968b73ef-attachment.txt
-│   ├── 992c7e55-ba51-4606-85d7-d13d298fd40c-attachment.txt
-│   ├── 9c88e019-b267-42a4-a14a-6e1c6946848e-result.json
-│   ├── 9e335562-d58b-4a8d-814c-1aff5cf10f9d-result.json
-│   ├── a2b65a9b-5e20-4795-945b-42504fde2450-result.json
-│   ├── a4d9bf60-59c3-431d-a125-2932dc34c7fe-result.json
-│   ├── a57ff6bd-ff06-40f5-a486-7d9dd681ded2-attachment.txt
-│   ├── a880c43b-595d-4a4e-811d-b685c61848bb-result.json
-│   ├── a893be36-78f2-4bb8-9fdf-47d15f80f916-attachment.txt
-│   ├── a954e1a9-07e3-4a4a-ae1b-5181f118ad3e-attachment.txt
-│   ├── a97cc4de-1c17-4174-9e1e-622da2b088d2-attachment.txt
-│   ├── ab2099cb-f901-446a-9d5a-7c8d8af66342-attachment.txt
-│   ├── aba0af4d-08b8-4ab8-8c6f-10a2a7f685f3-result.json
-│   ├── b23a4690-6483-429b-8e3c-b20b120d794b-attachment.png
-│   ├── b2518441-0147-44c8-b87d-d28a3120748e-result.json
-│   ├── b253f767-245e-4111-82a9-d6fa89c4acdf-attachment.txt
-│   ├── b36bd563-c1e1-4156-9390-7e5606e99b29-attachment.png
-│   ├── b3cd6c10-8f00-4bd8-a1f9-fa6fde02d0e2-attachment.txt
-│   ├── b9b4c9c9-4dd8-4613-8ff6-06256c06246e-attachment.txt
-│   ├── bbfa5be5-198f-4972-a840-a022f3ddc133-result.json
-│   ├── bd89b7a1-9bdd-447b-9912-ba06bc70ed2a-attachment.txt
-│   ├── be8406a1-3bac-4890-aa89-4374bf77ee3f-attachment.txt
-│   ├── c00abfab-7017-4c2a-b495-0ba089546bff-attachment.txt
-│   ├── c20a9868-2b6b-4ff1-9475-9f62cc401bde-result.json
-│   ├── c25dbed3-ac6b-4ede-a857-40a5b011f017-attachment.txt
-│   ├── c342a8b3-95b8-48d4-bf39-498d2dd91c09-attachment.txt
-│   ├── c51587f0-9d41-446b-922f-6980e4683ca8-result.json
-│   ├── c62728ec-50d7-4fe9-84cb-8a267136f64d-attachment.txt
-│   ├── c6a02dff-7138-47af-aa0c-47d771d183af-result.json
-│   ├── c758df72-299d-4378-801d-43d85493998e-attachment.txt
-│   ├── c9af845e-ca16-4fd0-875e-5d94996f16d2-result.json
-│   ├── cbac8147-0876-4e5b-a922-9856db210e2d-attachment.png
-│   ├── ce291609-8aeb-40ba-8518-b97032243efd-attachment.txt
-│   ├── cfaa0206-f088-48a4-b3cf-2e8cfd2542fc-attachment.md
-│   ├── d7c6f994-ca32-459c-9b13-0203c1687c39-result.json
-│   ├── da395e16-9047-491b-9ace-951624aeb23b-attachment.md
-│   ├── e1c296ad-531f-4a2c-ac29-b45f547054ac-result.json
-│   ├── e2b56c21-69a3-4f60-9f3c-e151b50861ef-attachment.txt
-│   ├── e3beab76-7ac0-4712-97bb-47ed3e1e7a25-attachment.png
-│   ├── e4c4895e-f0b7-40e6-98b2-0cdf0c5027ce-attachment.txt
-│   ├── e5ba84ff-4d06-44ac-9392-0aaac91f7627-result.json
-│   ├── e81997be-26dc-4cec-b72f-f8203631d28c-attachment.txt
-│   ├── eb295b49-8456-44c8-937c-e9a2b7df0c87-result.json
-│   ├── edd1e88a-127d-425d-a155-f08e3e6d19cb-attachment.md
-│   ├── f05f8d24-566d-4591-84f1-2820770003bd-result.json
-│   ├── f4891c7f-14f5-4977-8d69-b5e37135d600-attachment.txt
-│   ├── f6aab345-0683-4040-bcdb-4030aaa4e6fb-attachment.txt
-│   ├── f88add01-374b-4a01-8840-2c2861358169-attachment.txt
-│   ├── fa010a82-c638-452e-b012-0e41d6da3876-attachment.txt
-│   ├── fad4cd8a-3833-4815-9b4c-9bf0afbafcbb-attachment.txt
-│   ├── fc3d0459-2c21-42cd-925e-22f72ea3df39-attachment.txt
-│   ├── fdf2d73f-7e00-4d74-8ba6-c9742754bcfe-result.json
-│   ├── fe1dd50d-1259-4be3-af4e-8669ff3f8e09-result.json
-│   └── ff1f2646-b2cc-4078-8c5b-103c9b6346a9-attachment.txt
+│   ├── 009d86d8-be88-4960-b9e1-6583039cfb03-result.json
+│   ├── 018d4f11-fed3-4875-825e-263ce7669db8-attachment.txt
+│   ├── 01e3cdc9-6afc-4a28-a0f0-665149dc4e10-attachment.txt
+│   ├── 02270463-3092-4027-a1d8-8df413f68d8a-attachment.txt
+│   ├── 025d2ab4-d839-4104-bc4d-fa1132087fbf-result.json
+│   ├── 03571c0b-57de-4a15-ae6c-34ddc1d81571-result.json
+│   ├── 038d504f-4890-4803-9c17-f2df0fd5d3a2-attachment.md
+│   ├── 038e7931-1c33-4bc5-8f87-e8cc243f30b0-result.json
+│   ├── 09386147-18b4-41fd-a12e-63c36eb80415-result.json
+│   ├── 0ada2b6e-b574-4006-b01a-d473558b12e7-attachment.txt
+│   ├── 0b724813-5ac6-4c71-be02-27e7f31dd159-attachment.txt
+│   ├── 0b75bb19-859b-40f9-b162-ab46f9a32104-attachment.txt
+│   ├── 0bb4d90a-02d4-485b-ab6f-08b982f08b05-result.json
+│   ├── 0c286e47-ffef-44ef-a3d8-46838faf8e2c-result.json
+│   ├── 0ce9aa40-ff9b-4fd9-b1ce-c0516accb8cd-attachment.txt
+│   ├── 0d7b99f8-8a9c-4bc5-a891-decf875199dc-attachment.txt
+│   ├── 0d89a139-61a9-4b68-b27b-12405f957967-result.json
+│   ├── 0dbdd7aa-7d14-405e-a15b-0c1397771d96-result.json
+│   ├── 0e16506c-bd22-42d6-a030-ec8d659b31a5-result.json
+│   ├── 0ecdd7c3-4938-4a7d-bf6e-c427c7975023-attachment.txt
+│   ├── 0ff48bcb-d300-454d-aa1b-6f46e95e3f9b-attachment.txt
+│   ├── 10ec4401-58cd-4e1b-9305-22330d7a8db2-attachment.png
+│   ├── 11f9c524-0334-4c6f-9e58-1fea158489b8-attachment.png
+│   ├── 127ad075-e8e0-4439-9e13-291be244fd9d-result.json
+│   ├── 14032ee0-e041-42db-9100-18a82c7a8a1d-attachment.png
+│   ├── 1576b4d6-775a-4592-9f99-9f613b80ceca-attachment.txt
+│   ├── 16801827-6785-4f1b-8b69-1e39add42aaf-attachment.txt
+│   ├── 1994072a-fd76-4be2-9f86-1d2c4c19d165-result.json
+│   ├── 1ac47ce0-c8d4-478e-8082-62862eb5b81e-attachment.txt
+│   ├── 1b13873c-93da-46b6-9dc5-027dacf74925-attachment.txt
+│   ├── 1ba105f4-3776-4495-be81-914c63b6d487-attachment.png
+│   ├── 1eb47d8b-6c94-4049-a3c6-0d7c21318d6a-attachment.txt
+│   ├── 1f05a7a4-c413-498d-a1ac-8bb88fa4f6f4-attachment.md
+│   ├── 1f6b665e-75f0-4652-928d-8f5b61866020-attachment.txt
+│   ├── 205ddcf3-881e-4ff7-8ff5-bcb910ceb951-attachment.txt
+│   ├── 209dee75-2d6d-4492-b45f-445e9d39033d-attachment.txt
+│   ├── 22b77ae9-d30c-4d14-bba9-cbed5d22e3e8-result.json
+│   ├── 267f686b-55c5-43c3-850d-1a421f797e0b-attachment.png
+│   ├── 2717d2e9-5fbe-4629-86fb-b4908e1de47a-result.json
+│   ├── 276b791e-6baa-4b1e-b6e3-687e18e130cb-result.json
+│   ├── 29f66e57-b21e-4ec5-99f4-24e1dc383600-attachment.txt
+│   ├── 2a53c00c-63bc-41a4-a1dc-bba1b79e3cf4-attachment.png
+│   ├── 2aa5b869-05bd-4cd3-adff-0c4cd1090b05-attachment.txt
+│   ├── 2c323bc5-a266-4160-9ca5-490fe63c4de6-attachment.png
+│   ├── 2c7249f8-f580-4f01-a9ac-0a297b0b08f6-attachment.md
+│   ├── 2cdd2667-13c0-4d6b-b75f-439a2f6f513f-attachment.zip
+│   ├── 2cec6f88-a9bd-479e-b19e-cf4eff83adc0-attachment.txt
+│   ├── 2d4b79ae-77a4-4b3c-bbd5-146983710dc2-attachment.txt
+│   ├── 2d85adb5-ea94-48dd-b7d5-6880e056bdfe-attachment.png
+│   ├── 2e116b1f-bd81-450c-a3f6-e174dabd3a15-result.json
+│   ├── 2e49ca5b-a918-4204-9ba6-3d4e620ca490-result.json
+│   ├── 2e58dc0a-40a9-4ee4-87c0-6b8741f3d48c-attachment.txt
+│   ├── 2e694856-24ac-488f-a8ea-5fe726f235d2-attachment.png
+│   ├── 2fbb64ae-a6c1-4648-9172-6a33d79c4b89-result.json
+│   ├── 32f9d9e5-68f6-440b-bcac-3e6a45e681ca-attachment.txt
+│   ├── 3451c55b-85a6-47b4-bcf2-7ee7448250b5-attachment.txt
+│   ├── 3546c80f-ab79-4875-adc4-7d243108a3a7-attachment.txt
+│   ├── 35550159-e437-4b4b-b975-bdb744e07fed-attachment.txt
+│   ├── 377336be-5c2d-46d1-99fe-f320c66917c3-result.json
+│   ├── 38054f5d-ef15-44ae-babb-b945f1c73b08-attachment.txt
+│   ├── 3858e39f-0b89-4ce7-8a9b-7c1b9cc0d492-result.json
+│   ├── 38a57125-b184-4c25-8501-9c4507042559-attachment.txt
+│   ├── 39986782-26de-49a1-8e85-8ff83f5e714a-attachment.zip
+│   ├── 3b3723da-219a-430c-9ad8-605e8f8beb7d-result.json
+│   ├── 3b4c6459-4dfb-4ca0-b94c-45482bc4a2d7-attachment.txt
+│   ├── 3ca60432-25d4-4661-9533-f7162c1ebce5-attachment.txt
+│   ├── 3d155e19-e0e5-4f30-819e-7cf209c7b68a-attachment.md
+│   ├── 3d5e1118-36fc-491c-9de9-6adb4458f8c0-result.json
+│   ├── 3edfd7fd-8999-45d6-96da-8f44bf9b82ae-attachment.txt
+│   ├── 403943b2-8773-4440-a019-6b3766b171f2-attachment.txt
+│   ├── 405166db-d1d2-473c-8f99-93f6634137fa-attachment.zip
+│   ├── 4253face-566e-4f6b-b617-700a53d7e8ab-result.json
+│   ├── 43942660-284e-4ee1-948a-3194abf333ed-attachment.txt
+│   ├── 44b97ce4-0a7a-41aa-b74e-86f67175816b-result.json
+│   ├── 45ae3c77-9257-45be-9539-5e1bc9826541-attachment.md
+│   ├── 47b1751e-5d2b-46b7-a87d-de674e883f5a-attachment.txt
+│   ├── 48512559-64c8-4fb0-8681-1c3acabe6970-result.json
+│   ├── 48e078e5-8384-4aff-a1cb-f73f9738a28b-attachment.md
+│   ├── 492c6575-b04e-4ebf-8034-57bf71d8c21a-attachment.md
+│   ├── 496f6bab-3f4a-4d5f-80b1-758100ded0d1-attachment.txt
+│   ├── 4a1f801b-8a14-4e64-9385-7b5fffe8c4a8-attachment.txt
+│   ├── 4ae31721-0915-429e-bad1-cc0031ff5112-attachment.txt
+│   ├── 4c6df12a-a8ac-4f47-b3ea-a1f47edfd0fe-attachment.txt
+│   ├── 4c9ad454-2041-4277-ad1d-3232c53c8b52-attachment.txt
+│   ├── 4cc20040-95f8-4ae0-b61a-5812562e670d-attachment.png
+│   ├── 4dfb713a-7786-4c06-8914-44e87c92bbdf-result.json
+│   ├── 4e82f3c0-444b-41be-ac52-1e0b1d49abad-result.json
+│   ├── 4e927570-55b6-459f-9bd5-6f72b032487d-attachment.txt
+│   ├── 4ec2e56a-c670-4d43-988a-af4dceeb497d-attachment.md
+│   ├── 507afb15-843d-412d-b4aa-5b98360cd392-attachment.md
+│   ├── 50804266-6645-4814-9a65-faa41b130c9b-attachment.png
+│   ├── 51921a90-d280-4e49-9534-27c76767322f-attachment.png
+│   ├── 521bda5e-171d-4d1c-8db0-6f51806aec89-attachment.txt
+│   ├── 53319799-97c3-4049-9978-2736941a27ee-attachment.txt
+│   ├── 56e2284b-96ae-4780-835b-f34a9087c5fb-attachment.txt
+│   ├── 5747c612-53f2-4016-a0e3-7d2e49d99b92-attachment.md
+│   ├── 57c85b8e-2d5e-47e8-ac50-40bab7d4a35a-result.json
+│   ├── 583c285c-7366-45d2-999e-2a6af3791248-result.json
+│   ├── 58c28fe1-2228-4681-8e32-b908a0643673-attachment.txt
+│   ├── 5abf5180-656f-41f8-9b60-fd6804af315b-attachment.md
+│   ├── 5adeef00-4d31-4331-8230-c898a2443716-attachment.txt
+│   ├── 5bf0e0ef-a25c-4b81-b615-78774bfbf04a-result.json
+│   ├── 5c356d3f-92d4-41cf-85f6-84430608c5b5-attachment.zip
+│   ├── 5df44de2-ee28-4690-91a8-9d13dd6e4a8d-attachment.txt
+│   ├── 5eede711-a841-429b-816a-32609c80ab7d-attachment.txt
+│   ├── 5ef3a24f-d20a-48c4-82e1-a240448e7931-attachment.txt
+│   ├── 5fed1650-8158-4b25-b3d8-b917dd2e6bb5-attachment.txt
+│   ├── 5ff2ae66-062b-478c-adfd-88ef8ec81f9c-attachment.txt
+│   ├── 604d65ed-50ae-43af-955b-dd6b13ab560e-attachment.md
+│   ├── 61416798-9d97-40c1-8400-126dc0fb9373-attachment.md
+│   ├── 61cc4018-7f3c-4f26-8811-4d18e25e249c-result.json
+│   ├── 62ef2a9e-1c9b-424d-865a-a44e10b38e79-attachment.txt
+│   ├── 6383e04e-b286-4041-87c7-afbe6b3a609a-result.json
+│   ├── 66d186d7-3261-4433-a609-40aa6721f906-attachment.txt
+│   ├── 67d6ba16-25a5-4020-a261-cd1b70019374-result.json
+│   ├── 6823fd2c-78fc-4e2c-8f12-60a5b622589f-result.json
+│   ├── 6868f3cc-ba7e-42df-ba2d-3c3b0480df5c-attachment.txt
+│   ├── 686ff8fd-4721-4d5b-9a7b-dd44a8df01b8-attachment.txt
+│   ├── 6d4bcf02-3802-47bc-8b44-5daaa593b3cb-result.json
+│   ├── 6d5b96f6-f270-488c-bb3b-969c8ee6b881-attachment.txt
+│   ├── 6ef18ca2-f8d7-4e2c-ab72-0c0d9b002b84-attachment.txt
+│   ├── 7095b315-998a-40db-b012-1580874a6bb2-attachment.txt
+│   ├── 71deb962-8ee4-4ea5-b106-ba10bebc73b4-attachment.md
+│   ├── 723aeb3c-d57a-42f9-89a4-395aff3b0828-result.json
+│   ├── 73c83871-ba11-4f5c-b7b7-d35d9d344e7a-result.json
+│   ├── 740ff28a-4683-43ba-9fee-4ff507c631f8-attachment.txt
+│   ├── 755fae72-34fd-444e-8ca5-59a40329b394-result.json
+│   ├── 75b9b789-282b-41d2-819f-08aabb0f3e8b-result.json
+│   ├── 765e8ec7-337f-4577-a720-8aaebfad359b-result.json
+│   ├── 76bc3cda-999c-4e54-8a64-a2a56289b98a-attachment.txt
+│   ├── 76decbe0-1830-459c-bff5-8c2d1abb61c6-attachment.txt
+│   ├── 76f5a163-8c83-41e8-8ec2-d9f79bc57240-result.json
+│   ├── 77042cc6-ae1b-4e00-8cab-ea222099d986-result.json
+│   ├── 7802c4f0-e376-4d49-b63b-918acab71b9f-result.json
+│   ├── 7a3cec37-b033-4ee0-8892-6c5a818f44c6-attachment.txt
+│   ├── 7a7feda8-b279-4ca3-b14e-955a0a590669-result.json
+│   ├── 7b080bc5-e79e-42b6-8be8-7a5e2fd4b628-result.json
+│   ├── 7c0c43c3-4ae8-4719-af6e-9c22737b24f8-attachment.txt
+│   ├── 7d508bf1-fe10-4495-830d-5be999b1587a-attachment.txt
+│   ├── 7db654e1-5ce3-40bb-9290-a1e490f5e4b0-attachment.txt
+│   ├── 7ed39dd7-9b6e-414b-b05a-75d38ba0ad41-attachment.txt
+│   ├── 7fe04c32-b756-44cf-83bb-fbca5903d964-attachment.png
+│   ├── 7fe2c474-a278-4018-8417-f0c3d0d740cb-attachment.txt
+│   ├── 80e4eadf-d02a-48ca-a50a-0050d077efc1-result.json
+│   ├── 8108015e-468a-4b69-aa43-c774e55cc6e9-attachment.txt
+│   ├── 81a3db8a-95b0-4424-8aa5-faf8c0ea285f-attachment.txt
+│   ├── 81c454b6-9a35-425a-ad61-70023ee46e97-attachment.txt
+│   ├── 81e06f61-8a2a-4e72-a848-d10c7ecba612-attachment.txt
+│   ├── 821d2cfd-8f20-45db-ab3f-847587c10ac4-attachment.png
+│   ├── 829a151d-0aa2-4e7d-b804-0363bd14940d-result.json
+│   ├── 82c3f39b-43a2-46f9-a6e3-b568aba5a189-attachment.txt
+│   ├── 82f10eb5-152e-432a-86d6-3f75cf02bcd8-result.json
+│   ├── 832f23d2-7033-453a-a753-00a09162e997-result.json
+│   ├── 849e87be-5007-4a46-8b16-894cf44db143-attachment.txt
+│   ├── 849ee00c-3e9f-4909-94dc-1f461c91dda9-attachment.txt
+│   ├── 84c0e2ec-7d03-483b-a9ef-2eab0085ddeb-attachment.txt
+│   ├── 8580aefe-0097-4ae5-bdc4-33a3442a5517-result.json
+│   ├── 860a7115-cfcf-44b0-b222-e9700bc6991e-attachment.md
+│   ├── 875008c8-c182-4055-b6d8-046b818ad208-attachment.txt
+│   ├── 88de137e-0db8-4311-a7d6-f4c9cd71120f-attachment.txt
+│   ├── 893636f8-993c-495d-9755-786177f423e6-attachment.txt
+│   ├── 894ba231-2de2-49d0-8161-d7f12ef7364e-attachment.md
+│   ├── 8ae43647-4d2b-4758-8519-73e48d323c81-attachment.md
+│   ├── 8bd3b9df-da45-4463-a86b-6f83f3bfdcb3-attachment.txt
+│   ├── 8ce96d7c-c44b-48ac-a3d6-5e725e51e4b5-attachment.png
+│   ├── 8d905a38-74e3-44f2-a2d3-d88f43bbd81e-result.json
+│   ├── 8db6b5d2-843f-4ca1-b4aa-cda1c5ceb03d-result.json
+│   ├── 8ddb1a5d-5bda-46b3-8734-381c6ead87be-result.json
+│   ├── 91487c74-215f-431f-9d85-7020ce4dc9ac-result.json
+│   ├── 91d82b38-fb00-4b77-9138-5ad8b3b99b49-attachment.txt
+│   ├── 943088c1-8f61-4d68-a1e3-acd936f83bf2-result.json
+│   ├── 94b0f9be-7da6-4383-9e65-e88a96028eaf-result.json
+│   ├── 95a4d501-d4f5-4b5c-ab0c-00eabc970192-attachment.txt
+│   ├── 9775e1af-068e-428f-99e1-bc6b1d46620a-attachment.txt
+│   ├── 983977c1-b02f-4493-8aee-4167670b5cbc-attachment.png
+│   ├── 9a0e0e10-3b71-4166-94ba-3918fd7ea290-attachment.txt
+│   ├── 9aab325e-a2e0-4123-8e94-92f43d4dc605-attachment.txt
+│   ├── 9bb8db32-a3a9-4a13-a771-c9a4577ab1f8-attachment.txt
+│   ├── a2f99ac9-33fe-41b9-8ae5-818a023e3692-attachment.txt
+│   ├── a6492cec-ea8f-447b-b6b1-42f1f2196e0a-attachment.md
+│   ├── a689c02d-f8ec-40dd-a7ca-4c6c0b377402-attachment.png
+│   ├── a78b30e5-2f63-4aec-9b82-10a045ccb39d-result.json
+│   ├── a921ccdf-1057-4f83-bf89-8cc60f70379e-attachment.txt
+│   ├── a94895fd-faa3-4feb-a2f8-5243276d4b31-result.json
+│   ├── a9c08484-0fc4-49e9-8414-d764f3541962-attachment.png
+│   ├── a9d52a4d-37aa-43a2-a948-4798136017fd-attachment.txt
+│   ├── aa194a18-ca92-4d18-94c0-ad64f1cc3702-result.json
+│   ├── ab924e0d-41eb-4890-9aca-a539a929d808-result.json
+│   ├── ac40d3dd-f273-4baa-b9b4-b51b5871a2fb-attachment.png
+│   ├── ac533ef2-ad5d-43da-ac56-9e6635e4e4a1-result.json
+│   ├── ac589826-a952-45f8-b0ea-0fcb62396021-attachment.txt
+│   ├── ac912544-2152-43fa-99fb-cb9720697449-result.json
+│   ├── acc81a8e-d4b8-48e5-943a-2ec168d0ce3a-result.json
+│   ├── ad20a7a3-ad87-4d72-bcb7-4ffd7e8d4705-attachment.txt
+│   ├── ad607d4a-a571-453c-8a74-e692e332a4c1-attachment.txt
+│   ├── adab2803-1d34-4b80-981e-961fc6c78a2a-attachment.png
+│   ├── b02a6c15-2602-4bdd-ae55-375f5330799c-result.json
+│   ├── b1a10138-a99b-4287-9abc-3b686f32815b-attachment.md
+│   ├── b1ab3128-0484-439d-8482-3293bc415069-attachment.md
+│   ├── b3500615-9418-4442-8c54-f75c4c8c0b80-attachment.md
+│   ├── b623cdac-1fa2-4dd1-8ea0-00fc36d2128b-attachment.txt
+│   ├── b640a47b-8628-4714-9f39-3b8dabebb191-attachment.txt
+│   ├── b6bc5324-31f6-4da0-b821-3405779821e5-attachment.md
+│   ├── b7898fc1-9330-49b7-9371-a77d82755483-attachment.txt
+│   ├── b9d3e3c5-2cb3-4f97-b270-21247f63ddb2-result.json
+│   ├── ba3a25f5-1f3b-4eeb-9515-13715cacf36a-attachment.txt
+│   ├── bb2cf842-7df9-47ff-bcb9-173001e9b7ad-attachment.txt
+│   ├── bc7187ca-d3b4-4987-82db-bdcf86689ad1-attachment.txt
+│   ├── bd1e3d13-77b7-4701-8278-b4fb0e87f568-result.json
+│   ├── bf5cb6d1-1fc6-4fff-b49a-ead6b5c729e3-attachment.txt
+│   ├── c110b083-1669-45d9-831a-27d23bf29b79-attachment.md
+│   ├── c1437725-79cd-4927-8c54-dedca62b69b8-attachment.md
+│   ├── c231e117-c374-415c-8cc8-b655586552fe-attachment.txt
+│   ├── c2c4bad3-2189-4112-9b5f-6679ae32fab0-attachment.txt
+│   ├── c3deed12-f5c9-4b8e-8590-3a433126c1f5-attachment.png
+│   ├── c3f8a696-c661-424a-b26f-60e571b67bc7-attachment.md
+│   ├── c40b70ec-6202-43ba-a4ed-5c6accbf7925-attachment.txt
+│   ├── c4c18997-0f7a-4634-9c2e-184b0370b74e-attachment.md
+│   ├── c576ac1c-67e7-4c49-aa4f-da3e14e7f466-result.json
+│   ├── c754b551-1c39-4270-b3fb-3fd4c3f7c32f-result.json
+│   ├── c7eff187-7794-4d1c-9b77-02a5f7b4a95c-attachment.txt
+│   ├── c858e03b-b229-49bc-bcc5-de3f242746a3-attachment.png
+│   ├── c9e7ae5d-8dfc-4bc2-8160-1d0d03fafdbb-attachment.txt
+│   ├── c9f3717c-6a5b-4199-92e4-0bbdd24e0eb5-attachment.zip
+│   ├── cb1722d3-8b29-4056-87c2-4a8da96be98d-attachment.png
+│   ├── cd2d65b9-0680-4718-8893-2593b9a36559-attachment.txt
+│   ├── ce984ce8-d230-4a46-aad5-baffc87cfc53-attachment.txt
+│   ├── cf9ac9e0-4085-49f2-b60a-10fcebd4157f-attachment.txt
+│   ├── d10d7126-b69b-488a-a1c5-beb54da43bdf-attachment.zip
+│   ├── d11ff2d7-ad2a-4c0b-90f9-f6a676ce3bcd-result.json
+│   ├── d164c75a-5be6-4871-9247-40082f686764-attachment.txt
+│   ├── d20580b7-ad5b-4326-bc5f-9124b9251294-attachment.txt
+│   ├── d20e671f-58e5-4c14-a226-b04323c634ac-result.json
+│   ├── d21fd675-f732-4e79-bc89-f5b18a6ff242-result.json
+│   ├── d28bcbfd-9bd9-4c4c-956a-29a4419ea5f5-attachment.txt
+│   ├── d3789b58-797d-4d6d-8bf8-6bdbecff28ea-result.json
+│   ├── d47e1552-1b24-4ea5-a71d-9e814649c893-attachment.txt
+│   ├── d4c11c9d-3b19-4f52-93ef-7e89d3809b5a-attachment.png
+│   ├── d51df8fb-39bf-4a84-b511-0e0c2b575fe2-result.json
+│   ├── d51f0324-f1e2-43d0-a7f7-4acc76ea7dd2-attachment.txt
+│   ├── d5cde80e-773c-4b75-a3f8-1dcd9451a0ee-attachment.png
+│   ├── d7fee185-0c3b-49b2-b82a-6f4973d0c4ba-result.json
+│   ├── d8e0ff86-9044-43ee-a2ec-04ad7e8447c8-attachment.txt
+│   ├── db7bdfaa-2084-472d-85f6-eaa2cf9c5014-attachment.txt
+│   ├── dddcf085-7fa4-43e1-a8ba-9d0779224db5-attachment.md
+│   ├── dedca653-4aaa-45ce-b14e-065b8283fbe9-attachment.png
+│   ├── df8f328b-db55-4d92-801f-2413abc4cca6-attachment.png
+│   ├── e183c3fc-7289-45ba-a6fb-08e18a19c681-attachment.txt
+│   ├── e25dd0e4-50a2-4e2e-949c-227bea17f38d-attachment.txt
+│   ├── e39ccba7-03c0-400c-9142-b0837dc9bf15-attachment.txt
+│   ├── e7ffcf57-0784-482c-bf32-bac217dd9062-result.json
+│   ├── e85a5cac-828a-4166-ae63-606ea40b1fbc-result.json
+│   ├── e8e5b353-ffe9-4307-aafe-f85a6fefdd5a-result.json
+│   ├── ea2104d2-c92c-4bde-bf5d-e1281d840059-result.json
+│   ├── eab1d195-4123-4be6-bb30-03bc2aef937a-result.json
+│   ├── eb1ec1e9-efb9-48ce-87cd-db2dd1ba4645-result.json
+│   ├── eb3863bc-31a5-411a-9da6-49e46431e1b6-attachment.png
+│   ├── ec7c4e63-3cd9-4c7d-8f47-dc28f03defb8-attachment.png
+│   ├── ef0e892d-fa46-4cc0-9c4f-88adae3abc99-attachment.txt
+│   ├── efda43ae-7ea1-4e97-bf23-142b8908373a-attachment.png
+│   ├── f0382052-e1f2-4880-ac09-f0a867e407e5-result.json
+│   ├── f049b030-2a2d-48f5-909d-a0f22e33a866-result.json
+│   ├── f11c1b7e-9970-46f9-800f-88a35b2b1ab8-attachment.png
+│   ├── f16754a1-afed-4526-8754-34815ac507fa-attachment.txt
+│   ├── f2dbb454-f209-45ab-882d-67689059b81c-attachment.txt
+│   ├── f6586615-a941-4d1d-8a99-41e481a69b6e-attachment.md
+│   ├── f6b26adf-77d9-4711-a13f-a7ebd93e9c0b-attachment.txt
+│   ├── f6b6cbe2-ac96-438c-8d8d-d8287ed5a326-attachment.md
+│   ├── f715c4ea-c2cc-4a2b-aa84-9c03cb4bf710-attachment.txt
+│   ├── fa211705-062c-41af-b502-462795a72b63-attachment.txt
+│   ├── fa786df7-097b-4814-b3b4-b883cc9b7824-attachment.md
+│   ├── fa7b1be9-7cbb-4fcb-b0d3-3aa3472d1e13-result.json
+│   ├── facd420f-2d93-42ad-aa8a-663e005a1b9d-attachment.png
+│   ├── fb2361eb-e235-4e97-a154-2cd33e6c7302-result.json
+│   ├── fb4990c3-6a9a-492d-80e7-8e8829768440-attachment.txt
+│   ├── fc97c07c-5a2b-41af-9869-4ba7c5750791-attachment.txt
+│   ├── fd0e2755-0b0c-4f50-8d3b-a73ebb5275fb-attachment.md
+│   ├── fdd065d9-48b0-4870-9159-2d73044c3c11-result.json
+│   ├── fdfe0da8-b3f2-49ca-a066-ab4b38c7bd41-attachment.txt
+│   └── ffc41ffb-185f-4bd9-94de-d859e16a2613-attachment.txt
 ├── implementation_status.md
 ├── next_steps.md
 ├── node_modules
@@ -2143,11 +2291,39 @@
 ├── package-lock.json
 ├── package.json
 ├── picks
+│   ├── BeforeAddedToCurrentVisit.jpg
+│   ├── afterAddedCurrentVisit.jpg
+│   ├── afterDiagnosClicked.jpg
+│   ├── afterRecomendedAddedToTreatmentPlan.jpg
+│   ├── afterTothSelected.jpg
+│   ├── beforeRecomendedAdded.jpg
+│   ├── beforetothSelected.jpg
+│   ├── diagnos.jpg
+│   ├── виз1.jpg
+│   ├── виз10.jpg
+│   ├── виз11.jpg
+│   ├── виз12.jpg
+│   ├── виз2.jpg
+│   ├── виз3.jpg
+│   ├── виз4.jpg
+│   ├── виз5.jpg
+│   ├── виз6.jpg
+│   ├── виз7.jpg
+│   ├── виз8.jpg
+│   ├── виз9.jpg
 │   └── визит.jpg
 ├── playwright
 ├── playwright-report
+│   ├── data
+│   │   ├── 4de7622d48658cebf28ea8c1d3afd3177d42ae2e.png
+│   │   ├── 76dc8b23d0060fdaf1298a744e2384a310f59560.md
+│   │   ├── bbce9858888fe2f61e76513e2da488f86d239b3f.png
+│   │   └── f1cf87c849448b13d82046b762296b56ff37d9cf.md
 │   └── index.html
 ├── playwright.config.ts
+├── prompts
+│   ├── generate-implementation-status.md
+│   └── generate-next-steps.md
 ├── spikes
 │   ├── probe-auth-handshake.ts
 │   ├── probe-data-formats.ts
@@ -2180,7 +2356,8 @@
 │   │   │   └── visit.types.ts
 │   │   ├── factories
 │   │   │   ├── patient.factory.ts
-│   │   │   └── shift.factory.ts
+│   │   │   ├── shift.factory.ts
+│   │   │   └── visit-form.factory.ts
 │   │   └── fixtures
 │   │       └── index.ts
 │   ├── pages
@@ -2197,6 +2374,8 @@
 │   │   │       ├── input-field.atom.ts
 │   │   │       └── select-dropdown.atom.ts
 │   │   ├── main.page.ts
+│   │   ├── modals
+│   │   │   └── create-visit-modal.page.ts
 │   │   └── visit.page.ts
 │   ├── tests
 │   │   ├── api
@@ -2206,11 +2385,14 @@
 │   │   │   └── glossary.spec.ts
 │   │   ├── auth.setup.ts
 │   │   ├── e2e
-│   │   │   └── smoke
-│   │   │       ├── api-check.spec.ts
-│   │   │       ├── auth-workflow.spec.ts
-│   │   │       ├── sanity.spec.ts
-│   │   │       └── ui-main-page.spec.ts
+│   │   │   ├── smoke
+│   │   │   │   ├── api-check.spec.ts
+│   │   │   │   ├── auth-workflow.spec.ts
+│   │   │   │   ├── create-visit-modal.spec.ts
+│   │   │   │   ├── sanity.spec.ts
+│   │   │   │   └── ui-main-page.spec.ts
+│   │   │   └── workflows
+│   │   │       └── complete-visit-flow.spec.ts
 │   │   └── unit
 │   │       ├── components
 │   │       │   ├── input-field.spec.ts
@@ -2224,8 +2406,13 @@
 │       ├── retry.utils.ts
 │       └── snils.utils.ts
 ├── test-results
-├── test-results.json
+│   ├── src-tests-e2e-smoke-create-df024-veal-the-time-slots-section-chromium
+│   │   ├── error-context.md
+│   │   └── test-failed-1.png
+│   └── src-tests-e2e-smoke-create-e3336-reveal-the-Кабинет-dropdown-chromium
+│       ├── error-context.md
+│       └── test-failed-1.png
 ├── tree.txt
 └── tsconfig.json
 
-181 directories, 2048 files
+187 directories, 2229 files

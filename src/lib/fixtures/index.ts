@@ -1,10 +1,56 @@
 import { test as base, expect } from '@playwright/test';
 import { logger } from '../../utils/logger';
+import { PatientsService } from '../api/services/patients.service';
+import { ScheduleService } from '../api/services/schedule.service';
+import { VisitService } from '../api/services/visit.service';
+import { VisitPage } from '../../pages/visit.page';
+import { CreateVisitModal } from '../../pages/modals/create-visit-modal.page';
+import { getConfig } from '../../config/env-loader';
+import { EmployeeService } from '../api/services/employee.service';
+import { BranchService } from '../api/services/branch.service';
 
-export const test = base.extend<{}, { workerStorageState: string }>({
+type CustomFixtures = {
+  patientService: PatientsService;
+  scheduleService: ScheduleService;
+  visitService: VisitService;
+  branchService: BranchService;
+  visitPage: VisitPage;
+  createVisitModal: CreateVisitModal;
+  employeeService: EmployeeService;
+};
+
+export const test = base.extend<CustomFixtures, { workerStorageState: string }>({
   workerStorageState: [async ({}, use) => {
     await use('playwright/.auth/admin.json');
   }, { scope: 'worker' }],
+
+  employeeService: async ({ request }, use) => {
+    await use(new EmployeeService(request));
+  },
+
+  branchService: async ({ request }, use) => {
+    await use(new BranchService(request));
+  },
+
+  patientService: async ({ request }, use) => {
+    await use(new PatientsService(request));
+  },
+
+  scheduleService: async ({ request }, use) => {
+    await use(new ScheduleService(request));
+  },
+
+  visitService: async ({ request }, use) => {
+    await use(new VisitService(request));
+  },
+
+  visitPage: async ({ page }, use) => {
+    await use(new VisitPage(page, getConfig()));
+  },
+
+  createVisitModal: async ({ page }, use) => {
+    await use(new CreateVisitModal(page, getConfig()));
+  },
 
   page: async ({ browser, workerStorageState }, use) => {
     const context = await browser.newContext({ 
@@ -43,3 +89,5 @@ export { expect } from '@playwright/test';
 
 export { PatientFactory } from '../factories/patient.factory';
 export { ShiftFactory } from '../factories/shift.factory';
+export { VisitFormFactory } from '../factories/visit-form.factory';
+export type { VisitFormData } from '../factories/visit-form.factory';
