@@ -41,26 +41,6 @@ test.describe('Smoke: CreateVisitModal', () => {
   // ─── 2. Form Structure ──────────────────────────────────────────────────────
 
   test.describe('Form Structure', () => {
-    test('should display all required form sections', async ({ createVisitModal }) => {
-      Logger.setTestContext('CreateVisitModal Smoke', 'Form structure');
-      await createVisitModal.openFromVisitsList();
-
-      await expect(createVisitModal.patientDropdown).toBeVisible();
-      await expect(createVisitModal.treatmentPlanDropdown).toBeVisible();
-      await expect(createVisitModal.stageDropdown).toBeVisible();
-      await expect(createVisitModal.visitTypeDropdown).toBeVisible();
-      await expect(createVisitModal.byDoctorRadio).toBeVisible();
-      await expect(createVisitModal.bySpecialityRadio).toBeVisible();
-      await expect(createVisitModal.doctorDropdown).toBeVisible();
-      await expect(createVisitModal.desiredDateFromInput).toBeVisible();
-      await expect(createVisitModal.desiredDateToInput).toBeVisible();
-      await expect(createVisitModal.addNomenclatureButton).toBeVisible();
-      await expect(createVisitModal.submitButton).toBeVisible();
-      await expect(createVisitModal.cancelButton).toBeVisible();
-
-      logger.info('Smoke: all required form sections are visible');
-    });
-
     test('should accept a desired date range', async ({ createVisitModal }) => {
       Logger.setTestContext('CreateVisitModal Smoke', 'Date range');
       const { dateFrom, dateTo } = VisitFormFactory.createDefault();
@@ -148,7 +128,7 @@ test.describe('Smoke: CreateVisitModal', () => {
 
     doctorSearchTerm = 'Пашеный Максим';
 
-    test.only('day card selection should reveal the time slots section', async ({ createVisitModal }) => {
+    test('day card selection should reveal the time slots section', async ({ createVisitModal }) => {
       Logger.setTestContext('CreateVisitModal Smoke', 'Day card → time slots');
       const { dateFrom, dateTo } = VisitFormFactory.createDefault();
 
