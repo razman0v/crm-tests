@@ -258,6 +258,8 @@ export class CreateVisitModal extends BasePage {
     this.logger.info('CreateVisitModal: selecting doctor', { searchTerm });
     await this.doctorDropdown.click();
     const searchInput = this.page.getByPlaceholder(/Начните вводить символы для поиска|Search/i).first();
+    await searchInput.waitFor({ state: 'visible' });
+    await searchInput.pressSequentially(searchTerm, { delay: 50 });
     await searchInput.fill(searchTerm);
     await this.page.getByText(searchTerm, { exact: false }).first().click();
     await this.page.waitForTimeout(300);
