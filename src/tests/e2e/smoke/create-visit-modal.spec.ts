@@ -102,7 +102,7 @@ test.describe('Smoke: CreateVisitModal', () => {
 
   // ─── 4. Time Selection Flow ─────────────────────────────────────────────────
 
-  //TO DO — эти тесты зависят от наличия открытых слотов в живом расписании, иначе падают с понятной ошибкой из selectFirstAvailableDay / selectFirstAvailableTimeSlot. Можно будет добавить API-шаг в beforeAll для создания такого слота, но пока оставим так, чтобы не плодить тестовые данные.
+  //TO DO — эти тесты зависят от наличия открытых слотов в живом расписании, иначе падают с ошибкой из selectFirstAvailableDay / selectFirstAvailableTimeSlot. Можно будет добавить API-шаг в beforeAll для создания такого слота, но пока оставим так, чтобы не плодить тестовые данные.
 
   test.describe('Time Selection Flow', () => {
     /**
