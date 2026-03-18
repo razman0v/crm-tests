@@ -47,6 +47,8 @@ export class CreateVisitModal extends BasePage {
   // ─── Date & time section ──────────────────────────────────────────────────────
   readonly desiredDateFromInput: Locator;
   readonly desiredDateToInput: Locator;
+  readonly desiredTimeFromInput: Locator;
+  readonly desiredTimeToInput: Locator;
   readonly dateSlider: Locator;
   readonly timeSlotsHeader: Locator;
   readonly timeSlotsSection: Locator;
@@ -141,6 +143,13 @@ export class CreateVisitModal extends BasePage {
       .filter({ hasText: /Желаемые даты/i });
     this.desiredDateFromInput = desiredDatesField.locator('input').first();
     this.desiredDateToInput = desiredDatesField.locator('input').last();
+
+    // Desired times inputs (two separate time inputs inside one FieldLayoutView)
+    const desiredTimesField = this.modal
+      .locator('.FieldLayoutView')
+      .filter({ hasText: /Желаемые время/i });
+    this.desiredTimeFromInput = desiredTimesField.locator('input').first();
+    this.desiredTimeToInput = desiredTimesField.locator('input').last();
 
     // DateSlider — day cards strip (active slides have .DateSlider__slide_active)
     this.dateSlider = this.modal.locator('.DateSlider');
@@ -266,7 +275,7 @@ export class CreateVisitModal extends BasePage {
     this.logger.info('CreateVisitModal: filling date range', { from, to });
     await this.desiredDateFromInput.fill(from);
     await this.desiredDateToInput.fill(to);
-    await this.modal.locator('.ModalView__title').click(); // to close open datepicker
+    await this.page.keyboard.press('Enter'); // to close open datepicker
     this.logger.info('CreateVisitModal: ✅ date range filled');
   }
 
