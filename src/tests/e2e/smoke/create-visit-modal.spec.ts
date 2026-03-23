@@ -112,23 +112,23 @@ test.describe('Smoke: CreateVisitModal', () => {
      */
     let doctorSearchTerm: string;
 
-    // test.beforeAll(async ({ branchService, employeeService, scheduleService }) => {
-    //   Logger.setTestContext('CreateVisitModal Smoke', 'beforeAll — create doctor with schedule');
-    //   const branch = await branchService.create();
-    //   const cabinetId = branch.companyBranchCabinets![0].id;
+    test.beforeAll(async ({ branchService, employeeService, scheduleService }) => {
+      Logger.setTestContext('CreateVisitModal Smoke', 'beforeAll — create doctor with schedule');
+      const branch = await branchService.create();
+      const cabinetId = branch.companyBranchCabinets![0].id;
 
-    //   const doctor = await employeeService.create(branch.id);
-    //   doctorSearchTerm = `${doctor.user.surname} ${doctor.user.name}`;
+      const doctor = await employeeService.create(branch.id);
+      doctorSearchTerm = `${doctor.user.surname} ${doctor.user.name}`;
 
-    //   const today = new Date();
-    //   const dateFrom = today.toISOString().split('T')[0];
-    //   const dateTo = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-    //   await scheduleService.createSimpleShift(doctor.employeeBranchId, cabinetId, dateFrom, dateTo);
+      const today = new Date();
+      const dateFrom = today.toISOString().split('T')[0];
+      const dateTo = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+      await scheduleService.createSimpleShift(doctor.employeeBranchId, cabinetId, dateFrom, dateTo);
 
-    //   logger.info('beforeAll: doctor + schedule created for time flow tests', { doctorSearchTerm });
-    // });
+      logger.info('beforeAll: doctor + schedule created for time flow tests', { doctorSearchTerm });
+    });
 
-    doctorSearchTerm = 'Пашеный Максим';
+    //doctorSearchTerm = 'Пашеный Максим';
 
     test('day card selection should reveal the time slots section', async ({ createVisitModal }) => {
       Logger.setTestContext('CreateVisitModal Smoke', 'Day card → time slots');

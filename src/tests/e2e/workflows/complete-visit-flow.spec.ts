@@ -1,5 +1,4 @@
-import { test, expect } from '../../../lib/fixtures'; // Use custom fixtures
-import { getConfig } from '../../../config/env-loader';
+import { test, expect, PatientFactory } from '../../../lib/fixtures'; // Use custom fixtures
 import { Logger, logger } from '../../../utils/logger';
 
 test.describe('E2E: Complete Dental Visit Flow (14-Step Journey)', () => {
@@ -9,79 +8,42 @@ test.describe('E2E: Complete Dental Visit Flow (14-Step Journey)', () => {
     scheduleService,
     visitService,
     visitPage,
-    page,
-    request,
+    branchService,
+    employeeService,
   }) => {
-    const config = getConfig();
     Logger.setTestContext('Complete Visit Flow', 'Main Test');
 
     try {
       // ========================================
-      // STEP 1: Resolve Real Doctor ID from Glossary
+      // STEP 1: Create Branch and Doctor
       // ========================================
-      logger.info('STEP 1: Resolving real doctor ID from glossary');
-      let doctorBranchId: number;
-      try {
-        // Use glossary to get actual doctor ID, or fallback
-        doctorBranchId = 1; // TODO: Replace with actual glossary call after API stabilizes
-        logger.info('✅ Doctor ID resolved', { doctorBranchId });
-      } catch (error) {
-        logger.warn('Could not resolve doctor from glossary, using fallback', {
-          error: String(error),
-        });
-        doctorBranchId = 1;
-      }
+      logger.info('STEP 1: Creating branch and doctor');
+      const branch = await branchService.create();
+      const cabinetId = branch.companyBranchCabinets![0].id;
+      const doctor = await employeeService.create(branch.id);
+      const doctorBranchId = doctor.employeeBranchId;
+      logger.info('✅ Branch and doctor created', { branchId: branch.id, doctorBranchId, cabinetId });
 
       // ========================================
       // STEP 2: Create Work Schedule
       // ========================================
       logger.info('STEP 2: Creating work schedule');
       const now = new Date();
-      const weekLater = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
 
-      const schedulePayload = {
-        employeeBranchId: doctorBranchId,
-        dateFrom: now.toISOString(),
-        dateTo: weekLater.toISOString(),
-        companyBranchId: config.companyUid ? parseInt(config.companyUid, 10) : 1,
-        dataJson: '',
-      };
-
-      // Don't send invalid payload—validate first
-      if (!schedulePayload.employeeBranchId || !schedulePayload.companyBranchId) {
-        throw new Error(
-          `Invalid schedule payload: employeeBranchId=${schedulePayload.employeeBranchId}, ` +
-          `companyBranchId=${schedulePayload.companyBranchId}`
-        );
-      }
-
-      const schedule = await scheduleService.createShift(schedulePayload);
+      const schedule = await scheduleService.createSimpleShift(
+        doctorBranchId,
+        cabinetId,
+        now.toISOString(),
+      );
       expect(schedule).toHaveProperty('id');
       expect(schedule.id).toBeGreaterThan(0);
       logger.info('✅ Schedule created', { scheduleId: schedule.id });
 
       // ========================================
-      // STEP 3: Create Patient with Validated Payload
+      // STEP 3: Create Patient
       // ========================================
       logger.info('STEP 3: Creating patient');
-      const patientPayload = {
-        user: {
-          glossaryGenderId: 1,
-          surname: 'Петров',
-          name: 'Иван',
-          patronymic: 'Сергеевич',
-          birthday: '1985-03-15',
-          snils: '12345678901', // Note: This may fail validation; spike should verify real SNILS format
-          phone: '+79991234567',
-        },
-        policyOmsNumber: '1234567890123456', // 16 digits
-        passport: {
-          series: '1234',
-          number: '567890',
-        },
-        comment: null,
-      };
-
+      const patientPayload = PatientFactory.createRandom();
       const patient = await patientService.create(patientPayload);
       expect(patient).toHaveProperty('id');
       expect(patient.id).toBeGreaterThan(0);
@@ -111,29 +73,39 @@ test.describe('E2E: Complete Dental Visit Flow (14-Step Journey)', () => {
       await visitPage.goto(visit.id);
 
       // ========================================
-      // STEP 6: Change Status → Arrived
+      // STEP 6: Change Status → Patient Arrived
+      // Click "Пациент пришел"; expect button to become "Начать визит"
       // ========================================
-      logger.info('STEP 6: Changing visit status to "Arrived"');
-      await visitPage.clickStateButton('Пациент пришел');
-      logger.info('✅ Status changed to "Arrived"');
+      logger.info('STEP 6: Patient arrived');
+      await visitPage.clickStateButton('Начать визит');
+      logger.info('✅ Status: arrived — button now shows "Начать визит"');
 
       // ========================================
-      // STEP 7-14: (SIMPLIFIED FOR BREVITY)
-      // Keep original step logic but use visitPage methods with proper waits
+      // STEP 7: Change Status → Start Visit
+      // Click "Начать визит"; expect button to become "Завершить визит"
       // ========================================
-      logger.info('STEPS 7-14: Completing remaining workflow steps...');
-      
-      // Fill questionnaire (example)
-      const questionnaireTab = page.locator('[data-test="tab-questionnaire"], button:has-text("Анкета")');
-      if (await questionnaireTab.isVisible()) {
-        await questionnaireTab.click();
-        logger.info('✅ Questionnaire tab opened');
-      }
-
-      // TODO: Continue with remaining steps, using visitPage methods
+      logger.info('STEP 7: Starting visit');
+      await visitPage.clickStateButton('Завершить визит');
+      logger.info('✅ Status: in progress — button now shows "Завершить визит"');
 
       // ========================================
-      // FINAL ASSERTION
+      // STEP 8: Open Dental Chart and Select Tooth
+      // ========================================
+      logger.info('STEP 8: Opening dental chart and selecting tooth 18');
+      await visitPage.clickDentalChartButton();
+      await visitPage.clickTooth(18);
+      logger.info('✅ Tooth 18 selected on dental chart');
+
+      // ========================================
+      // STEP 9: Return to Visit Page and Complete Visit
+      // ========================================
+      logger.info('STEP 9: Completing visit');
+      await visitPage.goto(visit.id);
+      await visitPage.stateButton.click();
+      logger.info('✅ Visit completed');
+
+      // ========================================
+      // FINAL ASSERTIONS
       // ========================================
       logger.info('✅✅✅ COMPLETE VISIT WORKFLOW SUCCESSFULLY EXECUTED ✅✅✅', {
         patientId: patient.id,
@@ -142,9 +114,9 @@ test.describe('E2E: Complete Dental Visit Flow (14-Step Journey)', () => {
         timestamp: new Date().toISOString(),
       });
 
-      expect(patient.id).toBeTruthy();
-      expect(visit.id).toBeTruthy();
-      expect(schedule.id).toBeTruthy();
+      expect(patient.id).toBeGreaterThan(0);
+      expect(visit.id).toBeGreaterThan(0);
+      expect(schedule.id).toBeGreaterThan(0);
 
     } catch (error) {
       logger.error('❌ Complete visit workflow failed', {
