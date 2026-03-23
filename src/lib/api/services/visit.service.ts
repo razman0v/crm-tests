@@ -21,4 +21,20 @@ export class VisitService extends BaseService {
     const responseData: VisitResponse = await response.json();
     return responseData;
   }
+
+  /**
+   * Construct the browser URL for a visit detail page.
+   * Used to navigate directly to a visit after creation via `VisitDetailsPage.goto()`.
+   *
+   * @param visitId - Numeric visit ID (from VisitResponse.id)
+   * @returns Full URL in the form: baseUrl + "/visits/" + visitId
+   *
+   * @example
+   * const visit = await visitService.create(payload);
+   * const url = visitService.getVisitUrl(visit.id);
+   * // → "https://crm.example.com/visits/1708"
+   */
+  getVisitUrl(visitId: number): string {
+    return `${this.config.baseUrl}/visits/${visitId}`;
+  }
 }
