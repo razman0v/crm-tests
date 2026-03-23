@@ -1,4 +1,4 @@
-import { Page, Locator, expect } from '@playwright/test';
+import { Page, Locator } from '@playwright/test';
 import { logger } from '../../../../utils/logger';
 
 /**
@@ -12,6 +12,7 @@ import { logger } from '../../../../utils/logger';
  * @example
  * const status = new VisitStatusWidget(page);
  * const current = await status.getStatus();
+ * await status.changeStatus('Пациент пришел');
  * await status.changeStatus('Начать визит');
  */
 export class VisitStatusWidget {
@@ -27,7 +28,7 @@ export class VisitStatusWidget {
     this.page = page;
 
     this.stateButton = page.getByRole('button', {
-      name: /Пациент пришел|Начать визит|Завершить визит|Завершить прием|Patient arrived|Start visit|Complete visit/i,
+      name: /Пациент пришел|Начать визит|Завершить визит|Завершить прием|Patient Arrived|Start Visit|Complete Visit|Complete Reception/i,
     });
   }
 
@@ -49,38 +50,30 @@ export class VisitStatusWidget {
   }
 
   /**
-   * Transition visit to `to` by clicking the state button once.
-   * If the button already shows `to`, skips the click.
+   * Click the status button that currently shows `label`.
    *
-   * Note: This method performs a single transition. If multiple transitions
-   * are needed (e.g. from "Пациент пришел" to "Завершить визит"), call it
-   * sequentially for each step.
+   * Handles any life-cycle label dynamically in both RU and EN
+   * (case-insensitive partial match):
+   *   - "Пациент пришел" / "Patient Arrived"
+   *   - "Начать визит"   / "Start Visit"
+   *   - "Завершить визит"/ "Complete Visit"
    *
-   * @param to - Expected button label after the click (partial match, case-insensitive)
+   * Call sequentially for multi-step transitions:
+   *   await changeStatus('Пациент пришел');
+   *   await changeStatus('Начать визит');
+   *
+   * @param label - Visible button label to click (partial, case-insensitive)
    */
-  async changeStatus(to: string): Promise<void> {
-    logger.info('VisitStatusWidget: changing status', { to });
+  async changeStatus(label: string): Promise<void> {
+    logger.info('VisitStatusWidget: clicking status button', { label });
 
-    await this.stateButton.waitFor({ state: 'visible', timeout: 5000 });
-    const currentText = await this.getStatus();
-
-    if (currentText.toLowerCase().includes(to.toLowerCase())) {
-      logger.info('VisitStatusWidget: already at target status, skipping click', { to });
-      return;
-    }
-
-    logger.info('VisitStatusWidget: clicking transition button', {
-      from: currentText,
-      to,
+    const button = this.page.getByRole('button', {
+      name: new RegExp(label, 'i'),
     });
-    await this.stateButton.click();
 
-    // Assert the button now shows the desired label
-    const updatedButton = this.page.getByRole('button', {
-      name: new RegExp(to, 'i'),
-    });
-    await expect(updatedButton).toBeVisible({ timeout: 5000 });
+    await button.waitFor({ state: 'visible', timeout: 5000 });
+    await button.click();
 
-    logger.info('VisitStatusWidget: ✅ status changed', { to });
+    logger.info('VisitStatusWidget: ✅ status button clicked', { label });
   }
 }

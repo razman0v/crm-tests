@@ -5,6 +5,7 @@ import { DentalChartWidget } from '../components/organisms/dental-chart/dental-c
 import { TreatmentPlanWidget } from '../components/organisms/treatment-plan/treatment-plan.widget';
 import { VisitStatusWidget } from '../components/organisms/visit-status/visit-status.widget';
 import { MedicalDiaryWidget } from '../components/organisms/medical-diary/medical-diary.widget';
+import { NomenclaturePanelWidget } from '../components/organisms/nomenclature/nomenclature-panel.widget';
 
 /**
  * VisitDetailsPage — CRM Composition Page
@@ -43,6 +44,9 @@ export class VisitDetailsPage extends BasePage {
   /** Medical Diary section — free-text clinical notes. */
   readonly medicalDiary: MedicalDiaryWidget;
 
+  /** Nomenclature panel — add services from the general list to this visit. */
+  readonly nomenclature: NomenclaturePanelWidget;
+
   constructor(page: Page, config: config) {
     super(page, config);
 
@@ -50,6 +54,7 @@ export class VisitDetailsPage extends BasePage {
     this.dentalChart   = new DentalChartWidget(page);
     this.treatmentPlan = new TreatmentPlanWidget(page);
     this.medicalDiary  = new MedicalDiaryWidget(page);
+    this.nomenclature  = new NomenclaturePanelWidget(page);
   }
 
   // ─── Navigation ─────────────────────────────────────────────────────────────
@@ -77,6 +82,8 @@ export class VisitDetailsPage extends BasePage {
 
     try {
       await super.goto(path);
+      // Wait for SPA data load — visit page fetches patient, plan, nomenclature
+      await this.page.waitForLoadState('networkidle', { timeout: 30_000 });
       this.logger.info('VisitDetailsPage: ✅ navigation successful', { path });
     } catch (error) {
       this.logger.error('VisitDetailsPage: navigation failed', {

@@ -112,4 +112,105 @@ export class TreatmentPlanWidget {
 
     logger.info('TreatmentPlanWidget: ✅ plan transferred to visit');
   }
+
+  /**
+   * Click the three-dots (kebab) menu on a card in the "Recommended" section
+   * and select "Set Diagnosis."
+   *
+   * Triggered after dental-chart condition selection when the CRM surfaces
+   * recommended diagnosis cards in the side panel.
+   *
+   * @param name - Partial case-insensitive text on the card (e.g. 'Symptom complex TM1')
+   */
+  async addDiagnosis(name: string): Promise<void> {
+    logger.info('TreatmentPlanWidget: setting diagnosis from recommended card', { name });
+
+    const recommendedSection = this.page.locator(
+      '.RecommendedSection, [data-testid="recommended-section"], .RecommendedDiagnoses',
+    );
+    await recommendedSection.waitFor({ state: 'visible', timeout: 8000 });
+
+    const card = recommendedSection
+      .locator('.RecommendedCard, .CardItem, [data-testid="recommended-card"]')
+      .filter({ hasText: new RegExp(name, 'i') })
+      .first();
+
+    await card.waitFor({ state: 'visible', timeout: 5000 });
+
+    const kebab = card.locator(
+      '[data-testid="card-menu"], .KebabButton, .ThreeDotsButton, button[aria-label*="more" i]',
+    ).first();
+    await kebab.click();
+
+    await this.page.getByRole('menuitem', {
+      name: /Установить диагноз|Set Diagnosis/i,
+    }).click();
+
+    await this.page.waitForTimeout(300);
+    logger.info('TreatmentPlanWidget: ✅ diagnosis set', { name });
+  }
+
+  /**
+   * Click the three-dots menu next to a service in the "Recommended" section
+   * and select "Add to Treatment Plan."
+   *
+   * @param name - Partial case-insensitive service name.
+   *               Pass an empty string or omit to target the first available item.
+   */
+  async addServiceFromRecommended(name = ''): Promise<void> {
+    logger.info('TreatmentPlanWidget: adding recommended service to plan', { name });
+
+    const recommendedServicesSection = this.page.locator(
+      '.RecommendedServicesSection, [data-testid="recommended-services"], .RecommendedServices',
+    );
+    await recommendedServicesSection.waitFor({ state: 'visible', timeout: 8000 });
+
+    const allServiceItems = recommendedServicesSection.locator(
+      '.ServiceItem, .RecommendedService, [data-testid="recommended-service"]',
+    );
+
+    const targetItem = name.length > 0
+      ? allServiceItems.filter({ hasText: new RegExp(name, 'i') }).first()
+      : allServiceItems.first();
+
+    await targetItem.waitFor({ state: 'visible', timeout: 5000 });
+
+    const kebab = targetItem.locator(
+      '[data-testid="service-menu"], .KebabButton, .ThreeDotsButton, button[aria-label*="more" i]',
+    ).first();
+    await kebab.click();
+
+    await this.page.getByRole('menuitem', {
+      name: /Добавить в план лечения|Add to Treatment Plan/i,
+    }).click();
+
+    await this.page.waitForTimeout(300);
+    logger.info('TreatmentPlanWidget: ✅ service added from recommended', { name });
+  }
+
+  /**
+   * Click the three-dots menu in the "In Treatment Plan" section and select
+   * "Add to Current Visit," then wait for the page to reflect the change.
+   */
+  async finalizeServiceToVisit(): Promise<void> {
+    logger.info('TreatmentPlanWidget: finalizing service to current visit');
+
+    const inPlanSection = this.page.locator(
+      '.InTreatmentPlanSection, [data-testid="in-treatment-plan"], .InTreatmentPlan',
+    );
+    await inPlanSection.waitFor({ state: 'visible', timeout: 8000 });
+
+    const kebab = inPlanSection.locator(
+      '[data-testid="plan-menu"], .KebabButton, .ThreeDotsButton, button[aria-label*="more" i]',
+    ).first();
+    await kebab.click();
+
+    await this.page.getByRole('menuitem', {
+      name: /Добавить в текущий визит|Add to Current Visit/i,
+    }).click();
+
+    await this.page.waitForLoadState('networkidle').catch(() => {});
+    await this.page.waitForTimeout(300);
+    logger.info('TreatmentPlanWidget: ✅ service finalized to current visit');
+  }
 }

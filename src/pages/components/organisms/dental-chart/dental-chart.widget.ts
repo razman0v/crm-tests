@@ -181,4 +181,79 @@ export class DentalChartWidget {
 
     logger.info('DentalChartWidget: ✅ route stubs active');
   }
+
+  /**
+   * Click the "Dental Chart" (Зубная формула) tab/link to open the chart view.
+   * Waits for the teeth map to be visible before returning.
+   */
+  async clickTab(): Promise<void> {
+    logger.info('DentalChartWidget: navigating to Dental Chart tab');
+
+    const tab = this.page
+      .getByRole('tab', { name: /Зубная формула|Dental Chart/i })
+      .or(this.page.getByRole('link', { name: /Зубная формула|Dental Chart/i }));
+
+    await tab.waitFor({ state: 'visible', timeout: 5000 });
+    await tab.click();
+
+    await this.teethSvgRoot.waitFor({ state: 'visible', timeout: 10000 });
+    logger.info('DentalChartWidget: ✅ Dental Chart tab opened');
+  }
+
+  /**
+   * Select a tooth via its associated checkbox (used when the chart renders
+   * teeth as labelled checkboxes rather than SVG paths).
+   *
+   * @param toothNumber - FDI tooth number (e.g. 12 for upper-left lateral incisor)
+   */
+  async selectToothCheckbox(toothNumber: number): Promise<void> {
+    logger.info('DentalChartWidget: selecting tooth via checkbox', { toothNumber });
+
+    const toothContainer = this.teethSvgRoot.locator(
+      `[data-tooth="${toothNumber}"], [data-testid="tooth-${toothNumber}"], [data-number="${toothNumber}"]`,
+    );
+
+    const checkbox = toothContainer
+      .locator('input[type="checkbox"], .ToothCheckbox')
+      .first();
+
+    await checkbox.waitFor({ state: 'visible', timeout: 5000 });
+    await checkbox.check();
+
+    // Allow the side panel animation to complete
+    await this.page.waitForTimeout(300);
+    logger.info('DentalChartWidget: ✅ tooth checkbox selected', { toothNumber });
+  }
+
+  /**
+   * Use the search input in the Condition column of the dental chart side panel
+   * to find a condition and select its checkbox.
+   *
+   * @param conditionName - Condition label to search for (e.g. 'Intact tooth')
+   */
+  async searchAndSelectCondition(conditionName: string): Promise<void> {
+    logger.info('DentalChartWidget: searching and selecting condition', { conditionName });
+
+    const conditionColumn = this.page.locator(
+      '.ConditionColumn, [data-testid="condition-column"]',
+    );
+    await conditionColumn.waitFor({ state: 'visible', timeout: 5000 });
+
+    const searchInput = conditionColumn
+      .getByPlaceholder(/Поиск|Search/i)
+      .or(conditionColumn.locator('input[type="search"], input[type="text"]').first());
+
+    await searchInput.fill(conditionName);
+
+    const resultItem = conditionColumn
+      .locator('.ConditionItem, [data-testid="condition-item"]')
+      .filter({ hasText: new RegExp(conditionName, 'i') })
+      .first();
+
+    await resultItem.waitFor({ state: 'visible', timeout: 5000 });
+    await resultItem.locator('input[type="checkbox"]').first().check();
+
+    await this.page.waitForTimeout(300);
+    logger.info('DentalChartWidget: ✅ condition selected', { conditionName });
+  }
 }

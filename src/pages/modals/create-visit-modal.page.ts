@@ -1,6 +1,7 @@
 import { Page, Locator, expect } from '@playwright/test';
 import { BasePage } from '../base.page';
 import { config } from '../../config/config.interface';
+import { NomenclaturePanelWidget } from '../components/organisms/nomenclature/nomenclature-panel.widget';
 
 /**
  * CreateVisitModal Page Object
@@ -43,6 +44,9 @@ export class CreateVisitModal extends BasePage {
 
   // ─── Nomenclature ─────────────────────────────────────────────────────────────
   readonly addNomenclatureButton: Locator;
+
+  /** Reusable panel widget — owns all "Добавить номенклатуру" interactions. */
+  readonly nomenclature: NomenclaturePanelWidget;
 
   // ─── Date & time section ──────────────────────────────────────────────────────
   readonly desiredDateFromInput: Locator;
@@ -176,6 +180,9 @@ export class CreateVisitModal extends BasePage {
 
     // Trigger (lives outside the modal on the visits-list page)
     this.addVisitButton = page.getByRole('button', { name: /Добавить визит|Add visit/i });
+
+    // Nomenclature panel widget (shared with VisitDetailsPage)
+    this.nomenclature = new NomenclaturePanelWidget(page);
   }
 
   // ─── Navigation ──────────────────────────────────────────────────────────────
@@ -394,6 +401,24 @@ export class CreateVisitModal extends BasePage {
     await firstOption.click();
     this.logger.info('CreateVisitModal: ✅ first available room selected', { roomName });
     return roomName;
+  }
+
+  // ─── Nomenclature ─────────────────────────────────────────────────────────────
+
+  /**
+   * Add a nomenclature service via the "Из общего списка" sub-menu.
+   * Works both inside the create-visit modal and on the visit-details page.
+   *
+   * Flow: Добавить номенклатуру → Из общего списка → search → check → Добавить
+   *
+   * @param serviceName Partial or full service name to search for and select.
+   */
+  /**
+   * @deprecated Call `this.nomenclature.addFromGeneralList(serviceName)` directly.
+   * Kept for backward compatibility with existing tests against the modal.
+   */
+  async addNomenclatureFromGeneralList(serviceName: string): Promise<void> {
+    return this.nomenclature.addFromGeneralList(serviceName);
   }
 
   // ─── Submit / Cancel ─────────────────────────────────────────────────────────

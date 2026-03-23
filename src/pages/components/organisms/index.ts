@@ -12,3 +12,4 @@ export { DentalChartWidget, TOOTH_COORDINATES } from './dental-chart/dental-char
 export { TreatmentPlanWidget } from './treatment-plan/treatment-plan.widget';
 export { VisitStatusWidget } from './visit-status/visit-status.widget';
 export { MedicalDiaryWidget } from './medical-diary/medical-diary.widget';
+export { NomenclaturePanelWidget } from './nomenclature/nomenclature-panel.widget';

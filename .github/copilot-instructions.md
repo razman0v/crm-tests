@@ -225,3 +225,65 @@ Request feedback: do you want this document shorter (summary) or to keep this fu
 - DO NOT merely describe the changes you intend to make. 
 - If you cannot access the file system for any reason, state the error immediately rather than pretending to update the metrics.
 - Your response should only come AFTER the tool-call success confirmation.
+
+## Test Failure Analysis Workflow
+
+**Trigger Phrase:** Whenever the user provides test logs + source files and says
+"Analyse this failure", execute the following four tasks in order.
+
+### Task 1 — Diagnose
+Classify every issue found as:
+- PRIMARY   → directly caused the failure (fix immediately)
+- SECONDARY → timing/flakiness risk under load (fix in same PR)
+- DESIGN    → SRP violation, silent breakage risk (fix in refactor PR)
+- MINOR     → low risk, note only
+
+Output per issue:
+- Issue ID (A, B, C...)
+- Classification
+- File + line number
+- Root cause (why it fails, not just what)
+
+### Task 2 — Fix
+For every PRIMARY and SECONDARY issue output:
+- Original code block (file + line reference)
+- Fixed code block
+- One-sentence explanation
+
+**Hard rules — never violate these:**
+- NEVER use `waitForTimeout()` for debounce/network waits
+  → Replace with `.waitFor({ state: 'visible' })` on a real DOM element
+- NEVER use `.first()` or `.last()` on a page-wide locator without a scope anchor
+  → Always find the container first, then search inside it
+- NEVER use XPath ancestor traversal to find checkboxes or siblings
+  → Use top-down `.filter({ has: ... })` instead
+- ALWAYS scope locators to the nearest stable container
+  (dialog, panel, drawer — whatever wraps the interaction)
+
+### Task 3 — Refactor
+For every DESIGN issue:
+- Name the SRP violation
+- Propose extraction into:
+  src/pages/components/organisms/<domain>/<name>.widget.ts
+- Show the updated test call after refactoring
+- Show how the original class delegates to the new widget
+
+### Task 4 — Prevention
+Output 3–5 enforceable rules. Format each as:
+- Rule name
+- What to ban
+- What to use instead  
+- How to enforce (lint / code review checklist / fixture naming)
+
+## Common Pitfalls
+- Never call a CreateXxxModal method on a page where no modal is open.
+  If a method uses `this.page` scope instead of `this.modal` scope,
+  it belongs in a widget, not the modal class.
+  Pattern: src/pages/components/organisms/<domain>/<name>.widget.ts
+
+## How AI Agents Should Operate Here
+  - When diagnosing a test failure, always correlate the stack trace line
+  number to the source file before proposing a fix. Never suggest a fix
+  based on the error message alone.
+- When fixing a locator, always verify the fix follows the scope-anchor
+  rule: container first, element inside. No page-wide .first()/.last().

@@ -1,4 +1,4 @@
-import { test, expect, PatientFactory } from '../../../lib/fixtures'; // Use custom fixtures
+import { test, expect, PatientFactory, VisitFormFactory } from '../../../lib/fixtures'; // Use custom fixtures
 import { Logger, logger } from '../../../utils/logger';
 
 test.describe('E2E: Complete Dental Visit Flow (14-Step Journey)', () => {
@@ -10,6 +10,7 @@ test.describe('E2E: Complete Dental Visit Flow (14-Step Journey)', () => {
     visitPage,
     branchService,
     employeeService,
+    nomenclatureService,
   }) => {
     Logger.setTestContext('Complete Visit Flow', 'Main Test');
 
@@ -50,18 +51,38 @@ test.describe('E2E: Complete Dental Visit Flow (14-Step Journey)', () => {
       logger.info('✅ Patient created', { patientId: patient.id, name: patient.user?.name });
 
       // ========================================
+      // STEP 3.5: Discover Nomenclature Service ID
+      // ========================================
+      logger.info('STEP 3.5: Discovering service nomenclature ID');
+      const nomenclature = await nomenclatureService.getFirstActive(patient.id);
+      logger.info('✅ Nomenclature discovered', { id: nomenclature.id });
+
+      // ========================================
       // STEP 4: Create Visit
       // ========================================
       logger.info('STEP 4: Creating visit');
-      const visitPayload = {
-        patientId: patient.id,
-        doctorId: doctorBranchId,
-        shiftTime: now.toISOString(),
-        duration: 60,
-        status: 'PLANNED' as const,
-      };
+      const wishStartDate = now.toISOString().split('T')[0];
+      const wishEndDate = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split('T')[0];
 
-      const visit = await visitService.create(visitPayload);
+      const visit = await visitService.create(
+        VisitFormFactory.create({
+          patientId: patient.id,
+          doctorId: doctorBranchId,
+          companyBranchId: branch.id,
+          companyBranchCabinetId: cabinetId,
+          companyEmployeeId: doctor.id,
+          shiftTime: now.toISOString(),
+          wishStartDate,
+          wishEndDate,
+          doctorOrSpecialization: 'doctor',
+          type: 'primary',
+          glossarySpecializationId: 148,
+          glossaryJobPositionId: 562,
+          stockNomenclatureIds: [nomenclature.id],
+        }),
+      );
       expect(visit).toHaveProperty('id');
       expect(visit.id).toBeGreaterThan(0);
       logger.info('✅ Visit created', { visitId: visit.id, status: visit.status });

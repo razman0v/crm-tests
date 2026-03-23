@@ -1,4 +1,5 @@
 import { fakerRU as faker } from '@faker-js/faker';
+import { VisitDTO } from '../entities/visit.types';
 
 /**
  * Data contract for the "Записать пациента" modal form.
@@ -15,6 +16,58 @@ export interface VisitFormData {
   dateTo: string;
   /** Optional free-text visit purpose ("Цель визита") */
   visitPurpose?: string;
+}
+
+/**
+ * Runtime identifiers and temporal data required by the visit creation API.
+ * Obtain IDs from branchService / employeeService / patientService responses.
+ */
+export interface VisitApiParams {
+  // ─── Required identifiers ──────────────────────────────────────────────
+  patientId: number;
+  /** employeeBranchId (the branch-link ID, used as doctorId in the API) */
+  doctorId: number;
+  companyBranchId: number;
+  companyBranchCabinetId: number;
+  /** Raw company-employee ID (doctor.id from EmployeeResponse) */
+  companyEmployeeId: number;
+
+  // ─── Temporal (auto-generated when omitted) ────────────────────────────
+  /** ISO 8601 datetime; defaults to now */
+  shiftTime?: string;
+  /** YYYY-MM-DD; derived from shiftTime when omitted */
+  date?: string;
+  /** Visit start time in HH:mm; defaults to '09:00' */
+  fromTime?: string;
+  /** Visit end time in HH:mm; defaults to '10:00' */
+  toTime?: string;
+  duration?: number;
+  status?: 'PLANNED' | 'ARRIVED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
+
+  // ─── Health plan (pass null when the patient has no plan yet) ──────────
+  healthPlanId?: number | null;
+  healthPlanName?: string | null;
+  healthPlanStepId?: number | null;
+  healthPlanStepName?: string | null;
+
+  // ─── Glossary / Nomenclature ───────────────────────────────────────────
+  glossarySpecializationId?: number | null;
+  glossaryJobPositionId?: number | null;
+  healthPlanNomenclatureIds?: number[];
+  stockNomenclatureIds?: number[];
+
+  // ─── Golden Payload fields ─────────────────────────────────────────────
+  /** Desired start date in YYYY-MM-DD; defaults to today */
+  wishStartDate?: string;
+  /** Desired end date in YYYY-MM-DD; defaults to +30 days */
+  wishEndDate?: string;
+  wishFromTime?: string | null;
+  wishToTime?: string | null;
+  /** Booking mode: 'doctor' or 'specialization'; defaults to 'doctor' */
+  doctorOrSpecialization?: string;
+  /** Visit type key, e.g. 'primary'; defaults to 'primary' */
+  type?: string;
+  comment?: string | null;
 }
 
 // ─── Utility ─────────────────────────────────────────────────────────────────
@@ -78,22 +131,73 @@ export class VisitFormBuilder {
 // ─── Factory ─────────────────────────────────────────────────────────────────
 
 /**
- * VisitFormFactory — static factory for "Записать пациента" modal test data.
+ * VisitFormFactory — factory for visit-related test data.
  *
- * Usage:
- *   // Minimal (today + 30-day window, no purpose):
+ * ### Modal form data (UI tests)
  *   const form = VisitFormFactory.createDefault();
+ *   const form = VisitFormFactory.builder().withDateFrom('15.03.2026').build();
  *
- *   // With reproducible seed:
- *   const form = VisitFormFactory.createDefault(42);
- *
- *   // Fluent customization:
- *   const form = VisitFormFactory.builder()
- *     .withDateFrom('15.03.2026')
- *     .withRandomVisitPurpose()
- *     .build();
+ * ### API payload (hybrid / API tests)
+ *   const payload = VisitFormFactory.create({
+ *     patientId: patient.id,
+ *     doctorId: doctor.employeeBranchId,
+ *     companyBranchId: branch.id,
+ *     companyBranchCabinetId: cabinetId,
+ *     companyEmployeeId: doctor.id,
+ *     shiftTime: now.toISOString(),
+ *     glossarySpecializationId: 148,
+ *     glossaryJobPositionId: 1,
+ *   });
+ *   const visit = await visitService.create(payload);
  */
 export class VisitFormFactory {
+  /** Produce a VisitDTO ready to be sent to POST /api/v1/health/visits. */
+  static create(params: VisitApiParams): VisitDTO {
+    if (!params.stockNomenclatureIds || params.stockNomenclatureIds.length === 0) {
+      throw new Error(
+        '[VisitFormFactory] stockNomenclatureIds is required and must not be empty. ' +
+        'Discover a valid service ID via NomenclatureService.getFirstActive(patientId) and pass it in params.',
+      );
+    }
+
+    const shiftTime = params.shiftTime ?? new Date().toISOString();
+    const date = params.date ?? shiftTime.split('T')[0];
+    const wishStartDate = params.wishStartDate ?? date;
+    const wishEndDate =
+      params.wishEndDate ??
+      new Date(new Date(date).getTime() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
+    return {
+      patientId: params.patientId,
+      doctorId: params.doctorId,
+      companyEmployeeId: params.companyEmployeeId,
+      companyBranchId: params.companyBranchId,
+      companyBranchCabinetId: params.companyBranchCabinetId,
+      shiftTime,
+      date,
+      fromTime: params.fromTime ?? '09:00',
+      toTime: params.toTime ?? '10:00',
+      duration: params.duration ?? 60,
+      status: params.status ?? 'PLANNED',
+      healthPlanId: params.healthPlanId ?? null,
+      healthPlanName:
+        params.healthPlanName ?? `План лечения от ${toDisplayDate(new Date(date))}`,
+      healthPlanStepId: params.healthPlanStepId ?? null,
+      healthPlanStepName: params.healthPlanStepName ?? 'Первичный этап',
+      glossarySpecializationId: params.glossarySpecializationId ?? null,
+      glossaryJobPositionId: params.glossaryJobPositionId ?? null,
+      healthPlanNomenclatureIds: params.healthPlanNomenclatureIds ?? [],
+      stockNomenclatureIds: params.stockNomenclatureIds,
+      wishStartDate,
+      wishEndDate,
+      wishFromTime: params.wishFromTime ?? null,
+      wishToTime: params.wishToTime ?? null,
+      doctorOrSpecialization: params.doctorOrSpecialization ?? 'doctor',
+      type: params.type ?? 'primary',
+      comment: params.comment ?? null,
+    };
+  }
+
   static createDefault(seed?: number): VisitFormData {
     return new VisitFormBuilder(seed).build();
   }

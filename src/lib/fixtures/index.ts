@@ -5,9 +5,11 @@ import { ScheduleService } from '../api/services/schedule.service';
 import { VisitService } from '../api/services/visit.service';
 import { VisitPage } from '../../pages/visit.page';
 import { CreateVisitModal } from '../../pages/modals/create-visit-modal.page';
+import { VisitDetailsPage } from '../../pages/crm';
 import { getConfig } from '../../config/env-loader';
 import { EmployeeService } from '../api/services/employee.service';
 import { BranchService } from '../api/services/branch.service';
+import { NomenclatureService } from '../api/services/nomenclature.service';
 
 type CustomFixtures = {
   patientService: PatientsService;
@@ -15,8 +17,10 @@ type CustomFixtures = {
   visitService: VisitService;
   branchService: BranchService;
   visitPage: VisitPage;
+  visitDetailsPage: VisitDetailsPage;
   createVisitModal: CreateVisitModal;
   employeeService: EmployeeService;
+  nomenclatureService: NomenclatureService;
 };
 
 export const test = base.extend<CustomFixtures, { workerStorageState: string }>({
@@ -26,6 +30,10 @@ export const test = base.extend<CustomFixtures, { workerStorageState: string }>(
 
   employeeService: async ({ request }, use) => {
     await use(new EmployeeService(request));
+  },
+
+  nomenclatureService: async ({ request }, use) => {
+    await use(new NomenclatureService(request));
   },
 
   branchService: async ({ request }, use) => {
@@ -46,6 +54,10 @@ export const test = base.extend<CustomFixtures, { workerStorageState: string }>(
 
   visitPage: async ({ page }, use) => {
     await use(new VisitPage(page, getConfig()));
+  },
+
+  visitDetailsPage: async ({ page }, use) => {
+    await use(new VisitDetailsPage(page, getConfig()));
   },
 
   createVisitModal: async ({ page }, use) => {
@@ -90,4 +102,6 @@ export { expect } from '@playwright/test';
 export { PatientFactory } from '../factories/patient.factory';
 export { ShiftFactory } from '../factories/shift.factory';
 export { VisitFormFactory } from '../factories/visit-form.factory';
-export type { VisitFormData } from '../factories/visit-form.factory';
+export type { VisitFormData, VisitApiParams } from '../factories/visit-form.factory';
+export { NomenclatureService, CriticalDataMissingError } from '../api/services/nomenclature.service';
+export type { NomenclatureItem } from '../api/services/nomenclature.service';
