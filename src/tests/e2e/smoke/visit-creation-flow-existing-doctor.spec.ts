@@ -109,7 +109,7 @@ test.describe('Smoke: Visit Creation Flow with Existing Doctor', () => {
 
     // App stays on the visits list after creation (no auto-redirect for existing doctors).
     // Find the newly created visit row by patient surname + today's date, then navigate.
-    if (!page.url().match(/\/visits\/\d+/)) {
+    if (!page.url().match(/\/schedule\/visits\/\d+/)) {
       logger.info('Stage 4: still on visits list — navigating to new visit');
       const patientSurname = patientFullName.split(' ')[0];
       const todayStr = toRuDate(today);
@@ -120,9 +120,19 @@ test.describe('Smoke: Visit Creation Flow with Existing Doctor', () => {
         .first();
       await newVisitRow.waitFor({ state: 'visible', timeout: 10_000 });
       const visitId = (await newVisitRow.locator('td').first().textContent())?.trim();
-      await page.goto(`/visits/${visitId}`);
-      await page.waitForLoadState('networkidle', { timeout: 30_000 });
+      logger.info('Stage 4: navigating to visit details', { visitId, patientFullName });
+      await page.goto(`/schedule/visits/${visitId}`);
     }
+    await page.waitForLoadState('networkidle', { timeout: 30_000 });
     logger.info('Stage 4 ✅ modal submitted, on visit details page');
+
+    // ── Stage 5: Assert patient name on visit details page ────────────────────
+    logger.info('Stage 5: assert patient name on visit details', { patientFullName });
+    await expect(
+      page.getByText(patientFullName, { exact: false }),
+    ).toBeVisible({ timeout: 15_000 });
+    logger.info('Stage 5 ✅ patient name visible on visit details page', { patientFullName });
+
+    logger.info('✅ Smoke: Visit Creation Flow (Existing Doctor) — COMPLETE');
   });
 });
