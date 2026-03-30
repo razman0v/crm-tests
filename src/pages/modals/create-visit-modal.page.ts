@@ -103,11 +103,11 @@ export class CreateVisitModal extends BasePage {
       .filter({ hasText: /Название этапа/i })
       .locator('input');
 
-    // Visit type — input field (fill, not click+option)
+    // Visit type — DropDownFieldView (same pattern as patient/doctor)
     this.visitTypeInput = this.modal
       .locator('.FieldLayoutView')
       .filter({ hasText: /Тип визита/i })
-      .locator('input');
+      .locator('.DropDownFieldView');
 
     // Purpose
     this.visitPurposeTextarea = this.modal.getByPlaceholder(/Цель визита/i);
@@ -242,13 +242,16 @@ export class CreateVisitModal extends BasePage {
     this.logger.info('CreateVisitModal: selecting visit type', { visitType });
     await this.visitTypeInput.waitFor({ state: 'visible' });
     await this.visitTypeInput.click();
-    await this.visitTypeInput.fill(visitType);
+    const searchInput = this.page.locator('.DropDownFieldView__search-input');
+    await searchInput.waitFor({ state: 'visible', timeout: 5_000 });
+    await searchInput.fill(visitType);
     const option = this.page
       .locator('.DropDownItemView__option')
       .filter({ hasText: new RegExp(visitType, 'i') })
       .first();
     await option.waitFor({ state: 'visible', timeout: 5_000 });
     await option.click();
+    await searchInput.waitFor({ state: 'hidden' });
     this.logger.info('CreateVisitModal: ✅ visit type selected', { visitType });
   }
 
@@ -476,6 +479,11 @@ export class CreateVisitModal extends BasePage {
 
   /** Assert Plan лечения was auto-filled after patient selection. */
   async assertTreatmentPlanFilled(): Promise<void> {
+    await this.treatmentPlanInput
+      .or(this.treatmentPlanDropdown)
+      .first()
+      .waitFor({ state: 'visible', timeout: 10_000 });
+
     let value = '';
     if (await this.treatmentPlanInput.isVisible()) {
       value = await this.treatmentPlanInput.inputValue();
@@ -488,6 +496,11 @@ export class CreateVisitModal extends BasePage {
 
   /** Assert Этап was auto-filled after patient selection. */
   async assertStageFilled(): Promise<void> {
+    await this.stageInput
+      .or(this.stageDropdown)
+      .first()
+      .waitFor({ state: 'visible', timeout: 10_000 });
+
     let value = '';
     if (await this.stageInput.isVisible()) {
       value = await this.stageInput.inputValue();
