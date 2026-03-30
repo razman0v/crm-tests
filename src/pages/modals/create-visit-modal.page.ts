@@ -27,7 +27,8 @@ export class CreateVisitModal extends BasePage {
   readonly stageInput: Locator; // for new patient flow
 
   // ─── Visit type ───────────────────────────────────────────────────────────────
-  readonly visitTypeDropdown: Locator;
+  // Field is an input (fill-able), NOT a click+option dropdown.
+  readonly visitTypeInput: Locator;
 
   // ─── Visit purpose ────────────────────────────────────────────────────────────
   readonly visitPurposeTextarea: Locator;
@@ -102,11 +103,11 @@ export class CreateVisitModal extends BasePage {
       .filter({ hasText: /Название этапа/i })
       .locator('input');
 
-    // Visit type
-    this.visitTypeDropdown = this.modal
+    // Visit type — input field (fill, not click+option)
+    this.visitTypeInput = this.modal
       .locator('.FieldLayoutView')
-      .filter({ hasText: /^Тип визита:$/i })
-      .locator('.DropDownFieldView');
+      .filter({ hasText: /Тип визита/i })
+      .locator('input');
 
     // Purpose
     this.visitPurposeTextarea = this.modal.getByPlaceholder(/Цель визита/i);
@@ -151,7 +152,7 @@ export class CreateVisitModal extends BasePage {
     // Desired times inputs (two separate time inputs inside one FieldLayoutView)
     const desiredTimesField = this.modal
       .locator('.FieldLayoutView')
-      .filter({ hasText: /Желаемые время/i });
+      .filter({ hasText: /Желаемое время:/i });
     this.desiredTimeFromInput = desiredTimesField.locator('input').first();
     this.desiredTimeToInput = desiredTimesField.locator('input').last();
 
@@ -233,16 +234,21 @@ export class CreateVisitModal extends BasePage {
   // ─── Visit type ───────────────────────────────────────────────────────────────
 
   /**
-   * Select a visit type from the dropdown.
-   * @param visitType Exact visible label (e.g. "Первичный")
+   * Select a visit type via the autocomplete input.
+   * Flow: click input → fill search term → click matching option → wait for dismiss.
+   * @param visitType Visible option text, e.g. "Первичный"
    */
   async selectVisitType(visitType: string): Promise<void> {
     this.logger.info('CreateVisitModal: selecting visit type', { visitType });
-    await this.visitTypeDropdown.click();
-    await this.page
-      .getByRole('option', { name: visitType })
-      .or(this.page.getByText(visitType, { exact: false }).first())
-      .click();
+    await this.visitTypeInput.waitFor({ state: 'visible' });
+    await this.visitTypeInput.click();
+    await this.visitTypeInput.fill(visitType);
+    const option = this.page
+      .locator('.DropDownItemView__option')
+      .filter({ hasText: new RegExp(visitType, 'i') })
+      .first();
+    await option.waitFor({ state: 'visible', timeout: 5_000 });
+    await option.click();
     this.logger.info('CreateVisitModal: ✅ visit type selected', { visitType });
   }
 
@@ -255,6 +261,25 @@ export class CreateVisitModal extends BasePage {
   }
 
   // ─── Doctor ───────────────────────────────────────────────────────────────────
+
+  /**
+   * Select the first doctor from the dropdown without typing a search term.
+   * Opens the dropdown, waits for options to appear, and clicks the first one.
+   * Returns the doctor name text.
+   */
+  async selectFirstAvailableDoctor(): Promise<string> {
+    this.logger.info('CreateVisitModal: selecting first available doctor');
+    await this.doctorDropdown.click();
+    const searchInput = this.page.getByPlaceholder(/Начните вводить символы для поиска|Search/i).first();
+    await searchInput.waitFor({ state: 'visible' });
+    const firstOption = this.page.locator('.DropDownItemView__option').first();
+    await firstOption.waitFor({ state: 'visible', timeout: 10_000 });
+    const doctorName = (await firstOption.textContent())?.trim() ?? '';
+    await firstOption.click();
+    await this.page.waitForTimeout(300);
+    this.logger.info('CreateVisitModal: ✅ first available doctor selected', { doctorName });
+    return doctorName;
+  }
 
   /**
    * Select a doctor from the dropdown.
@@ -392,11 +417,11 @@ export class CreateVisitModal extends BasePage {
     await this.roomDropdown.waitFor({ state: 'visible' });
     await this.roomDropdown.click();
 
-    const firstOption = this.page
-      .getByRole('option')
-      .or(this.page.locator('[class*="DropDownOption"], [class*="dropdown-item"]'))
+    // Scoped to modal, same option class used by selectPatient()
+    const firstOption = this.modal
+      .locator('.DropDownItemView__option')
       .first();
-    await firstOption.waitFor({ state: 'visible' });
+    await firstOption.waitFor({ state: 'visible', timeout: 5_000 });
     const roomName = (await firstOption.textContent())?.trim() ?? '';
     await firstOption.click();
     this.logger.info('CreateVisitModal: ✅ first available room selected', { roomName });
@@ -455,7 +480,7 @@ export class CreateVisitModal extends BasePage {
     if (await this.treatmentPlanInput.isVisible()) {
       value = await this.treatmentPlanInput.inputValue();
     } else {
-        value = (await this.treatmentPlanDropdown.textContent())?.trim() ?? '';
+      value = (await this.treatmentPlanDropdown.textContent())?.trim() ?? '';
     }
     expect(value).not.toBe('');
     this.logger.info('CreateVisitModal: ✅ treatment plan is filled', { value });
@@ -471,7 +496,7 @@ export class CreateVisitModal extends BasePage {
     }
     expect(value).not.toBe('');
     this.logger.info('CreateVisitModal: ✅ stage is filled', { value });
-  }   
+  }
 
   /** Assert Филиал was auto-filled after doctor selection. */
   async assertBranchFilled(): Promise<void> {

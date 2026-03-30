@@ -2,25 +2,24 @@ import { test, expect, PatientFactory } from '../../../lib/fixtures';
 import { Logger, logger } from '../../../utils/logger';
 
 /**
- * Smoke: Visit Creation Flow — complete business-process lifecycle
+ * Smoke: Visit Creation Flow (Existing Doctor) — uses pre-existing doctor from the system.
  *
- *  beforeEach (API — Discovery Sweep)
- *   1. Discover Branch, Cabinet, Doctor via their services (no hardcoded IDs).
+ *  beforeEach (API — minimal setup)
+ *   1. Create patient via API.
  *   2. Discover a valid service ID via NomenclatureService (type=service, scoped to patient).
- *   3. Create patient via API.
+ *   No branch or doctor creation — relies on existing data in the system.
  *
  *  Test (UI — Full Lifecycle)
  *   Stage 1   — Open visits list, open "Записать пациента" modal.
- *   Stage 2   — Fill modal: patient → doctor → date range → day → time → room.
+ *   Stage 2   — Fill modal: patient → visit type → first available doctor → date range → day → time → room.
  *   Stage 3   — Add nomenclature inside modal via "Из общего списка".
  *   Stage 4   — Submit modal → assert redirect to visit details page.
  *   Stage 5   — Assert patient name, treatment plan, stage auto-filled by backend.
  *   Stage 6   — Assert nomenclature visible on visit details page.
  *   Stage 7   — Save visit, assert success notification.
  */
-test.describe('Smoke: Visit Creation Flow with Nomenclature', () => {
+test.describe('Smoke: Visit Creation Flow with Existing Doctor', () => {
   let patientFullName: string;
-  let doctorFullName: string;
   let discoveredNomenclatureName: string;
 
   // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -31,29 +30,13 @@ test.describe('Smoke: Visit Creation Flow with Nomenclature', () => {
     return `${d}.${m}.${date.getFullYear()}`;
   }
 
-  // ─── beforeEach: API Discovery Sweep ────────────────────────────────────────
+  // ─── beforeEach: API Setup ───────────────────────────────────────────────────
 
   test.beforeEach(async ({
     patientService,
-    branchService,
-    employeeService,
-    scheduleService,
     nomenclatureService,
   }) => {
-    Logger.setTestContext('Visit Creation Flow', 'beforeEach — discovery sweep');
-
-    const branch = await branchService.create();
-    const cabinetId = branch.companyBranchCabinets![0].id;
-    logger.info('beforeEach: branch + cabinet ready', { branchId: branch.id, cabinetId });
-
-    const doctor = await employeeService.create(branch.id);
-    const doctorBranchId = doctor.employeeBranchId;
-    doctorFullName = `${doctor.user.surname} ${doctor.user.name}`;
-    logger.info('beforeEach: doctor ready', { doctorId: doctor.id, doctorBranchId, doctorFullName });
-
-    const now = new Date();
-    await scheduleService.createSimpleShift(doctorBranchId, cabinetId, now.toISOString());
-    logger.info('beforeEach: schedule created');
+    Logger.setTestContext('Visit Creation Flow (Existing Doctor)', 'beforeEach — setup');
 
     const patient = await patientService.create(PatientFactory.createRandom());
     expect(patient.id).toBeGreaterThan(0);
@@ -70,13 +53,12 @@ test.describe('Smoke: Visit Creation Flow with Nomenclature', () => {
 
   // ─── Test: Full Lifecycle ────────────────────────────────────────────────────
 
-  test('should create visit via modal, add nomenclature, and save', async ({
+  test('should create visit using existing doctor (first in dropdown), add nomenclature, and save', async ({
     createVisitModal,
-    visitDetailsPage,
     page,
   }) => {
     test.setTimeout(120_000);
-    Logger.setTestContext('Visit Creation Flow', 'UI lifecycle');
+    Logger.setTestContext('Visit Creation Flow (Existing Doctor)', 'UI lifecycle');
 
     const today = new Date();
     const thirtyDaysLater = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
@@ -97,7 +79,8 @@ test.describe('Smoke: Visit Creation Flow with Nomenclature', () => {
 
     await createVisitModal.selectVisitType('Первичный');
 
-    await createVisitModal.selectDoctor(doctorFullName);
+    const selectedDoctorName = await createVisitModal.selectFirstAvailableDoctor();
+    logger.info('Stage 2: first available doctor selected', { selectedDoctorName });
     await createVisitModal.assertBranchFilled();
     await createVisitModal.assertMedSpecFilled();
     await createVisitModal.assertMedPositionFilled();
@@ -159,6 +142,6 @@ test.describe('Smoke: Visit Creation Flow with Nomenclature', () => {
     ).toBeVisible({ timeout: 8_000 });
     logger.info('Stage 7 ✅ success notification visible');
 
-    logger.info('✅ Smoke: Visit Creation Flow — COMPLETE');
+    logger.info('✅ Smoke: Visit Creation Flow (Existing Doctor) — COMPLETE');
   });
 });
