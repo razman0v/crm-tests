@@ -513,22 +513,31 @@ export class CreateVisitModal extends BasePage {
 
   /** Assert Филиал was auto-filled after doctor selection. */
   async assertBranchFilled(): Promise<void> {
+    await expect(async () => {
+      const text = (await this.branchDropdown.textContent())?.trim() ?? '';
+      expect(text).not.toBe('');
+    }).toPass({ timeout: 5_000 });
     const text = (await this.branchDropdown.textContent())?.trim() ?? '';
-    expect(text).not.toBe('');
     this.logger.info('CreateVisitModal: ✅ branch is filled', { text });
   }
 
   /** Assert Мед. специализация was auto-filled after doctor selection. */
   async assertMedSpecFilled(): Promise<void> {
+    await expect(async () => {
+      const text = (await this.medSpecDropdown.textContent())?.trim() ?? '';
+      expect(text).not.toBe('');
+    }).toPass({ timeout: 5_000 });
     const text = (await this.medSpecDropdown.textContent())?.trim() ?? '';
-    expect(text).not.toBe('');
     this.logger.info('CreateVisitModal: ✅ med spec is filled', { text });
   }
 
   /** Assert Мед. должность was auto-filled after doctor selection. */
   async assertMedPositionFilled(): Promise<void> {
+    await expect(async () => {
+      const text = (await this.medPositionDropdown.textContent())?.trim() ?? '';
+      expect(text).not.toBe('');
+    }).toPass({ timeout: 5_000 });
     const text = (await this.medPositionDropdown.textContent())?.trim() ?? '';
-    expect(text).not.toBe('');
     this.logger.info('CreateVisitModal: ✅ med position is filled', { text });
   }
 
