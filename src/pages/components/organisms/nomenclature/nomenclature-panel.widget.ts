@@ -94,39 +94,45 @@ export class NomenclaturePanelWidget {
     const searchInput = nomenclatureModal.getByPlaceholder(/Поиск|Search/i).first();
     await searchInput.waitFor({ state: 'visible', timeout: 8_000 });
 
-    // ── 5. Search ────────────────────────────────────────────────────────────
-    await searchInput.fill(serviceName);
-    logger.info('NomenclaturePanelWidget: search filled', { serviceName });
-
-    // Wait for results — no debounce timer, wait for real DOM
+    // Wait for the initial row list to load BEFORE filling the search.
+    // Filling before initial load fires the search API while the tab is still
+    // initialising, causing a frontend JS error (Cannot read .status of undefined).
     await nomenclatureModal
       .locator('tr.StockNomenclatureRow')
       .first()
       .waitFor({ state: 'visible', timeout: 8_000 });
 
+    // ── 5. Search ────────────────────────────────────────────────────────────
+    await searchInput.pressSequentially(serviceName, { delay: 50 });
+    logger.info('NomenclaturePanelWidget: search filled', { serviceName });
+
     // ── 6. Check the matching row's checkbox ─────────────────────────────────
     const targetRow = nomenclatureModal
       .locator('tr.StockNomenclatureRow')
-      .filter({ has: nomenclatureModal.getByText(serviceName, { exact: false }) })
+      .filter({ hasText: serviceName })
       .first();
-    await targetRow.waitFor({ state: 'visible', timeout: 5_000 });
-    await targetRow
-      .locator('td.StockNomenclatureRow__checkbox input[type="checkbox"]')
-      .check();
+    await targetRow.waitFor({ state: 'visible', timeout: 8_000 });
+    // Click the label (for="checkboxN") — the correct interactive element for the
+    // custom CheckboxFieldView; clicking it toggles the underlying input.
+    await targetRow.locator('label.CheckboxFieldView__label').click();
     logger.info('NomenclaturePanelWidget: checkbox checked');
 
-    // ── 7. Click confirm — scoped to nomenclature modal ──────────────────────
-    // Confirm button text lives in <span class="ButtonView__text">Добавить</span>
-    const confirmBtn = nomenclatureModal
-      .locator('.ButtonView__text')
-      .filter({ hasText: /^Добавить$/i });
-    await confirmBtn.waitFor({ state: 'visible' });
-    await confirmBtn.click();
-    logger.info('NomenclaturePanelWidget: confirm clicked');
+    // ── 7. Click confirm (if modal is still open) ────────────────────────────
+    // Some checkbox selections auto-confirm and close the modal immediately.
+    // Guard: only click Добавить if the modal is still visible.
+    const modalStillOpen = await nomenclatureModal.isVisible();
+    if (modalStillOpen) {
+      const confirmBtn = nomenclatureModal.getByRole('button', { name: /Добавить/i });
+      await confirmBtn.waitFor({ state: 'visible', timeout: 5_000 });
+      await confirmBtn.click();
+      logger.info('NomenclaturePanelWidget: confirm clicked');
 
-    // ── 8. Wait for nomenclature modal to close ──────────────────────────────
-    await nomenclatureModal.waitFor({ state: 'hidden', timeout: 10_000 });
-    logger.info('NomenclaturePanelWidget: nomenclature modal closed');
+      // ── 8. Wait for nomenclature modal to close ────────────────────────────
+      await nomenclatureModal.waitFor({ state: 'hidden', timeout: 10_000 });
+      logger.info('NomenclaturePanelWidget: nomenclature modal closed');
+    } else {
+      logger.info('NomenclaturePanelWidget: modal auto-closed after checkbox — skipping confirm');
+    }
 
     // ── 9. Assert backend confirmation toast on the page ─────────────────────
     await expect(

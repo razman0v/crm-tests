@@ -420,8 +420,8 @@ export class CreateVisitModal extends BasePage {
     await this.roomDropdown.waitFor({ state: 'visible' });
     await this.roomDropdown.click();
 
-    // Scoped to modal, same option class used by selectPatient()
-    const firstOption = this.modal
+    // Options render as a DOM portal outside [role="dialog"] — must scope to page
+    const firstOption = this.page
       .locator('.DropDownItemView__option')
       .first();
     await firstOption.waitFor({ state: 'visible', timeout: 5_000 });
