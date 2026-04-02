@@ -15,7 +15,7 @@ import { VisitPage } from '../src/pages/visit.page';
  * Update VISIT_ID constant if your test environment uses different IDs.
  */
 
-const VISIT_ID = 1722; // TODO: Make configurable via env var or fixture
+const VISIT_ID = process.env.VISIT_ID; // TODO: Make configurable via env var or fixture
 
 const test = base.extend({});
 
